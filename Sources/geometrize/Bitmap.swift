@@ -37,8 +37,8 @@ public struct Bitmap {
     // height The height of the bitmap.
     // @param data The byte data to fill the bitmap with, must be width * height * depth (4) long.
     public init(width: Int, height: Int, data: [UInt8]) {
-        precondition(width > 0 && height > 0)
-        precondition(width * height * 4 == data.count)
+        assert(width > 0 && height > 0)
+        assert(width * height * 4 == data.count)
         self.width = width
         self.height = height
         self.data = data
