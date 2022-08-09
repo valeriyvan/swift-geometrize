@@ -68,4 +68,21 @@ final class BitmapTests: XCTestCase {
         let sampleBitmap = Bitmap(width: 5, height: 7, color: color)
         XCTAssertEqual(bitmap, sampleBitmap)
     }
+    
+    func testAverageColor() {
+        XCTAssertEqual(Bitmap(width: 3, height: 5, color: .black).averageColor(), .black)
+        XCTAssertEqual(Bitmap(width: 5, height: 3, color: .white).averageColor(), .white)
+        
+        let bitmap = Bitmap(
+            width: 5,
+            height: 3,
+            data:
+                [ 0,0,0,0,     1,1,1,1,         2,2,2,2,     3,3,3,3,         4,4,4,4,
+                  10,10,10,10, 111,111,111,111, 12,12,12,12, 13,13,13,13,     14,14,14,14,
+                  20,20,20,20, 21,21,21,21,     22,22,22,22, 222,222,222,222, 24,24,24,24
+                ] as [UInt8]
+        )
+        XCTAssertEqual(bitmap.averageColor(), Rgba(r: 31, g: 31, b: 31, a: 255))
+    }
+    
 }
