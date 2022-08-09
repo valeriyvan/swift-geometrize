@@ -16,7 +16,7 @@ public struct Rgba {
         self.a = a
     }
         
-    public static var black: Rgba { Rgba(r: 0, g: 0, b: 0, a: 0) }
+    public static var black: Rgba { Rgba(r: 0, g: 0, b: 0, a: 255) }
     public static var white: Rgba { Rgba(r: 255, g: 255, b: 255, a: 255) }
     
 }

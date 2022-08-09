@@ -12,7 +12,7 @@ final class BitmapTests: XCTestCase {
     }
 
     func testInitSizeAndColor() throws {
-        let blackBitmap = Bitmap(width: 5, height: 7, color: .black)
+        let blackBitmap = Bitmap(width: 5, height: 7, color: Rgba(r: 0, g: 0, b: 0, a: 0))
         XCTAssertEqual(blackBitmap.width, 5)
         XCTAssertEqual(blackBitmap.height, 7)
         XCTAssertEqual(blackBitmap.data.count, 5 * 7 * 4)
