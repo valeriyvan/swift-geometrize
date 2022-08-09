@@ -50,6 +50,8 @@ public struct Bitmap {
     // Height of the bitmap.
     public let height: Int
 
+    public var pixelCount: Int { width * height }
+    
     // Raw bitmap data.
     public var data: [UInt8]
 
@@ -86,7 +88,7 @@ public struct Bitmap {
     // Fills the bitmap with the given color.
     // @param color The color to fill the bitmap with.
     public mutating func fill(color: Rgba) {
-        for index in 0 ..< width * height {
+        for index in 0 ..< pixelCount {
             let offset = index * 4
             data[offset + 0] = color.r
             data[offset + 1] = color.g
