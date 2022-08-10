@@ -1,6 +1,42 @@
 import Foundation
 
-struct ImageRunnerOptions {}
+// Encapsulates options for where shapes may be drawn within the image.
+// Defines a rectangle expressed as percentages (0-100%) of the target image dimensions
+struct ImageRunnerShapeBoundsOptions {
+    // Whether to use these bounds, or to use the bounds of the target image instead
+    // (these can't be larger than the image in any case).
+    var enabled: Bool = false
+    var xMinPercent: Double = 0.0
+    var yMinPercent: Double = 0.0
+    var xMaxPercent: Double = 100.0
+    var yMaxPercent: Double = 100.0
+}
+
+// Encapsulates preferences/options that the image runner uses.
+struct ImageRunnerOptions {
+    
+    // The shape types that the image runner shall use.
+    var shapeTypes: ShapeTypes = ShapeTypes.ellipse
+    
+    // The alpha/opacity of the shapes (0-255).
+    var alpha: UInt8 = 128
+    
+    // The number of candidate shapes that will be tried per model step.
+    var shapeCount: Int = 50
+    
+    // The maximum number of times each candidate shape will be modified to attempt to find a better fit.
+    var maxShapeMutations: Int = 100
+   
+    // The seed for the random number generators used by the image runner.
+    var seed: Int = 9001
+    
+    // The maximum number of separate threads for the implementation to use.
+    // 0 lets the implementation choose a reasonable number.
+    var maxThreads: Int = 0
+    
+    // If zero or do not form a rectangle, the entire target image is used i.e. (0, 0, imageWidth, imageHeight).
+    var shapeBounds: ImageRunnerShapeBoundsOptions
+}
 
 // Helper for creating a set of primitives from a source image.
 struct ImageRunner {
