@@ -2,7 +2,7 @@ import Foundation
 
 // Specifies the types of shapes that can be used.
 // These can be combined to produce images composed of multiple primitive types.
-enum ShapeTypes: String, CaseIterable {
+enum ShapeType: String, CaseIterable {
     case rectangle
     case rotatedRectangle
     case triangle
@@ -15,4 +15,10 @@ enum ShapeTypes: String, CaseIterable {
     case shapeCount
 }
 
-struct Shape {}
+struct Shape {
+    init() {}
+    func setup() {}
+    mutating func mutate() {}
+    func rasterize() -> [Scanline] { [] }
+    func type() -> ShapeType { .rectangle }
+}

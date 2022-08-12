@@ -5,7 +5,7 @@ import Foundation
 
 public struct Bitmap {
     
-    // Create useless empty bitmap.
+    // Creates useless empty bitmap.
     public init() {
         width = 0
         height = 0
@@ -133,6 +133,62 @@ extension Bitmap {
             b: UInt8(totalBlue / pixelCount),
             a: 255
         )
+    }
+
+}
+
+extension Bitmap {
+    
+    // Draws scanlines onto an image.
+    // @param color The color of the scanlines.
+    // @param lines The scanlines to draw.
+    mutating func draw(lines: [Scanline], color: Rgba) {
+        // Convert the non-premultiplied color to alpha-premultiplied 16-bits per channel RGBA
+        // In other words, scale the rgb color components by the alpha component
+        var sr: UInt32 = UInt32(color.r)
+        sr |= sr << 8
+        sr *= UInt32(color.a)
+        sr /= UInt32(UInt8.max)
+        var sg: UInt32 = UInt32(color.g)
+        sg |= sg << 8
+        sg *= UInt32(color.a)
+        sg /= UInt32(UInt8.max)
+        var sb: UInt32 = UInt32(color.b)
+        sb |= sb << 8
+        sb *= UInt32(color.a)
+        sb /= UInt32(UInt8.max)
+        var sa: UInt32 = UInt32(color.a)
+        sa |= sa << 8
+
+        let m: UInt32 = UInt32(UInt16.max)
+        let aa: UInt32 = (m - sa) * 257
+
+        for line in lines {
+            let y: Int32 = Int32(line.y)
+
+            for x in line.x1...line.x2 {
+                let d: Rgba = self[x, Int(y)]
+                let r: UInt8 = UInt8(((UInt32(d.r) * aa + sr * m) / m) >> 8)
+                let g: UInt8 = UInt8(((UInt32(d.g) * aa + sg * m) / m) >> 8)
+                let b: UInt8 = UInt8(((UInt32(d.b) * aa + sb * m) / m) >> 8)
+                let a: UInt8 = UInt8(((UInt32(d.a) * aa + sa * m) / m) >> 8)
+                self[x, Int(y)] = Rgba(r: r, g: g, b: b, a: a)
+            }
+        }
+
+    }
+
+    // Copies source pixels to a destination defined by a set of scanlines.
+    // @param destination The destination bitmap to copy the lines to.
+    // @param source The source bitmap to copy the lines from.
+    // @param lines The scanlines that comprise the source to destination copying mask.
+    mutating func copy(lines: [Scanline], source: Bitmap) {
+        for line in lines {
+            let y = line.y
+            for x in line.x1...line.x2 {
+                self[x, y] = source[x, y]
+            }
+        }
     }
 
 }

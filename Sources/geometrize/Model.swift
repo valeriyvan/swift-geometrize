@@ -10,40 +10,87 @@ import Foundation
 // @param after The image as it would be after adding the shape
 // @param target The image that we are trying to replicate
 // @return True to add the shape to the image, false not to
-//using ShapeAcceptancePreconditionFunction = std::function<bool(
-//    double lastScore,
-//    double newScore,
-//    const geometrize::Shape& shape,
-//    const std::vector<geometrize::Scanline>& lines,
-//    const geometrize::rgba& color,
-//    const geometrize::Bitmap& before,
-//    const geometrize::Bitmap& after,
-//    const geometrize::Bitmap& target)>;
+typealias ShapeAcceptancePreconditionFunction = (
+    _ lastScore: Double,
+    _ newScore: Double,
+    _ shape: Shape,
+    _ lines: [Scanline],
+    _ color: Rgba,
+    _ before: Bitmap,
+    _ after: Bitmap,
+    _ target: Bitmap
+) -> Bool
 
+fileprivate func defaultAddShapePrecondition(
+    lastScore: Double,
+    newScore: Double,
+    shape: Shape,
+    lines: [Scanline],
+    color: Rgba,
+    _: Bitmap,
+    _: Bitmap,
+    _: Bitmap
+) -> Bool {
+    newScore < lastScore; // Adds the shape if the score improved (that is: the difference decreased)
+}
 
 // The Model class is the model for the core optimization/fitting algorithm.
-
 struct Model {
-    
-    // Temporarily here. REMOVE.
-    init() {}
     
     // Creates a model that will aim to replicate the target bitmap with shapes.
     // @param target The target bitmap to replicate with shapes.
-    init(target: Bitmap) {}
+    init(target: Bitmap) {
+        m_target = target
+        m_current = Bitmap(width: target.width, height: target.height, color: m_target.averageColor())
+        m_lastScore = differenceFull(first: m_target, second: m_current)
+        m_baseRandomSeed = 0
+        m_randomSeedOffset = 0
+    }
 
     // Creates a model that will optimize for the given target bitmap, starting from the given initial bitmap.
     // The target bitmap and initial bitmap must be the same size (width and height).
     // @param target The target bitmap to replicate with shapes.
     // @param initial The starting bitmap.
-    init(target: Bitmap, initial: Bitmap) {}
+    init(target: Bitmap, initial: Bitmap) {
+        m_target = target
+        m_current = initial
+        m_lastScore = differenceFull(first: m_target, second: m_current)
+        m_baseRandomSeed = 0
+        m_randomSeedOffset = 0
+        assert(m_target.width == m_current.width)
+        assert(m_target.height == m_current.height)
+
+    }
 
     // Resets the model back to the state it was in when it was created.
     // @param backgroundColor The starting background color to use.
     mutating func reset(backgroundColor: Rgba) { }
 
-    var width: Int { 0 }
-    var height: Int { 0 }
+    var width: Int { m_target.width }
+    var height: Int { m_target.height }
+
+    private mutating func getHillClimbState(
+        shapeCreator: () -> Shape,
+        alpha: UInt8,
+        shapeCount: UInt,
+        maxShapeMutations: UInt,
+        maxThreads: Int, // Ignored. Single thread is used at the moment.
+        energyFunction: @escaping EnergyFunction
+    ) -> [State] {
+        // Ensure that the results of the random generation are the same between tasks with identical settings
+        // The RNG is thread-local and std::async may use a thread pool (which is why this is necessary)
+        // Note this implementation requires maxThreads to be the same between tasks for each task to produce the same results.
+        let seed = m_baseRandomSeed + m_randomSeedOffset
+        m_randomSeedOffset += 1
+        seedRandomGenerator(seed)
+
+        let lastScore = m_lastScore
+        
+        var buffer: Bitmap = m_current
+        let state = bestHillClimbState(shapeCreator: shapeCreator, alpha: UInt(alpha), n: shapeCount, age: maxShapeMutations, target: m_target, current: m_current, buffer: &buffer, lastScore: lastScore, customEnergyFunction: energyFunction)
+        
+        return [state]
+    }
 
     // Steps the primitive optimization/fitting algorithm.
     // @param shapeCreator A function that will produce the shapes.
@@ -54,26 +101,47 @@ struct Model {
     // @param energyFunction An optional function to calculate the energy (if unspecified a default implementation is used).
     // @param addShapePrecondition An optional function to determine whether to accept a shape (if unspecified a default implementation is used).
     // @return A vector containing data about the shapes added to the model in this step. This may be empty if no shape that improved the image could be found.
-    
-    //std::vector<geometrize::ShapeResult> step(
-    //        const std::function<std::shared_ptr<geometrize::Shape>(void)>& shapeCreator,
-    //        std::uint8_t alpha,
-    //        std::uint32_t shapeCount,
-    //        std::uint32_t maxShapeMutations,
-    //        std::uint32_t maxThreads,
-    //        const geometrize::core::EnergyFunction& energyFunction = nullptr,
-    //        const geometrize::ShapeAcceptancePreconditionFunction& addShapePrecondition = nullptr);
-
-    func step(
+    mutating func step(
         shapeCreator: () -> Shape,
         alpha: UInt8,
         shapeCount: Int,
         maxShapeMutations: Int,
         maxThreads: Int,
-        energyFunction: (() -> Double)? = nil,
-        addShapePrecondition: ((Shape) -> Bool)? = nil
+        energyFunction: @escaping EnergyFunction,
+        addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
     ) -> [ShapeResult] {
-        []
+        
+        let states: [State] = getHillClimbState(shapeCreator: shapeCreator, alpha: alpha, shapeCount: UInt(shapeCount), maxShapeMutations: UInt(maxShapeMutations), maxThreads: maxThreads, energyFunction: energyFunction)
+
+        guard !states.isEmpty else {
+            fatalError("Failed to get a hill climb state.")
+        }
+
+        // State with min score
+        guard let it = states.min(by: { $0.m_score < $1.m_score }) else {
+            fatalError("Failed to get a state with min score.")
+        }
+        
+        // Draw the shape onto the image
+        let shape = it.m_shape
+        let lines: [Scanline] = shape.rasterize()
+        let color: Rgba = computeColor(target: m_target, current: m_current, lines: lines, alpha: alpha)
+        let before: Bitmap = m_current
+        m_current.draw(lines: lines, color: color)
+
+        // Check for an improvement - if not, roll back and return no result
+        let newScore: Double = differencePartial(target: m_target, before: before, after: m_current, score: m_lastScore, lines: lines)
+        let addShapeCondition = addShapePrecondition ?? defaultAddShapePrecondition
+        guard addShapeCondition(m_lastScore, newScore, shape, lines, color, before, m_current, m_target) else {
+            m_current = before
+            return []
+        }
+
+        // Improvement - set new baseline and return the new shape
+        m_lastScore = newScore
+        
+        let result: ShapeResult = ShapeResult(score: m_lastScore, color: color, shape: shape)
+        return [result]
     }
 
     // Draws a shape on the model. Typically used when to manually add a shape to the image
@@ -83,20 +151,45 @@ struct Model {
     // @param shape The shape to draw.
     // @param color The color (including alpha) of the shape.
     // @return Data about the shape drawn on the model.
-
-    func drawShape(shape: Shape, color: Rgba) -> ShapeResult { ShapeResult() }
+    mutating func draw(shape: Shape, color: Rgba) -> ShapeResult {
+        let lines: [Scanline] = shape.rasterize()
+        let before: Bitmap = m_current
+        m_current.draw(lines: lines, color: color)
+        m_lastScore = differencePartial(target: m_target, before: before, after: m_current, score: m_lastScore, lines: lines)
+        return ShapeResult(score: m_lastScore, color: color, shape: shape)
+    }
 
      // Gets the current bitmap.
      // @return The current bitmap.
-    func getCurrent() -> Bitmap { Bitmap() }
+    func getCurrent() -> Bitmap { m_current }
 
      // Gets the target bitmap.
      // @return The target bitmap.
-    func getTarget() -> Bitmap { Bitmap() }
+    func getTarget() -> Bitmap { m_target }
 
     // Sets the seed that the random number generators of this model use.
     // Note that the model also uses an internal seed offset which is incremented when the model is stepped.
     // @param seed The random number generator seed.
-    mutating func setSeed(_ seed: Int) {}
+    mutating func setSeed(_ seed: Int) {
+        m_baseRandomSeed = seed
+    }
+
+    // The target bitmap, the bitmap we aim to approximate.
+    private var m_target: Bitmap
+    
+    // The current bitmap.
+    private var m_current: Bitmap
+    
+    // Score derived from calculating the difference between bitmaps.
+    var m_lastScore: Double
+    
+    private static let defaultMaxThreads: Int = 4
+    
+    // The base value used for seeding the random number generator (the one the user has control over)
+    var m_baseRandomSeed: Int // TODO: atomic
+    
+    // Seed used for random number generation.
+    // Note: incremented by each std::async call used for model stepping.
+    var m_randomSeedOffset: Int // TODO: atomic
 
 }
