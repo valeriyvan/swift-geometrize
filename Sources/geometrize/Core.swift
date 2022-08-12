@@ -276,11 +276,11 @@ fileprivate func bestRandomState(
     lastScore: Double,
     energyFunction: EnergyFunction
 ) -> State {
-    var bestState: State = State(m_score: 0, m_alpha: UInt8(alpha), m_shape: shapeCreator()) // TODO: geometrize::State bestState(shapeCreator(), alpha);
+    var bestState: State = State(shape: shapeCreator(), alpha: UInt8(alpha))
     bestState.m_score = energyFunction(bestState.m_shape.rasterize(), UInt(bestState.m_alpha), target, current, &buffer, lastScore)
     var bestEnergy: Double = bestState.m_score
     for i in 0...n {
-        var state: State = State(m_score: 0, m_alpha: UInt8(alpha), m_shape: shapeCreator()) // TODO: geometrize::State state(shapeCreator(), alpha);
+        var state: State = State(shape: shapeCreator(), alpha: UInt8(alpha))
         state.m_score = energyFunction(state.m_shape.rasterize(), UInt(state.m_alpha), target, current, &buffer, lastScore)
         let energy: Double = state.m_score
         if i == 0 || energy < bestEnergy {

@@ -15,10 +15,10 @@ enum ShapeType: String, CaseIterable {
     case shapeCount
 }
 
-struct Shape {
+class Shape {
     init() {}
     func setup() {}
-    mutating func mutate() {}
+    func mutate() {}
     func rasterize() -> [Scanline] { [] }
     func type() -> ShapeType { .rectangle }
 }
