@@ -70,5 +70,28 @@ extension Array where Element == Scanline {
         }
         return false
     }
+    
+    func overlap(with another: Self) -> Bool {
+        for f in self {
+            for s in another where f.y == s.y && f.x1 <= s.x2 && f.x2 >= s.x1 {
+                return true
+            }
+        }
+        return false
+    }
 
+    func contains(_ another: Self) -> Bool {
+        for s in another {
+            var contained = false
+            for f in self where f.y == s.y && f.x1 <= s.x1 && f.x2 >= s.x2 {
+                contained = true
+                break
+            }
+            guard contained else {
+                return false
+            }
+        }
+        return true
+    }
+    
 }
