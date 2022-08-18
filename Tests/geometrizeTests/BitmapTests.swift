@@ -93,12 +93,7 @@ final class BitmapTests: XCTestCase {
         XCTAssertEqual(bitmap.height, 3 + inset * 2)
         for x in 0..<bitmap.width {
             for y in 0..<bitmap.height {
-                let color: Rgba
-                if (inset..<bitmap.width - inset ~= x) && (inset..<bitmap.height - inset ~= y) {
-                     color = .black
-                } else {
-                    color = .white
-                }
+                let color: Rgba = (inset..<bitmap.width - inset ~= x) && (inset..<bitmap.height - inset ~= y) ? .black : .white
                 XCTAssertEqual(bitmap[x, y], color)
             }
         }
