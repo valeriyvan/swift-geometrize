@@ -20,15 +20,17 @@ public struct Bitmap {
         assert(width > 0 && height > 0)
         self.width = width
         self.height = height
-        data = [UInt8](unsafeUninitializedCapacity: width * height * 4) { buffer, initializedCapacity in
-            for index in 0 ..< width * height {
+        let pixelCount = width * height
+        let capacity =  pixelCount * 4
+        data = [UInt8](unsafeUninitializedCapacity: capacity) { buffer, initializedCapacity in
+            for index in 0 ..< pixelCount {
                 let offset = index * 4
                 buffer[offset + 0] = color.r
                 buffer[offset + 1] = color.g
                 buffer[offset + 2] = color.b
                 buffer[offset + 3] = color.a
             }
-            initializedCapacity = width * height * 4
+            initializedCapacity = capacity
         }
     }
     
