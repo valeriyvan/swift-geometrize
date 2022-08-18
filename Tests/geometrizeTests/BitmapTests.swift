@@ -85,4 +85,23 @@ final class BitmapTests: XCTestCase {
         XCTAssertEqual(bitmap.averageColor(), Rgba(r: 31, g: 31, b: 31, a: 255))
     }
     
+    func testAddFrame() {
+        let inset = 2
+        var bitmap = Bitmap(width: 4, height: 3, color: .black)
+        bitmap.addFrame(width: inset, color: .white)
+        XCTAssertEqual(bitmap.width, 4 + inset * 2)
+        XCTAssertEqual(bitmap.height, 3 + inset * 2)
+        for x in 0..<bitmap.width {
+            for y in 0..<bitmap.height {
+                let color: Rgba
+                if (inset..<bitmap.width - inset ~= x) && (inset..<bitmap.height - inset ~= y) {
+                     color = .black
+                } else {
+                    color = .white
+                }
+                XCTAssertEqual(bitmap[x, y], color)
+            }
+        }
+    }
+    
 }

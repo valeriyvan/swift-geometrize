@@ -45,10 +45,10 @@ public struct Bitmap {
     }
 
     // Width of the bitmap.
-    public let width: Int
+    public private(set) var width: Int
 
     // Height of the bitmap.
-    public let height: Int
+    public private(set) var height: Int
 
     public var pixelCount: Int { width * height }
     
@@ -103,6 +103,36 @@ public struct Bitmap {
     internal func offset(x: Int, y: Int) -> Int {
         assert(0..<width ~= x && 0..<height ~= y)
         return (width * y + x) * 4
+    }
+    
+    public mutating func addFrame(width inset: Int, color: Rgba) {
+        assert(inset >= 0)
+        guard inset > 0 else { return }
+        let newWidth = width + inset * 2
+        let newHeight = height + inset * 2
+        let newCapacity = newWidth * newHeight * 4
+        let newData: [UInt8] = [UInt8](unsafeUninitializedCapacity: newCapacity) { buffer, initializedCapacity in
+            for x in 0..<newWidth {
+                for y in 0..<newHeight {
+                    let targetOffset =  (newWidth * y + x) * 4
+                    if (inset..<newWidth-inset ~= x) && (inset..<newHeight-inset ~= y) {
+                        let sourceOffset = (width * (y - inset) + (x - inset)) * 4
+                        for i in 0..<4 {
+                            buffer[targetOffset + i] = data[sourceOffset + i]
+                        }
+                    } else {
+                        buffer[targetOffset + 0] = color.r
+                        buffer[targetOffset + 1] = color.g
+                        buffer[targetOffset + 2] = color.b
+                        buffer[targetOffset + 3] = color.a
+                    }
+                }
+            }
+            initializedCapacity = newCapacity
+        }
+        width = newWidth
+        height = newHeight
+        data = newData
     }
 
 }
