@@ -21,7 +21,7 @@ typealias ShapeAcceptancePreconditionFunction = (
     _ target: Bitmap
 ) -> Bool
 
-fileprivate func defaultAddShapePrecondition(
+func defaultAddShapePrecondition(
     lastScore: Double,
     newScore: Double,
     shape: Shape,
