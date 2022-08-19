@@ -1,15 +1,34 @@
 import Foundation
 
+// https://www.advancedswift.com/swift-random-numbers/
+fileprivate struct RandomNumberGeneratorWithSeed: RandomNumberGenerator {
+    init(_ seed: Int) {
+        srand48(seed)
+    }
+
+    func next() -> UInt64 {
+        // drand48() returns a Double, transform to UInt64
+        withUnsafeBytes(of: drand48()) { bytes in
+            bytes.load(as: UInt64.self)
+        }
+    }
+}
+
+fileprivate var generator = RandomNumberGeneratorWithSeed(0)
+
 // seedRandomGenerator Seeds the (thread-local) random number generators.
 // @param seed The random seed.
-func seedRandomGenerator(_ seed: Int) {}
+// TODO: make it thread-local
+func seedRandomGenerator(_ seed: Int) {
+    generator = RandomNumberGeneratorWithSeed(seed)
+}
 
 // Returns a random integer in the range, inclusive. Uses thread-local random number generators under the hood.
 // To ensure deterministic shape generation that can be repeated for different seeds, this should be used for shape mutation, but nothing else.
 // @param min The lower bound.
 // @param max The upper bound.
 // @return The random integer in the range.
-func randomRange(min: Int, max: Int) -> Int { min }
+func randomRange(min: Int, max: Int) -> Int { Int.random(in: min...max, using: &generator) }
 
 // Maps the given shape bound percentages to the given image, returning a bounding rectangle, or the whole image if the bounds were invalid
 // @param The options to map to the image
