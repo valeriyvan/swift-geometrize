@@ -1,28 +1,48 @@
 // swift-tools-version: 5.6
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
+    
     name: "geometrize",
+    
+    platforms: [
+        .macOS(.v10_15), .iOS(.v15)
+    ],
+    
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "geometrize",
-            targets: ["geometrize"]),
+            targets: ["geometrize"]
+        ),
+        .executable(
+            name: "geometrize-cli",
+            targets: ["geometrize-cli"]
+        )
     ],
+    
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(name: "PNG", url: "https://github.com/kelvin13/swift-png", from: "4.0.1")
     ],
+    
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "geometrize",
-            dependencies: []),
+            dependencies: [],
+            path: "Sources/geometrize"
+        ),
+        .executableTarget(
+            name: "geometrize-cli",
+            dependencies: ["geometrize"]
+        ),
         .testTarget(
             name: "geometrizeTests",
-            dependencies: ["geometrize"]),
+            dependencies: ["geometrize", "PNG"],
+            path: "Tests/geometrizeTests",
+            resources: [
+                .copy("Resources/grapefruit.png")
+            ]
+        )
     ]
+    
 )
