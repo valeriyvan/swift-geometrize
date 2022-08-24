@@ -250,9 +250,13 @@ fileprivate func hillClimb(
         } else {
             bestEnergy = energy
             bestState = s
-            age = UInt.max // TODO: What's the point??? And following increment overflows
+            age = UInt.max // TODO: What's the point??? And following increment overflows.
         }
-        age += 1
+        if age == UInt.max {
+            age = 0
+        } else {
+            age += 1
+        }
     }
     return bestState
 }
