@@ -48,8 +48,8 @@ extension Array where Element == Scanline {
             if line.x1 > line.x2 {
                 continue
             }
-            let x1 = line.x1.clamped(to: minX...maxX - 1)
-            let x2 = line.x2.clamped(to: minX...maxX - 1)
+            let x1 = line.x1.clamped(to: minX...maxX - 1) // -1 here should be removed or
+            let x2 = line.x2.clamped(to: minX...maxX - 1) // func definition should be changed.
             trimmedScanlines.append(Scanline(y: line.y, x1: x1, x2: x2))
         }
         return trimmedScanlines
