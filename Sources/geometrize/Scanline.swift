@@ -34,6 +34,8 @@ internal struct Scanline {
     internal let x2: Int
 }
 
+extension Scanline: Equatable {}
+
 extension Array where Element == Scanline {
 
      // Crops the scanning width of an array of scanlines so they do not scan outside of the given area.
