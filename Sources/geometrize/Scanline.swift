@@ -55,10 +55,14 @@ extension Array where Element == Scanline {
         return trimmedScanlines
     }
 
+    /*
     // Returns true if the scanlines contain transparent pixels in the given image
     // @param image The image whose pixels to check
     // @param minAlpha The minimum alpha level (0-255) to consider transparent
     // @return True if the scanlines contains any transparent pixels
+    // TODO: Minimum alpha level is implemented wrongly.
+    // TODO: optimize enumerating pixels without trimming which makes a lot of allocations.
+    // But it is not called anyway.
     func containTransparentPixels(image: Bitmap, minAlpha: UInt8) -> Bool {
         let trimmedScanlines = self.trimmedScanlines(minX: 0, minY: 0, maxX: image.width, maxY: image.height)
         for scanline in trimmedScanlines {
@@ -71,6 +75,7 @@ extension Array where Element == Scanline {
         return false
     }
     
+    // Is not called
     func overlap(with another: Self) -> Bool {
         for f in self {
             for s in another where f.y == s.y && f.x1 <= s.x2 && f.x2 >= s.x1 {
@@ -80,6 +85,7 @@ extension Array where Element == Scanline {
         return false
     }
 
+    // Is not called
     func contains(_ another: Self) -> Bool {
         for s in another {
             var contained = false
@@ -93,5 +99,5 @@ extension Array where Element == Scanline {
         }
         return true
     }
-    
+    */
 }
