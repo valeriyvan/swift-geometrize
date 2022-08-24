@@ -18,28 +18,47 @@ enum ShapeType: String, CaseIterable {
 
 protocol Shape: AnyObject, CustomStringConvertible {
     init()
-    func setup()
-    func mutate()
-    func rasterize() -> [Scanline]
-    func type() -> ShapeType
     
-    var xMin: Int { get set }
-    var yMin: Int { get set }
-    var xMax: Int { get set }
-    var yMax: Int { get set }
+    func setup()
+    var setupImplementation: (() -> Void)? {get set}
+    
+    func mutate()
+    var mutateImplementation: (() -> Void)? {get set}
+
+    func rasterize() -> [Scanline]
+    var rasterizeImplementation: (() -> [Scanline])? {get set}
+
+    func type() -> ShapeType
+}
+
+extension Shape {
+
+    func setup() {
+        guard let setupImplementation = setupImplementation else {
+            fatalError("setup func implementation should be provided at this point")
+        }
+        setupImplementation()
+    }
+
+    func mutate() {
+        guard let mutateImplementation = mutateImplementation else {
+            fatalError("mutate func implementation should be provided at this point")
+        }
+        mutateImplementation()
+    }
+
+    func rasterize() -> [Scanline] {
+        guard let rasterizeImplementation = rasterizeImplementation else {
+            fatalError("rasterize func implementation should be provided at this point")
+        }
+        return rasterizeImplementation()
+    }
+
 }
 
 // Represents a rectangle.
 
 class Rectangle: Shape {
-    var xMin: Int = 0
-    
-    var yMin: Int = 0
-    
-    var xMax: Int = 1
-    
-    var yMax: Int = 1
-    
     var x1, y1, x2, y2: Double
     
     required init() {
@@ -56,7 +75,17 @@ class Rectangle: Shape {
         self.y2 = y2
     }
     
-    func setup() {
+    deinit { // Could protocol require this and provide default implementation?
+        setupImplementation = nil
+        mutateImplementation = nil
+        rasterizeImplementation = nil
+    }
+    
+    var setupImplementation: (() -> Void)?
+    var mutateImplementation: (() -> Void)?
+    var rasterizeImplementation: (() -> [Scanline])?
+    
+    func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         print(#function)
         x1 = Double(randomRange(min: xMin, max: xMax - 1))
         y1 = Double(randomRange(min: yMin, max: yMax - 1))
@@ -64,7 +93,7 @@ class Rectangle: Shape {
         y2 = Double((Int(y1) + randomRange(min: 1, max: 32)).clamped(to: yMin...yMax - 1))
     }
 
-    func mutate() {
+    func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         print(#function)
         switch randomRange(min: 0, max: 1) {
         case 0:
@@ -76,7 +105,7 @@ class Rectangle: Shape {
         }
     }
 
-    func rasterize() -> [Scanline] {
+    func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
         print(#function)
         let x1: Int = Int(min(self.x1, self.x2))
         let y1: Int = Int(min(self.y1, self.y2))
