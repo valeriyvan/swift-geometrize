@@ -55,7 +55,7 @@ public struct Bitmap {
     public var pixelCount: Int { width * height }
     
     // Raw bitmap data.
-    public var data: [UInt8]
+    public private(set) var data: [UInt8]
 
     @inlinable
     @inline(__always)
@@ -66,8 +66,6 @@ public struct Bitmap {
         // @param x The x-coordinate of the pixel.
         // @param y The y-coordinate of the pixel.
         // @return The pixel RGBA color value.
-        @inlinable
-        @inline(__always)
         get {
             let offset = offset(x: x, y: y)
             return Rgba(r: data[offset], g: data[offset + 1], b: data[offset + 2], a: data[offset + 3])
@@ -76,8 +74,6 @@ public struct Bitmap {
         // @param x The x-coordinate of the pixel.
         // @param y The y-coordinate of the pixel.
         // @param color The pixel RGBA color value.
-        @inlinable
-        @inline(__always)
         set {
             let offset = offset(x: x, y: y)
             data[offset + 0] = newValue.r
@@ -89,7 +85,7 @@ public struct Bitmap {
 
     // Fills the bitmap with the given color.
     // @param color The color to fill the bitmap with.
-    public mutating func fill(color: Rgba) {
+    public func fill(color: Rgba) {
         for index in 0 ..< pixelCount {
             let offset = index * 4
             data[offset + 0] = color.r
@@ -107,7 +103,7 @@ public struct Bitmap {
         return (width * y + x) * 4
     }
     
-    public mutating func addFrame(width inset: Int, color: Rgba) {
+    public func addFrame(width inset: Int, color: Rgba) {
         assert(inset >= 0)
         guard inset > 0 else { return }
         let newWidth = width + inset * 2
@@ -139,7 +135,11 @@ public struct Bitmap {
 
 }
 
-extension Bitmap: Equatable {}
+extension Bitmap: Equatable {
+    public static func == (lhs: Bitmap, rhs: Bitmap) -> Bool {
+        lhs.width == rhs.width && lhs.height == rhs.height && lhs.data == rhs.data
+    }
+}
 
 extension Bitmap {
     
@@ -174,7 +174,7 @@ extension Bitmap {
     // Draws scanlines onto an image.
     // @param color The color of the scanlines.
     // @param lines The scanlines to draw.
-    mutating func draw(lines: [Scanline], color: Rgba) {
+    func draw(lines: [Scanline], color: Rgba) {
         // Convert the non-premultiplied color to alpha-premultiplied 16-bits per channel RGBA
         // In other words, scale the rgb color components by the alpha component
         var sr: UInt32 = UInt32(color.r)
