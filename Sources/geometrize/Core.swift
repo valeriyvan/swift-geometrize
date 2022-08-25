@@ -2,7 +2,8 @@ import Foundation
 
 // The core functions for Geometrize.
 
-// Type alias for a function that calculates a measure of the improvement adding the scanlines of a shape provides - lower energy is better.
+// Type alias for a function that calculates a measure of the improvement adding
+// the scanlines of a shape provides - lower energy is better.
 // @param lines The scanlines of the shape.
 // @param alpha The alpha of the scanlines.
 // @param target The target bitmap.
