@@ -12,6 +12,10 @@ struct State {
         m_shape.setup()
     }
 
+    func copy() -> State {
+        State(shape: m_shape.copy(), alpha: m_alpha)
+    }
+    
     // The score of the state, a measure of the improvement applying the state to the current bitmap will have.
     var m_score: Double
     
@@ -24,7 +28,7 @@ struct State {
      // Modifies the current state in a random fashion.
      // @return The old state, useful for undoing the mutation or keeping track of previous states.
     mutating func mutate() -> State {
-        let oldState = self
+        let oldState = copy()
         m_shape.mutate()
         m_score = -1
         return oldState

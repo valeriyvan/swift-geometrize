@@ -191,7 +191,7 @@ func bestHillClimbState(
     shapeCreator: () -> Shape,
     alpha: UInt,
     n: UInt,
-    age: UInt,
+    age: UInt32,
     target: Bitmap,
     current: Bitmap,
     buffer: inout Bitmap,
@@ -230,7 +230,7 @@ func bestHillClimbState(
 // @return The best state found from hillclimbing.
 fileprivate func hillClimb(
     state: State,
-    maxAge: UInt,
+    maxAge: UInt32,
     target: Bitmap,
     current: Bitmap,
     buffer: inout Bitmap,
@@ -240,7 +240,7 @@ fileprivate func hillClimb(
     var s: State = state
     var bestState: State = state
     var bestEnergy: Double = bestState.m_score
-    var age: UInt = 0
+    var age: UInt32 = 0
     while age < maxAge {
         let undo: State = s.mutate()
         s.m_score = energyFunction(s.m_shape.rasterize(), UInt(s.m_alpha), target, current, &buffer, lastScore)
@@ -249,8 +249,8 @@ fileprivate func hillClimb(
             s = undo
         } else {
             bestEnergy = energy
-            bestState = s
-            age = UInt.max // TODO: What's the point??? And following increment overflows.
+            bestState = s.copy()
+            age = UInt32.max // TODO: What's the point??? And following increment overflows.
         }
         if age == UInt.max {
             age = 0
@@ -289,8 +289,8 @@ fileprivate func bestRandomState(
         let energy: Double = state.m_score
         if i == 0 || energy < bestEnergy {
             bestEnergy = energy
-            bestState = state
+            bestState = state.copy()
         }
     }
-    return bestState;
+    return bestState.copy() // TODO: is copy needed here???
 }

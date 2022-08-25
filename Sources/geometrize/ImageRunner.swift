@@ -25,7 +25,7 @@ struct ImageRunnerOptions {
     var shapeCount: Int = 50
     
     // The maximum number of times each candidate shape will be modified to attempt to find a better fit.
-    var maxShapeMutations: Int = 100
+    var maxShapeMutations: UInt32 = 100
    
     // The seed for the random number generators used by the image runner.
     var seed: Int = 9001

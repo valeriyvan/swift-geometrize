@@ -75,7 +75,7 @@ struct Model {
         shapeCreator: () -> Shape,
         alpha: UInt8,
         shapeCount: UInt,
-        maxShapeMutations: UInt,
+        maxShapeMutations: UInt32,
         maxThreads: Int, // Ignored. Single thread is used at the moment.
         energyFunction: @escaping EnergyFunction
     ) -> [State] {
@@ -107,13 +107,13 @@ struct Model {
         shapeCreator: () -> Shape,
         alpha: UInt8,
         shapeCount: Int,
-        maxShapeMutations: Int,
+        maxShapeMutations: UInt32,
         maxThreads: Int,
         energyFunction: @escaping EnergyFunction,
         addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
     ) -> [ShapeResult] {
         
-        let states: [State] = getHillClimbState(shapeCreator: shapeCreator, alpha: alpha, shapeCount: UInt(shapeCount), maxShapeMutations: UInt(maxShapeMutations), maxThreads: maxThreads, energyFunction: energyFunction)
+        let states: [State] = getHillClimbState(shapeCreator: shapeCreator, alpha: alpha, shapeCount: UInt(shapeCount), maxShapeMutations: maxShapeMutations, maxThreads: maxThreads, energyFunction: energyFunction)
 
         guard !states.isEmpty else {
             fatalError("Failed to get a hill climb state.")
