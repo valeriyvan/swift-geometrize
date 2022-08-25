@@ -196,15 +196,14 @@ extension Bitmap {
         let aa: UInt32 = (m - sa) * 257
 
         for line in lines {
-            let y: Int32 = Int32(line.y)
-
+            let y = line.y
             for x in line.x1...line.x2 {
                 let d: Rgba = self[x, Int(y)]
                 let r: UInt8 = UInt8(((UInt32(d.r) * aa + sr * m) / m) >> 8)
                 let g: UInt8 = UInt8(((UInt32(d.g) * aa + sg * m) / m) >> 8)
                 let b: UInt8 = UInt8(((UInt32(d.b) * aa + sb * m) / m) >> 8)
                 let a: UInt8 = UInt8(((UInt32(d.a) * aa + sa * m) / m) >> 8)
-                self[x, Int(y)] = Rgba(r: r, g: g, b: b, a: a)
+                self[x, y] = Rgba(r: r, g: g, b: b, a: a)
             }
         }
 
@@ -214,7 +213,7 @@ extension Bitmap {
     // @param destination The destination bitmap to copy the lines to.
     // @param source The source bitmap to copy the lines from.
     // @param lines The scanlines that comprise the source to destination copying mask.
-    mutating func copy(lines: [Scanline], source: Bitmap) {
+    func copy(lines: [Scanline], source: Bitmap) {
         for line in lines {
             let y = line.y
             for x in line.x1...line.x2 {
