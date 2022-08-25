@@ -59,7 +59,6 @@ struct Model {
         m_randomSeedOffset = 0
         assert(m_target.width == m_current.width)
         assert(m_target.height == m_current.height)
-
     }
 
     // Resets the model back to the state it was in when it was created.
