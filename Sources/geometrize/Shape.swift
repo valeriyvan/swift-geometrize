@@ -19,6 +19,8 @@ enum ShapeType: String, CaseIterable {
 protocol Shape: AnyObject, CustomStringConvertible {
     init()
     
+    func copy() -> Self
+    
     func setup()
     var setupImplementation: (() -> Void)? {get set}
     
@@ -58,7 +60,7 @@ extension Shape {
 
 // Represents a rectangle.
 
-class Rectangle: Shape {
+final class Rectangle: Shape {
     var x1, y1, x2, y2: Double
     
     required init() {
@@ -81,6 +83,14 @@ class Rectangle: Shape {
         rasterizeImplementation = nil
     }
     
+    func copy() -> Rectangle {
+        let aCopy = Rectangle(x1: x1, y1: y1, x2: x2, y2: y2)
+        aCopy.setupImplementation = setupImplementation
+        aCopy.mutateImplementation = mutateImplementation
+        aCopy.rasterizeImplementation = rasterizeImplementation
+        return aCopy
+    }
+
     var setupImplementation: (() -> Void)?
     var mutateImplementation: (() -> Void)?
     var rasterizeImplementation: (() -> [Scanline])?
