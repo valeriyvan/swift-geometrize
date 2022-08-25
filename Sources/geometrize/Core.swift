@@ -151,7 +151,7 @@ func differencePartial(
     lines: [Scanline]
 ) -> Double {
     let rgbaCount: UInt64 = UInt64(target.width * target.height * 4)
-    var total: UInt64 = UInt64(score * 255.0) * UInt64(score * 255.0) * rgbaCount
+    var total: UInt64 = UInt64((score * 255.0) * (score * 255.0) * Double(rgbaCount))
     for line in lines {
         let y = line.y
         for x in line.x1...line.x2 {
