@@ -64,7 +64,10 @@ struct Model {
 
     // Resets the model back to the state it was in when it was created.
     // @param backgroundColor The starting background color to use.
-    mutating func reset(backgroundColor: Rgba) { }
+    mutating func reset(backgroundColor: Rgba) {
+        m_current.fill(color: backgroundColor)
+        m_lastScore = differenceFull(first: m_target, second: m_current);
+    }
 
     var width: Int { m_target.width }
     var height: Int { m_target.height }
