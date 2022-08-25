@@ -238,8 +238,8 @@ fileprivate func hillClimb(
     lastScore: Double,
     energyFunction: EnergyFunction
 ) -> State {
-    var s: State = state
-    var bestState: State = state
+    var s: State = state.copy()
+    var bestState: State = state.copy()
     var bestEnergy: Double = bestState.m_score
     var age: UInt32 = 0
     while age < maxAge {
