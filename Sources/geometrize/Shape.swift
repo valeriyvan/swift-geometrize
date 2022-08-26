@@ -96,7 +96,6 @@ final class Rectangle: Shape {
     var rasterizeImplementation: (() -> [Scanline])?
     
     func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        print(#function)
         x1 = Double(randomRange(min: xMin, max: xMax - 1))
         y1 = Double(randomRange(min: yMin, max: yMax - 1))
         x2 = Double((Int(x1) + randomRange(min: 1, max: 32)).clamped(to: xMin...xMax - 1))
@@ -104,7 +103,6 @@ final class Rectangle: Shape {
     }
 
     func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        print(#function)
         switch randomRange(min: 0, max: 1) {
         case 0:
             x1 = Double((Int(x1) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
@@ -116,7 +114,6 @@ final class Rectangle: Shape {
     }
 
     func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
-        print(#function)
         let x1: Int = Int(min(self.x1, self.x2))
         let y1: Int = Int(min(self.y1, self.y2))
         let x2: Int = Int(max(self.x1, self.x2))
