@@ -161,10 +161,6 @@ struct Model {
         return ShapeResult(score: m_lastScore, color: color, shape: shape)
     }
 
-     // Gets the current bitmap.
-     // @return The current bitmap.
-    func getCurrent() -> Bitmap { m_current }
-
      // Gets the target bitmap.
      // @return The target bitmap.
     func getTarget() -> Bitmap { m_target }
