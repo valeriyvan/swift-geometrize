@@ -253,7 +253,7 @@ fileprivate func hillClimb(
             bestState = s.copy()
             age = UInt32.max // TODO: What's the point??? And following increment overflows.
         }
-        if age == UInt.max {
+        if age == UInt32.max {
             age = 0
         } else {
             age += 1
