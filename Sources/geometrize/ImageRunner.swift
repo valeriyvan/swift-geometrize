@@ -87,18 +87,6 @@ struct ImageRunner {
 
         return result
     }
-    
-    // Gets the current bitmap with the primitives drawn on it.
-    // @return The current bitmap.
-    func getCurrent() -> Bitmap { m_model.getCurrent() }
-
-    // Gets the target bitmap.
-    // @return The target bitmap.
-    func getTarget() -> Bitmap { m_model.getTarget() }
-
-    // getModel Gets the underlying model.
-    // @return The model.
-    func getModel() -> Model { m_model }
 
     // The model for the primitive optimization/fitting algorithm.
     private var m_model: Model
