@@ -8,7 +8,7 @@ import Foundation
 // @param alpha The alpha of the scanlines.
 // @param target The target bitmap.
 // @param current The current bitmap.
-// @param buffer The buffer bitmap.
+// @param buffer The buffer bitmap. // TODO: explain it better.
 // @param score The score.
 // @return The energy measure.
 
@@ -27,7 +27,7 @@ typealias EnergyFunction = (
 // @param alpha The alpha of the scanlines.
 // @param target The target bitmap.
 // @param current The current bitmap.
-// @param buffer The buffer bitmap.
+// @param buffer The buffer bitmap. // TODO: explain it better.
 // @param score The score.
 // @return The energy measure.
 func defaultEnergyFunction(
@@ -184,7 +184,7 @@ func differencePartial(
 // @param age The number of hillclimbing steps.
 // @param target The target bitmap.
 // @param current The current bitmap.
-// @param buffer The buffer bitmap.
+// @param buffer The buffer bitmap. // TODO: better explain this.
 // @param lastScore The last score.
 // @param customEnergyFunction An optional function to calculate the energy (if unspecified a default implementation is used).
 // @return The best state acquired from hill climbing i.e. the one with the lowest energy.
