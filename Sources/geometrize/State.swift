@@ -12,8 +12,17 @@ struct State {
         m_shape.setup()
     }
 
+    private init(score: Double, alpha: UInt8, shape: Shape) {
+        self.m_score = score
+        self.m_alpha = alpha
+        self.m_shape = shape
+        self.m_shape.setupImplementation = shape.setupImplementation
+        self.m_shape.mutateImplementation = shape.mutateImplementation
+        self.m_shape.rasterizeImplementation = shape.rasterizeImplementation
+    }
+    
     func copy() -> State {
-        State(shape: m_shape.copy(), alpha: m_alpha)
+        State(score: m_score, alpha: m_alpha, shape: m_shape)
     }
     
     // The score of the state, a measure of the improvement applying the state to the current bitmap will have.
