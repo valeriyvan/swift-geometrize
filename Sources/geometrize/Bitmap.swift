@@ -85,7 +85,7 @@ public struct Bitmap {
 
     // Fills the bitmap with the given color.
     // @param color The color to fill the bitmap with.
-    public func fill(color: Rgba) {
+    public mutating func fill(color: Rgba) {
         for index in 0 ..< pixelCount {
             let offset = index * 4
             data[offset + 0] = color.r
@@ -103,7 +103,7 @@ public struct Bitmap {
         return (width * y + x) * 4
     }
     
-    public func addFrame(width inset: Int, color: Rgba) {
+    public mutating func addFrame(width inset: Int, color: Rgba) {
         assert(inset >= 0)
         guard inset > 0 else { return }
         let newWidth = width + inset * 2
@@ -174,7 +174,7 @@ extension Bitmap {
     // Draws scanlines onto an image.
     // @param color The color of the scanlines.
     // @param lines The scanlines to draw.
-    func draw(lines: [Scanline], color: Rgba) {
+    mutating func draw(lines: [Scanline], color: Rgba) {
         // Convert the non-premultiplied color to alpha-premultiplied 16-bits per channel RGBA
         // In other words, scale the rgb color components by the alpha component
         var sr: UInt32 = UInt32(color.r)
@@ -213,7 +213,7 @@ extension Bitmap {
     // @param destination The destination bitmap to copy the lines to.
     // @param source The source bitmap to copy the lines from.
     // @param lines The scanlines that comprise the source to destination copying mask.
-    func copy(lines: [Scanline], source: Bitmap) {
+    mutating func copy(lines: [Scanline], source: Bitmap) {
         for line in lines {
             let y = line.y
             for x in line.x1...line.x2 {
