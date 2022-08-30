@@ -99,6 +99,34 @@ final class BitmapTests: XCTestCase {
         }
     }
     
+    func testDraw() {
+        var bitmap = Bitmap(width: 4, height: 5, color: .black)
+        bitmap.draw(
+            lines: [
+                Scanline(y: 0, x1: 0, x2: 3),
+                Scanline(y: 1, x1: 0, x2: 3),
+                Scanline(y: 2, x1: 0, x2: 3),
+                Scanline(y: 3, x1: 0, x2: 3),
+                Scanline(y: 4, x1: 0, x2: 3)],
+            color: .white
+        )
+        XCTAssertEqual(bitmap, Bitmap(width: 4, height: 5, color: .white))
+
+        bitmap.draw(
+            lines: [
+                Scanline(y: 0, x1: 0, x2: 3),
+                Scanline(y: 1, x1: 1, x2: 3),
+                Scanline(y: 2, x1: 2, x2: 3),
+                Scanline(y: 3, x1: 3, x2: 3)],
+            color: .red
+        )
+        for x in 0..<4 {
+            for y in 0..<5 {
+                XCTAssertEqual(bitmap[x, y], y < 4 && x >= y ? .red : .white)
+            }
+        }
+    }
+    
     func testInitFromString() {
         XCTAssertEqual(
             Bitmap(
