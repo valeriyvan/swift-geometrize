@@ -46,6 +46,39 @@ internal struct Scanline {
 
 extension Scanline: Equatable {}
 
+extension Scanline: CustomStringConvertible {
+    
+    var description: String {
+        "Scanline(y: \(y), x1: \(x1), x2: \(x2))"
+    }
+
+}
+
+extension Scanline: ExpressibleByStringLiteral {
+
+    public init(stringLiteral value: String) {
+        let scanner = Scanner(string: value)
+        scanner.charactersToBeSkipped = .whitespacesAndNewlines
+        guard
+            scanner.scanString("Scanline(") != nil,
+            scanner.scanString("y:") != nil,
+            let y = scanner.scanInt(),
+            scanner.scanString(",") != nil,
+            scanner.scanString("x1:") != nil,
+            let x1 = scanner.scanInt(),
+            scanner.scanString(",") != nil,
+            scanner.scanString("x2:") != nil,
+            let x2 = scanner.scanInt(),
+            scanner.scanString(")") != nil
+        else {
+            fatalError()
+        }
+        self.y = y
+        self.x1 = x1
+        self.x2 = x2
+    }
+}
+
 extension Array where Element == Scanline {
 
      // Crops the scanning width of an array of scanlines so they do not scan outside of the given area.

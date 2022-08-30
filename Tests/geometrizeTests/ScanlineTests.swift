@@ -29,5 +29,10 @@ final class ScanlineTests: XCTestCase {
         ]
         XCTAssertEqual(trimmed, trimmedSample)
     }
+    
+    func testStringConversion() {
+        let line = Scanline(y: 3, x1: 3, x2: 13)
+        XCTAssertEqual(Scanline(stringLiteral: line.description), line)
+    }
 
 }
