@@ -32,6 +32,16 @@ internal struct Scanline {
     
     // The rightmost x-coordinate of the scanline.
     internal let x2: Int
+    
+    // Returned nil means trimming eliminates scanline completely.
+    func trimmed(minX: Int, minY: Int, maxX: Int, maxY: Int) -> Self? {
+        guard minY...maxY ~= y && x2 >= x1 else { // TODO: should it be x2 >= x1 or x2 > x1 ?
+            return nil
+        }
+        let x1 = x1.clamped(to: minX...maxX - 1) // -1 here should be removed or
+        let x2 = x2.clamped(to: minX...maxX - 1) // func definition should be changed.
+        return Scanline(y: y, x1: x1, x2: x2)
+    }
 }
 
 extension Scanline: Equatable {}
