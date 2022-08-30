@@ -1,0 +1,1 @@
+Scanline(y: 380, x1: 487, x2: 509), Scanline(y: 381, x1: 487, x2: 509), Scanline(y: 382, x1: 487, x2: 509)
