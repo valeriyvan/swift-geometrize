@@ -65,5 +65,34 @@ final class CoreTests: XCTestCase {
             accuracy: 0.000001
         )
     }
+    
+    func testDefaultEnergyFunctionComparingResultWithCPlusPlus() throws {
+        let scanlinesString = try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction scanlines", withExtension: "txt")!)
+        var components = scanlinesString.components(separatedBy: "),")
+        for i in components.indices.dropLast() {
+            components[i] += ")"
+        }
+        let scanlines = components.map(Scanline.init)
+        
+        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction target bitmap", withExtension: "txt")!))
+        let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction current bitmap", withExtension: "txt")!))
+        var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap", withExtension: "txt")!))
+        let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap on exit", withExtension: "txt")!))
+
+        XCTAssertEqual(
+            defaultEnergyFunction(
+                scanlines,
+                128 /* alpha */,
+                bitmapTarget,
+                bitmapCurrent,
+                &bitmapBuffer,
+                0.162824
+            ),
+            0.162776,
+            accuracy: 0.000001
+        )
+        
+        XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit)
+    }
 
 }

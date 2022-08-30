@@ -54,7 +54,12 @@ let package = Package(
                 .copy("Resources/differencePartial bitmap target.txt"),
                 .copy("Resources/differencePartial bitmap before.txt"),
                 .copy("Resources/differencePartial bitmap after.txt"),
-                .copy("Resources/differencePartial scanlines.txt")
+                .copy("Resources/differencePartial scanlines.txt"),
+                .copy("Resources/defaultEnergyFunction target bitmap.txt"),
+                .copy("Resources/defaultEnergyFunction current bitmap.txt"),
+                .copy("Resources/defaultEnergyFunction buffer bitmap.txt"),
+                .copy("Resources/defaultEnergyFunction buffer bitmap on exit.txt"),
+                .copy("Resources/defaultEnergyFunction scanlines.txt")
             ]
         )
     ]
