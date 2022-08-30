@@ -33,4 +33,12 @@ final class CoreTests: XCTestCase {
         XCTAssertTrue(differenceFull(first: whiteBitmap, second: whiteBitmapTwoPixelsChanged) > differenceFull(first: whiteBitmap, second: whiteBitmapOnePixelChanged))
     }
 
+    func testDifferenceFullComparingResultWithCPlusPlus() throws {
+        let firstUrl = Bundle.module.url(forResource: "differenceFull bitmap first", withExtension: "txt")!
+        let bitmapFirst = Bitmap(stringLiteral: try String(contentsOf: firstUrl))
+        let secondUrl = Bundle.module.url(forResource: "differenceFull bitmap second", withExtension: "txt")!
+        let bitmapSecond = Bitmap(stringLiteral: try String(contentsOf: secondUrl))
+        XCTAssertEqual(differenceFull(first: bitmapFirst, second: bitmapSecond), 0.170819, accuracy: 0.000001)
+    }
+    
 }

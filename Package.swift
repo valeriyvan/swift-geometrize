@@ -48,7 +48,9 @@ let package = Package(
                 .copy("Resources/pomegranate_splitting.png"),
                 .copy("Resources/sliced_fruit.png"),
                 .copy("Resources/sundaes.png"),
-                .copy("Resources/sunrise_at_sea.png")
+                .copy("Resources/sunrise_at_sea.png"),
+                .copy("Resources/differenceFull bitmap first.txt"),
+                .copy("Resources/differenceFull bitmap second.txt")
             ]
         )
     ]
