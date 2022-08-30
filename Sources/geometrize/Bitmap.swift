@@ -9,7 +9,7 @@ public struct Bitmap {
     public init() {
         width = 0
         height = 0
-        data = []
+        backing = ContiguousArray<UInt8>()
     }
     
     // Creates a new bitmap.
@@ -22,7 +22,7 @@ public struct Bitmap {
         self.height = height
         let pixelCount = width * height
         let capacity =  pixelCount * 4
-        data = [UInt8](unsafeUninitializedCapacity: capacity) { buffer, initializedCapacity in
+        backing = ContiguousArray<UInt8>(unsafeUninitializedCapacity: capacity) { buffer, initializedCapacity in
             for index in 0 ..< pixelCount {
                 let offset = index * 4
                 buffer[offset + 0] = color.r
@@ -43,7 +43,7 @@ public struct Bitmap {
         assert(width * height * 4 == data.count)
         self.width = width
         self.height = height
-        self.data = data
+        self.backing = ContiguousArray(data)
     }
 
     // Width of the bitmap.
@@ -55,7 +55,8 @@ public struct Bitmap {
     public var pixelCount: Int { width * height }
     
     // Raw bitmap data.
-    public private(set) var data: [UInt8]
+    public private(set) var backing: ContiguousArray<UInt8> // C ordering, row by row
+
 
     @inlinable
     @inline(__always)
@@ -67,8 +68,10 @@ public struct Bitmap {
         // @param y The y-coordinate of the pixel.
         // @return The pixel RGBA color value.
         get {
-            let offset = offset(x: x, y: y)
-            return Rgba(r: data[offset], g: data[offset + 1], b: data[offset + 2], a: data[offset + 3])
+            backing.withUnsafeBufferPointer {
+                let offset = offset(x: x, y: y)
+                return Rgba(r: $0[offset], g: $0[offset + 1], b: $0[offset + 2], a: $0[offset + 3])
+            }
         }
         // Sets a pixel color value.
         // @param x The x-coordinate of the pixel.
@@ -76,24 +79,29 @@ public struct Bitmap {
         // @param color The pixel RGBA color value.
         set {
             let offset = offset(x: x, y: y)
-            data[offset + 0] = newValue.r
-            data[offset + 1] = newValue.g
-            data[offset + 2] = newValue.b
-            data[offset + 3] = newValue.a
+            backing.withUnsafeMutableBufferPointer {
+                $0[offset + 0] = newValue.r
+                $0[offset + 1] = newValue.g
+                $0[offset + 2] = newValue.b
+                $0[offset + 3] = newValue.a
+            }
+
         }
     }
 
     // Fills the bitmap with the given color.
     // @param color The color to fill the bitmap with.
     public mutating func fill(color: Rgba) {
-        for index in 0 ..< pixelCount {
-            let offset = index * 4
-            data[offset + 0] = color.r
-            data[offset + 1] = color.g
-            data[offset + 2] = color.b
-            data[offset + 3] = color.a
+        let count = pixelCount
+        backing.withUnsafeMutableBufferPointer {
+            for index in 0 ..< count {
+                let offset = index * 4
+                $0[offset + 0] = color.r
+                $0[offset + 1] = color.g
+                $0[offset + 2] = color.b
+                $0[offset + 3] = color.a
+            }
         }
-
     }
     
     @inlinable
@@ -109,14 +117,14 @@ public struct Bitmap {
         let newWidth = width + inset * 2
         let newHeight = height + inset * 2
         let newCapacity = newWidth * newHeight * 4
-        let newData: [UInt8] = [UInt8](unsafeUninitializedCapacity: newCapacity) { buffer, initializedCapacity in
+        let newBacking = ContiguousArray<UInt8>(unsafeUninitializedCapacity: newCapacity) { buffer, initializedCapacity in
             for x in 0..<newWidth {
                 for y in 0..<newHeight {
                     let targetOffset =  (newWidth * y + x) * 4
                     if (inset..<newWidth-inset ~= x) && (inset..<newHeight-inset ~= y) {
                         let sourceOffset = (width * (y - inset) + (x - inset)) * 4
                         for i in 0..<4 {
-                            buffer[targetOffset + i] = data[sourceOffset + i]
+                            buffer[targetOffset + i] = backing[sourceOffset + i] // TODO: withUnsafeBufferPointer
                         }
                     } else {
                         buffer[targetOffset + 0] = color.r
@@ -130,14 +138,14 @@ public struct Bitmap {
         }
         width = newWidth
         height = newHeight
-        data = newData
+        backing = newBacking
     }
 
 }
 
 extension Bitmap: Equatable {
     public static func == (lhs: Bitmap, rhs: Bitmap) -> Bool {
-        lhs.width == rhs.width && lhs.height == rhs.height && lhs.data == rhs.data
+        lhs.width == rhs.width && lhs.height == rhs.height && lhs.backing == rhs.backing
     }
 }
 
@@ -152,10 +160,12 @@ extension Bitmap {
         var totalRed: Int = 0
         var totalGreen: Int = 0
         var totalBlue: Int = 0
-        for i in stride(from: 0, to: data.count, by: 4) {
-            totalRed += Int(data[i])
-            totalGreen += Int(data[i + 1])
-            totalBlue += Int(data[i + 2])
+        backing.withUnsafeBufferPointer {
+            for i in stride(from: 0, to: $0.count, by: 4) {
+                totalRed += Int($0[i])
+                totalGreen += Int($0[i + 1])
+                totalBlue += Int($0[i + 2])
+            }
         }
         
         let pixelCount = self.pixelCount
