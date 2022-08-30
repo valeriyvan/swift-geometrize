@@ -50,7 +50,11 @@ let package = Package(
                 .copy("Resources/sundaes.png"),
                 .copy("Resources/sunrise_at_sea.png"),
                 .copy("Resources/differenceFull bitmap first.txt"),
-                .copy("Resources/differenceFull bitmap second.txt")
+                .copy("Resources/differenceFull bitmap second.txt"),
+                .copy("Resources/differencePartial bitmap target.txt"),
+                .copy("Resources/differencePartial bitmap before.txt"),
+                .copy("Resources/differencePartial bitmap after.txt"),
+                .copy("Resources/differencePartial scanlines.txt")
             ]
         )
     ]

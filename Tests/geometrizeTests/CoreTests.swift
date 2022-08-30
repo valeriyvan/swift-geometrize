@@ -41,4 +41,29 @@ final class CoreTests: XCTestCase {
         XCTAssertEqual(differenceFull(first: bitmapFirst, second: bitmapSecond), 0.170819, accuracy: 0.000001)
     }
     
+    func testDifferencePartialComparingResultWithCPlusPlus() throws {
+        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap target", withExtension: "txt")!))
+        let bitmapBefore = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap before", withExtension: "txt")!))
+        let bitmapAfter = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap after", withExtension: "txt")!))
+
+        let scanlinesString = try String(contentsOf: Bundle.module.url(forResource: "differencePartial scanlines", withExtension: "txt")!)
+        var components = scanlinesString.components(separatedBy: "),")
+        for i in components.indices.dropLast() {
+            components[i] += ")"
+        }
+        let scanlines = components.map(Scanline.init)
+        
+        XCTAssertEqual(
+            differencePartial(
+                target: bitmapTarget,
+                before: bitmapBefore,
+                after: bitmapAfter,
+                score: 0.170819,
+                lines: scanlines
+            ),
+            0.170800,
+            accuracy: 0.000001
+        )
+    }
+
 }
