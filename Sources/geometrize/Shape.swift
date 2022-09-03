@@ -59,7 +59,6 @@ extension Shape {
 }
 
 // Represents a rectangle.
-
 final class Rectangle: Shape {
     var x1, y1, x2, y2: Double
     
@@ -121,9 +120,12 @@ final class Rectangle: Shape {
 
         var lines: [Scanline] = []
         for y in y1...y2 {
-            lines.append(Scanline(y: y, x1: x1, x2: x2))
+            let scanline = Scanline(y: y, x1: x1, x2: x2)
+            guard let trimmed = scanline.trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) else { continue
+            }
+            lines.append(trimmed)
         }
-        return lines.trimmedScanlines(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+        return lines
     }
 
     func type() -> ShapeType {
