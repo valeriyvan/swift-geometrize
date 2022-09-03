@@ -5,20 +5,17 @@ struct State {
     // Creates a new state.
     // @param shape The shape.
     // @param alpha The color alpha of the geometric shape.
-    init(shape: Shape, alpha: UInt8) {
+    init(shape: some Shape, alpha: UInt8) {
         m_score = -1
         m_alpha = alpha
         m_shape = shape
         m_shape.setup()
     }
 
-    private init(score: Double, alpha: UInt8, shape: Shape) {
+    init(score: Double, alpha: UInt8, shape: some Shape) {
         self.m_score = score
         self.m_alpha = alpha
         self.m_shape = shape
-        self.m_shape.setupImplementation = shape.setupImplementation
-        self.m_shape.mutateImplementation = shape.mutateImplementation
-        self.m_shape.rasterizeImplementation = shape.rasterizeImplementation
     }
     
     func copy() -> State {
@@ -32,7 +29,7 @@ struct State {
     var m_alpha: UInt8
     
     // The geometric primitive owned by the state.
-    var m_shape: Shape
+    var m_shape: any Shape
 
      // Modifies the current state in a random fashion.
      // @return The old state, useful for undoing the mutation or keeping track of previous states.
@@ -41,6 +38,14 @@ struct State {
         m_shape.mutate()
         m_score = -1
         return oldState
+    }
+    
+}
+
+extension State: Equatable {
+    
+    static func == (lhs: State, rhs: State) -> Bool {
+        lhs.m_score == rhs.m_score && lhs.m_alpha == rhs.m_alpha && lhs.m_shape == rhs.m_shape
     }
     
 }

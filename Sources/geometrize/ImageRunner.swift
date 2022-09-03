@@ -63,7 +63,7 @@ struct ImageRunner {
     // @return A vector containing data about the shapes just added to the internal model.
     mutating func step(
         options: ImageRunnerOptions,
-        shapeCreator: (() -> Shape)? = nil,
+        shapeCreator: (() -> any Shape)? = nil,
         energyFunction: EnergyFunction? = nil,
         addShapePrecondition: ShapeAcceptancePreconditionFunction? = nil
     ) -> [ShapeResult]
@@ -71,7 +71,7 @@ struct ImageRunner {
         let (xMin, yMin, xMax, yMax) = mapShapeBoundsToImage(options: options.shapeBounds, image: m_model.getTarget())
         let type = options.shapeType
         
-        let shapeCreator: () -> Shape = shapeCreator ?? createDefaultShapeCreator(type: type, xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
+        let shapeCreator: () -> any Shape = shapeCreator ?? createDefaultShapeCreator(type: type, xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
 
         m_model.setSeed(options.seed)
 

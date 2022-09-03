@@ -90,7 +90,7 @@ fileprivate func getSvgShapeData(rectangle r: Rectangle) -> String {
     "<rect x=\"\(min(r.x1, r.x2))\" y=\"\(min(r.y1, r.y2))\" width=\"\(max(r.x1, r.x2) - min(r.x1, r.x2))\" height=\"\(max(r.y1, r.y2) - min(r.y1, r.y2))\" \(SVG_STYLE_HOOK) />"
 }
 
-fileprivate func getSvgShapeData(shape s: Shape, options: SVGExportOptions) -> String {
+fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) -> String {
     switch s.type() {
     case .rectangle:
         return getSvgShapeData(rectangle: s as! Rectangle)

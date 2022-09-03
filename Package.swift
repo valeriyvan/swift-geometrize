@@ -1,4 +1,4 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.7
 
 import PackageDescription
 
@@ -59,7 +59,12 @@ let package = Package(
                 .copy("Resources/defaultEnergyFunction current bitmap.txt"),
                 .copy("Resources/defaultEnergyFunction buffer bitmap.txt"),
                 .copy("Resources/defaultEnergyFunction buffer bitmap on exit.txt"),
-                .copy("Resources/defaultEnergyFunction scanlines.txt")
+                .copy("Resources/defaultEnergyFunction scanlines.txt"),
+                .copy("Resources/hillClimb target bitmap.txt"),
+                .copy("Resources/hillClimb current bitmap.txt"),
+                .copy("Resources/hillClimb buffer bitmap.txt"),
+                .copy("Resources/hillClimb buffer bitmap on exit.txt"),
+                .copy("Resources/hillClimb randomRange.txt")
             ]
         )
     ]

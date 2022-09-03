@@ -13,7 +13,7 @@ import Foundation
 typealias ShapeAcceptancePreconditionFunction = (
     _ lastScore: Double,
     _ newScore: Double,
-    _ shape: Shape,
+    _ shape: any Shape,
     _ lines: [Scanline],
     _ color: Rgba,
     _ before: Bitmap,
@@ -24,7 +24,7 @@ typealias ShapeAcceptancePreconditionFunction = (
 func defaultAddShapePrecondition(
     lastScore: Double,
     newScore: Double,
-    shape: Shape,
+    shape: any Shape,
     lines: [Scanline],
     color: Rgba,
     _: Bitmap,
@@ -72,7 +72,7 @@ struct Model {
     var height: Int { m_target.height }
 
     private mutating func getHillClimbState(
-        shapeCreator: () -> Shape,
+        shapeCreator: () -> any Shape,
         alpha: UInt8,
         shapeCount: UInt,
         maxShapeMutations: UInt32,
@@ -104,7 +104,7 @@ struct Model {
     // @param addShapePrecondition An optional function to determine whether to accept a shape (if unspecified a default implementation is used).
     // @return A vector containing data about the shapes added to the model in this step. This may be empty if no shape that improved the image could be found.
     mutating func step(
-        shapeCreator: () -> Shape,
+        shapeCreator: () -> any Shape,
         alpha: UInt8,
         shapeCount: Int,
         maxShapeMutations: UInt32,
@@ -153,7 +153,7 @@ struct Model {
     // @param shape The shape to draw.
     // @param color The color (including alpha) of the shape.
     // @return Data about the shape drawn on the model.
-    mutating func draw(shape: Shape, color: Rgba) -> ShapeResult {
+    mutating func draw(shape: any Shape, color: Rgba) -> ShapeResult {
         let lines: [Scanline] = shape.rasterize()
         let before: Bitmap = m_current
         m_current.draw(lines: lines, color: color)

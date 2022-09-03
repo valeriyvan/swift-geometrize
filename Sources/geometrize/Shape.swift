@@ -22,13 +22,13 @@ protocol Shape: AnyObject, CustomStringConvertible {
     func copy() -> Self
     
     func setup()
-    var setupImplementation: (() -> Void)? {get set}
-    
+    func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int);
+
     func mutate()
-    var mutateImplementation: (() -> Void)? {get set}
+    func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int);
 
     func rasterize() -> [Scanline]
-    var rasterizeImplementation: (() -> [Scanline])? {get set}
+    func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline];
 
     func type() -> ShapeType
 }
@@ -36,26 +36,25 @@ protocol Shape: AnyObject, CustomStringConvertible {
 extension Shape {
 
     func setup() {
-        guard let setupImplementation = setupImplementation else {
-            fatalError("setup func implementation should be provided at this point")
-        }
-        setupImplementation()
+        setup(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.xMax)
     }
 
     func mutate() {
-        guard let mutateImplementation = mutateImplementation else {
-            fatalError("mutate func implementation should be provided at this point")
-        }
-        mutateImplementation()
+        mutate(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.xMax)
     }
 
     func rasterize() -> [Scanline] {
-        guard let rasterizeImplementation = rasterizeImplementation else {
-            fatalError("rasterize func implementation should be provided at this point")
-        }
-        return rasterizeImplementation()
+        rasterize(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.xMax)
     }
 
+}
+
+
+func ==(lhs: any Shape, rhs: any Shape) -> Bool {
+    switch (lhs, rhs) {
+    case (let lhs as Rectangle, let rhs as Rectangle): return lhs == rhs
+    default: return false
+    }
 }
 
 // Represents a rectangle.
@@ -75,24 +74,11 @@ final class Rectangle: Shape {
         self.x2 = x2
         self.y2 = y2
     }
-    
-    deinit { // Could protocol require this and provide default implementation?
-        setupImplementation = nil
-        mutateImplementation = nil
-        rasterizeImplementation = nil
-    }
-    
+
     func copy() -> Rectangle {
         let aCopy = Rectangle(x1: x1, y1: y1, x2: x2, y2: y2)
-        aCopy.setupImplementation = setupImplementation
-        aCopy.mutateImplementation = mutateImplementation
-        aCopy.rasterizeImplementation = rasterizeImplementation
         return aCopy
     }
-
-    var setupImplementation: (() -> Void)?
-    var mutateImplementation: (() -> Void)?
-    var rasterizeImplementation: (() -> [Scanline])?
     
     func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         x1 = Double(randomRange(min: xMin, max: xMax - 1))
@@ -133,7 +119,15 @@ final class Rectangle: Shape {
     }
     
     var description: String {
-        "Rectangle x1=\(x1), y1=\(y1), x2=\(x2), y2=\(y2)"
+        "Rectangle(x1=\(x1), y1=\(y1), x2=\(x2), y2=\(y2))"
     }
 
+}
+
+extension Rectangle: Equatable {
+    
+    static func == (lhs: Rectangle, rhs: Rectangle) -> Bool {
+        lhs.x1 == rhs.x1 && lhs.y1 == rhs.y1 && lhs.x2 == rhs.x2 && lhs.y2 == rhs.y2
+    }
+    
 }

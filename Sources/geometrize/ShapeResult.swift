@@ -4,5 +4,5 @@ import Foundation
 struct ShapeResult {
     let score: Double
     let color: Rgba
-    let shape: Shape
+    let shape: any Shape
 }

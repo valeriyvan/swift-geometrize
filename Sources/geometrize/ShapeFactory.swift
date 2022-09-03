@@ -8,21 +8,13 @@ import Foundation
 // @param xMax The maximum x coordinate of the shapes created.
 // @param yMax The maximum y coordinate of the shapes created.
 // @return The default shape creator.
-func createDefaultShapeCreator(type: ShapeType, xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> () -> Shape {
+func createDefaultShapeCreator(type: ShapeType, xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> () -> any Shape {
     {
         let shape = randomShapeOf(type)
+        canvasBounds = (xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
         switch type {
         case .rectangle:
             let rectangle = shape as! Rectangle
-            rectangle.setupImplementation = {
-                rectangle.setup(xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
-            }
-            rectangle.mutateImplementation = {
-                rectangle.mutate(xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
-            }
-            rectangle.rasterizeImplementation = {
-                rectangle.rasterize(xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
-            }
             return rectangle
         default:
             fatalError("Unimplemented")

@@ -194,7 +194,7 @@ func differencePartial(
 // @param customEnergyFunction An optional function to calculate the energy (if unspecified a default implementation is used).
 // @return The best state acquired from hill climbing i.e. the one with the lowest energy.
 func bestHillClimbState(
-    shapeCreator: () -> Shape,
+    shapeCreator: () -> any Shape,
     alpha: UInt,
     n: UInt,
     age: UInt32,
@@ -277,7 +277,7 @@ fileprivate func hillClimb(
 // @param lastScore The last score.
 // @return The best random state i.e. the one with the lowest energy.
 fileprivate func bestRandomState(
-    shapeCreator: () -> Shape,
+    shapeCreator: () -> any Shape,
     alpha: UInt,
     n: UInt,
     target: Bitmap,
