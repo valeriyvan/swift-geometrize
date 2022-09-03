@@ -19,7 +19,7 @@ struct State {
     }
     
     func copy() -> State {
-        State(score: m_score, alpha: m_alpha, shape: m_shape)
+        State(score: m_score, alpha: m_alpha, shape: m_shape.copy())
     }
     
     // The score of the state, a measure of the improvement applying the state to the current bitmap will have.
