@@ -23,12 +23,21 @@ func seedRandomGenerator(_ seed: Int) {
     generator = RandomNumberGeneratorWithSeed(seed)
 }
 
+var randomRangeImplementationReference = randomRangeImplementation
+
+private func randomRangeImplementation(_ min: Int, _ max: Int) -> Int {
+    let random = Int.random(in: min...max, using: &generator)
+    return random
+}
+
 // Returns a random integer in the range, inclusive. Uses thread-local random number generators under the hood.
 // To ensure deterministic shape generation that can be repeated for different seeds, this should be used for shape mutation, but nothing else.
 // @param min The lower bound.
 // @param max The upper bound.
 // @return The random integer in the range.
-func randomRange(min: Int, max: Int) -> Int { Int.random(in: min...max, using: &generator) }
+func randomRange(min: Int, max: Int) -> Int {
+    randomRangeImplementationReference(min, max)
+}
 
 // Maps the given shape bound percentages to the given image, returning a bounding rectangle, or the whole image if the bounds were invalid
 // @param The options to map to the image
