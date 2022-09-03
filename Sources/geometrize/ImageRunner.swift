@@ -16,13 +16,13 @@ struct ImageRunnerShapeBoundsOptions {
 struct ImageRunnerOptions {
     
     // The shape type that the image runner shall use.
-    var shapeType: ShapeType = .ellipse
+    var shapeType: ShapeType = .rectangle
     
     // The alpha/opacity of the shapes (0-255).
     var alpha: UInt8 = 128
     
     // The number of candidate shapes that will be tried per model step.
-    var shapeCount: Int = 50
+    var shapeCount: Int = 500
     
     // The maximum number of times each candidate shape will be modified to attempt to find a better fit.
     var maxShapeMutations: UInt32 = 100
@@ -32,10 +32,10 @@ struct ImageRunnerOptions {
     
     // The maximum number of separate threads for the implementation to use.
     // 0 lets the implementation choose a reasonable number.
-    var maxThreads: Int = 0
+    var maxThreads: Int = 1
     
     // If zero or do not form a rectangle, the entire target image is used i.e. (0, 0, imageWidth, imageHeight).
-    var shapeBounds: ImageRunnerShapeBoundsOptions
+    var shapeBounds: ImageRunnerShapeBoundsOptions = ImageRunnerShapeBoundsOptions()
 }
 
 // Helper for creating a set of primitives from a source image.
