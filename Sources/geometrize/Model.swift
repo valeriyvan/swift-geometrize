@@ -125,7 +125,7 @@ struct Model {
         }
         
         // Draw the shape onto the image
-        let shape = it.m_shape
+        let shape = it.m_shape.copy()
         let lines: [Scanline] = shape.rasterize()
         let color: Rgba = computeColor(target: m_target, current: m_current, lines: lines, alpha: alpha)
         let before: Bitmap = m_current

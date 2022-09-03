@@ -95,4 +95,78 @@ final class CoreTests: XCTestCase {
         XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit)
     }
 
+    func testHillClimbComparingResultWithCPlusPlus() throws {
+        
+        let randomNumbersString = try String(contentsOf: Bundle.module.url(forResource: "hillClimb randomRange", withExtension: "txt")!)
+        let lines = randomNumbersString.components(separatedBy: .newlines)
+        var counter = 0
+        func randomRangeFromFile(min: Int, max: Int) -> Int {
+            defer { counter += 1 }
+            let line = lines[counter]
+            let scanner = Scanner(string: line)
+            scanner.charactersToBeSkipped = .whitespacesAndNewlines
+            guard
+                let random = scanner.scanInt(),
+                scanner.scanString("(min:") != nil,
+                let min_ = scanner.scanInt(),
+                scanner.scanString(",max:") != nil,
+                let max_ = scanner.scanInt(),
+                min == min_, max == max_
+            else {
+                fatalError()
+            }
+            print("randomRange(\(min),\(max)) returns \(random)")
+            return random
+        }
+        randomRangeImplementationReference = randomRangeFromFile
+        
+        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb target bitmap", withExtension: "txt")!))
+        let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb current bitmap", withExtension: "txt")!))
+        var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap", withExtension: "txt")!))
+        let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap on exit", withExtension: "txt")!))
+
+        let rectangle = Rectangle(x1: 281, y1: 193, x2: 309, y2: 225)
+        canvasBounds = (xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        //rectangle.setupImplementation = { r in
+        //    r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        //}
+        //rectangle.mutateImplementation = { r in
+        //    r.mutate(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        //}
+        //rectangle.rasterizeImplementation = { r in
+        //    rectangle.rasterize(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        //}
+        let state = State(score: 0.169823, alpha: 128, shape: rectangle)
+        
+        // hillClimb return state State(m_score: 0.162824, m_alpha: 128, m_shape: Rectangle(x1=272,y1=113,x2=355,y2=237))
+
+        let rectangleOnExit = Rectangle(x1: 272, y1: 113, x2: 355, y2: 237)
+        //rectangleOnExit.setupImplementation = { r in
+        //    r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        //}
+        //rectangleOnExit.mutateImplementation = { r in
+        //    r.mutate(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        //}
+        //rectangleOnExit.rasterizeImplementation = { r in
+        //    r.rasterize(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        //}
+        let stateOnExitSample = State(score: 0.162824, alpha: 128, shape: rectangleOnExit)
+        
+        let stateOnExit = hillClimb(
+            state: state,
+            maxAge: 100,
+            target: bitmapTarget,
+            current: bitmapCurrent,
+            buffer: &bitmapBuffer,
+            lastScore: 0.170819, 
+            energyFunction: defaultEnergyFunction
+        )
+
+        XCTAssertEqual(stateOnExit.m_score, stateOnExitSample.m_score, accuracy: 0.000001)
+        XCTAssertEqual(stateOnExit.m_alpha, stateOnExitSample.m_alpha)
+        XCTAssertTrue(stateOnExit.m_shape == stateOnExitSample.m_shape)
+
+        XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit)
+    }
+
 }

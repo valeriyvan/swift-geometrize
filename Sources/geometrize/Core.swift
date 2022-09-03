@@ -227,6 +227,7 @@ func bestHillClimbState(
 }
 
 // Hill climbing optimization algorithm, attempts to minimize energy (the error/difference).
+// https://en.wikipedia.org/wiki/Hill_climbing
 // @param state The state to optimize.
 // @param maxAge The maximum age.
 // @param target The target bitmap.
@@ -234,7 +235,7 @@ func bestHillClimbState(
 // @param buffer The buffer bitmap.
 // @param lastScore The last score.
 // @return The best state found from hillclimbing.
-fileprivate func hillClimb(
+func hillClimb(
     state: State,
     maxAge: UInt32,
     target: Bitmap,
