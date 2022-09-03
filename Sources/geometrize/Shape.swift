@@ -1,5 +1,7 @@
 import Foundation
 
+var canvasBounds: (xMin: Int, yMin: Int, xMax: Int, yMax: Int) = (0, 0, .max, .max)
+
 // Specifies the types of shapes that can be used.
 // These can be combined to produce images composed of multiple primitive types.
 // TODO: put it inside Shape. Or remove completely.
