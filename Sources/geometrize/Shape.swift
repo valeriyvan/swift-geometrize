@@ -38,15 +38,15 @@ protocol Shape: AnyObject, CustomStringConvertible {
 extension Shape {
 
     func setup() {
-        setup(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.xMax)
+        setup(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
     }
 
     func mutate() {
-        mutate(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.xMax)
+        mutate(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
     }
 
     func rasterize() -> [Scanline] {
-        rasterize(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.xMax)
+        rasterize(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
     }
 
 }
@@ -90,6 +90,7 @@ final class Rectangle: Shape {
     }
 
     func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
+        print("Enter mutate Rectangle(x1:\(x1),y1:\(y1),x2:\(x2),y2:\(y2))")
         switch randomRange(min: 0, max: 1) {
         case 0:
             x1 = Double((Int(x1) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
@@ -98,9 +99,11 @@ final class Rectangle: Shape {
             x2 = Double((Int(x2) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
             y2 = Double((Int(y2) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax - 1))
         }
+        print("Exit mutate Rectangle(x1:\(x1),y1:\(y1),x2:\(x2),y2:\(y2))")
     }
 
     func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+        print("Enter rasterize Rectangle(x1:\(x1),y1:\(y1),x2:\(x2),y2:\(y2))")
         let x1: Int = Int(min(self.x1, self.x2))
         let y1: Int = Int(min(self.y1, self.y2))
         let x2: Int = Int(max(self.x1, self.x2))
