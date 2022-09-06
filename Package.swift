@@ -22,8 +22,9 @@ let package = Package(
     ],
     
     dependencies: [
-        .package(name: "PNG", url: "git@github.com:kelvin13/swift-png.git", from: "4.0.1"),
-        .package(name: "SnapshotTesting", url: "git@github.com:pointfreeco/swift-snapshot-testing.git", from: "1.9.0")
+        .package(url: "git@github.com:kelvin13/swift-png.git", from: "4.0.1"),
+        .package(url: "git@github.com:pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
+        .package(url: "git@github.com:apple/swift-algorithms.git", from: "1.0.0")
     ],
     
     targets: [
@@ -38,7 +39,11 @@ let package = Package(
         ),
         .testTarget(
             name: "geometrizeTests",
-            dependencies: ["geometrize", "PNG", "SnapshotTesting"],
+            dependencies: [
+                "geometrize",
+                .product(name: "PNG", package: "swift-png"),
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+            ],
             path: "Tests/geometrizeTests",
             resources: [
                 .copy("Resources/grapefruit.png"),
