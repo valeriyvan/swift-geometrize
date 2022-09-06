@@ -14,8 +14,9 @@ func createDefaultShapeCreator(type: ShapeType, xMin: Int, yMin: Int, xMax: Int,
         canvasBounds = (xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
         switch type {
         case .rectangle:
-            let rectangle = shape as! Rectangle
-            return rectangle
+            return shape as! Rectangle
+        case .rotatedRectangle:
+            return shape as! RotatedRectangle
         default:
             fatalError("Unimplemented")
         }
