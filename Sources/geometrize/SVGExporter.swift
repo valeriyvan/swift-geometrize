@@ -90,10 +90,17 @@ fileprivate func getSvgShapeData(rectangle r: Rectangle) -> String {
     "<rect x=\"\(min(r.x1, r.x2))\" y=\"\(min(r.y1, r.y2))\" width=\"\(max(r.x1, r.x2) - min(r.x1, r.x2))\" height=\"\(max(r.y1, r.y2) - min(r.y1, r.y2))\" \(SVG_STYLE_HOOK) />"
 }
 
+fileprivate func getSvgShapeData(rotatedRectangle r: RotatedRectangle) -> String {
+    let cp = r.cornerPoints
+    return "<polygon points=\"\(cp.0.x),\(cp.0.y) \(cp.1.x),\(cp.1.y) \(cp.2.x),\(cp.2.y) \(cp.3.x),\(cp.3.y)\" \(SVG_STYLE_HOOK)/>"
+}
+
 fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) -> String {
     switch s.type() {
     case .rectangle:
         return getSvgShapeData(rectangle: s as! Rectangle)
+    case .rotatedRectangle:
+        return getSvgShapeData(rotatedRectangle: s as! RotatedRectangle)
     default:
         fatalError("Unimplemented")
     }
