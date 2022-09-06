@@ -253,7 +253,7 @@ func hillClimb(
         s.m_score = energyFunction(s.m_shape.rasterize(), UInt(s.m_alpha), target, current, &buffer, lastScore)
         let energy: Double = s.m_score
         if energy >= bestEnergy {
-            s = undo
+            s = undo.copy()
         } else {
             bestEnergy = energy
             bestState = s.copy()
