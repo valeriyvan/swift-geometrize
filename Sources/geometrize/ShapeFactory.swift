@@ -10,7 +10,7 @@ import Foundation
 // @return The default shape creator.
 func createDefaultShapeCreator(type: ShapeType, xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> () -> any Shape {
     {
-        let shape = randomShapeOf(type)
+        let shape = randomShape(type: type)
         canvasBounds = (xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
         switch type {
         case .rectangle:
@@ -23,24 +23,15 @@ func createDefaultShapeCreator(type: ShapeType, xMin: Int, yMin: Int, xMax: Int,
     }
 }
 
-// @brief Creates a new shape of the specified type.
-// @param t The type of shape to create.
-// @return The new shape.
-func create(_ type: ShapeType) -> some Shape {
-    return Rectangle() // TODO: !!!
-}
-
-// @brief Creates a random shape.
-// @return The new shape.
-func randomShape() -> some Shape {
-    return Rectangle() // TODO: by now we have only rectangles
-}
-
 // Creates a random shape from the types supplied.
 // @param t The types of shape to possibly create.
 // @return The new shape.
 // Original C++ implementation allows mask parameter and so different shapes
 // could be used.
-func randomShapeOf(_ type: ShapeType) -> some Shape {
-    return Rectangle() // TODO: !!!
+func randomShape(type: ShapeType) -> any Shape {
+    switch type {
+    case .rectangle: return Rectangle()
+    case .rotatedRectangle: return RotatedRectangle()
+    default: fatalError()
+    }
 }
