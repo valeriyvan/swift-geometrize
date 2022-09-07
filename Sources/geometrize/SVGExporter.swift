@@ -95,12 +95,18 @@ fileprivate func getSvgShapeData(rotatedRectangle r: RotatedRectangle) -> String
     return "<polygon points=\"\(cp.0.x),\(cp.0.y) \(cp.1.x),\(cp.1.y) \(cp.2.x),\(cp.2.y) \(cp.3.x),\(cp.3.y)\" \(SVG_STYLE_HOOK)/>"
 }
 
+fileprivate func getSvgShapeData(rotatedRectangle r: RotatedEllipse) -> String {
+    "<g transform=\"translate(\(r.x) \(r.y)) rotate(\(r.angle)) scale(\(r.rx) \(r.ry))\"><ellipse cx=\"0\" cy=\"0\" rx=\"1\" ry=\"1\" \(SVG_STYLE_HOOK) /></g>"
+}
+
 fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) -> String {
     switch s.type() {
     case .rectangle:
         return getSvgShapeData(rectangle: s as! Rectangle)
     case .rotatedRectangle:
         return getSvgShapeData(rotatedRectangle: s as! RotatedRectangle)
+    case .rotatedEllipse:
+        return getSvgShapeData(rotatedRectangle: s as! RotatedEllipse)
     default:
         fatalError("Unimplemented")
     }

@@ -17,6 +17,8 @@ func createDefaultShapeCreator(type: ShapeType, xMin: Int, yMin: Int, xMax: Int,
             return shape as! Rectangle
         case .rotatedRectangle:
             return shape as! RotatedRectangle
+        case .rotatedEllipse:
+            return shape as! RotatedEllipse
         default:
             fatalError("Unimplemented")
         }
@@ -32,6 +34,7 @@ func randomShape(type: ShapeType) -> any Shape {
     switch type {
     case .rectangle: return Rectangle()
     case .rotatedRectangle: return RotatedRectangle()
+    case .rotatedEllipse: return RotatedEllipse()
     default: fatalError()
     }
 }
