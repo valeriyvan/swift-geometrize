@@ -1,4 +1,5 @@
 import Foundation
+import Algorithms
 
 struct Polygon<N: SignedInteger> {
     var vertices: [Point<N>]
@@ -42,8 +43,7 @@ extension Polygon {
         }
         var lines: [Scanline] = [Scanline]()
         for (y, xs) in yToXs {
-            let xMin = xs.min()! // TODO: let (xMin, xMax) = xs.minAndMax()!
-            let xMax = xs.max()!
+            let (xMin, xMax) = xs.minAndMax()!
             let line = Scanline(y: Int(y), x1: Int(xMin), x2: Int(xMax))
             lines.append(line)
         }

@@ -30,7 +30,9 @@ let package = Package(
     targets: [
         .target(
             name: "geometrize",
-            dependencies: [],
+            dependencies: [
+                .product(name: "Algorithms", package: "swift-algorithms")
+            ],
             path: "Sources/geometrize"
         ),
         .executableTarget(
