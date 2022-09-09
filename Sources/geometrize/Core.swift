@@ -12,7 +12,7 @@ import Foundation
 // @param score The score.
 // @return The energy measure.
 
-typealias EnergyFunction = (
+public typealias EnergyFunction = (
     _ lines: [Scanline],
     _ alpha: UInt, // TODO: why not UInt8???
     _ target: Bitmap,
@@ -30,7 +30,7 @@ typealias EnergyFunction = (
 // @param buffer The buffer bitmap. // TODO: explain it better.
 // @param score The score.
 // @return The energy measure.
-func defaultEnergyFunction(
+public func defaultEnergyFunction(
     _ lines: [Scanline],
     _ alpha: UInt, // TODO: why not UInt8???
     _ target: Bitmap,

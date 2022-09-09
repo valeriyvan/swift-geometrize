@@ -10,7 +10,7 @@ import Foundation
 // @param after The image as it would be after adding the shape
 // @param target The image that we are trying to replicate
 // @return True to add the shape to the image, false not to
-typealias ShapeAcceptancePreconditionFunction = (
+public typealias ShapeAcceptancePreconditionFunction = (
     _ lastScore: Double,
     _ newScore: Double,
     _ shape: any Shape,
@@ -21,7 +21,7 @@ typealias ShapeAcceptancePreconditionFunction = (
     _ target: Bitmap
 ) -> Bool
 
-func defaultAddShapePrecondition(
+public func defaultAddShapePrecondition(
     lastScore: Double,
     newScore: Double,
     shape: any Shape,

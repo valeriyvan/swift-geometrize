@@ -2,48 +2,74 @@ import Foundation
 
 // Encapsulates options for where shapes may be drawn within the image.
 // Defines a rectangle expressed as percentages (0-100%) of the target image dimensions
-struct ImageRunnerShapeBoundsOptions {
+public struct ImageRunnerShapeBoundsOptions {
     // Whether to use these bounds, or to use the bounds of the target image instead
     // (these can't be larger than the image in any case).
-    var enabled: Bool = false
-    var xMinPercent: Double = 0.0
-    var yMinPercent: Double = 0.0
-    var xMaxPercent: Double = 100.0
-    var yMaxPercent: Double = 100.0
+    var enabled: Bool
+    var xMinPercent: Double
+    var yMinPercent: Double
+    var xMaxPercent: Double
+    var yMaxPercent: Double
+    
+    public init() {
+        enabled = false
+        xMinPercent = 0.0
+        yMinPercent = 0.0
+        xMaxPercent = 100.0
+        yMaxPercent = 100.0
+    }
+    
+    public init(enabled: Bool, xMinPercent: Double, yMinPercent: Double, xMaxPercent: Double, yMaxPercent: Double) {
+        self.enabled = enabled
+        self.xMinPercent = xMinPercent
+        self.yMinPercent = yMinPercent
+        self.xMaxPercent = xMaxPercent
+        self.yMaxPercent = yMaxPercent
+    }
 }
 
 // Encapsulates preferences/options that the image runner uses.
-struct ImageRunnerOptions {
+public struct ImageRunnerOptions {
     
     // The shape type that the image runner shall use.
-    var shapeType: ShapeType = .rectangle
+    var shapeType: ShapeType
     
     // The alpha/opacity of the shapes (0-255).
-    var alpha: UInt8 = 128
+    var alpha: UInt8
     
     // The number of candidate shapes that will be tried per model step.
-    var shapeCount: Int = 500
+    var shapeCount: Int
     
     // The maximum number of times each candidate shape will be modified to attempt to find a better fit.
-    var maxShapeMutations: UInt32 = 100
-   
+    var maxShapeMutations: UInt32
+
     // The seed for the random number generators used by the image runner.
-    var seed: Int = 9001
+    var seed: Int
     
     // The maximum number of separate threads for the implementation to use.
     // 0 lets the implementation choose a reasonable number.
-    var maxThreads: Int = 1
+    var maxThreads: Int
     
     // If zero or do not form a rectangle, the entire target image is used i.e. (0, 0, imageWidth, imageHeight).
-    var shapeBounds: ImageRunnerShapeBoundsOptions = ImageRunnerShapeBoundsOptions()
+    var shapeBounds: ImageRunnerShapeBoundsOptions
+    
+    public init(shapeType: ShapeType, alpha: UInt8, shapeCount: Int, maxShapeMutations: UInt32, seed: Int, maxThreads: Int, shapeBounds: ImageRunnerShapeBoundsOptions) {
+        self.shapeType = shapeType
+        self.alpha = alpha
+        self.shapeCount = shapeCount
+        self.maxShapeMutations = maxShapeMutations
+        self.seed = seed
+        self.maxThreads = maxThreads
+        self.shapeBounds = shapeBounds
+    }
 }
 
 // Helper for creating a set of primitives from a source image.
-struct ImageRunner {
+public struct ImageRunner {
     
     // Creates a new image runner with the given target bitmap.
     // Uses the average color of the target as the starting image.
-    init(targetBitmap: Bitmap) {
+    public init(targetBitmap: Bitmap) {
         m_model = Model(target: targetBitmap)
     }
 
@@ -51,7 +77,7 @@ struct ImageRunner {
     // The target bitmap and initial bitmap must be the same size (width and height).
     // @param targetBitmap The target bitmap to replicate with shapes.
     // @param initialBitmap The starting bitmap.
-    init(targetBitmap: Bitmap, initialBitmap: Bitmap) {
+    public init(targetBitmap: Bitmap, initialBitmap: Bitmap) {
         m_model = Model(target: targetBitmap, initial: initialBitmap)
     }
 
@@ -61,7 +87,7 @@ struct ImageRunner {
     // @param energyFunction An optional function to calculate the energy (if unspecified a default implementation is used).
     // @param addShapePrecondition An optional function to determine whether to accept a shape (if unspecified a default implementation is used).
     // @return A vector containing data about the shapes just added to the internal model.
-    mutating func step(
+    public mutating func step(
         options: ImageRunnerOptions,
         shapeCreator: (() -> any Shape)? = nil,
         energyFunction: EnergyFunction? = nil,

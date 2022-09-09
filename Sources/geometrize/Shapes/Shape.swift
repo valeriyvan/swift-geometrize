@@ -1,11 +1,11 @@
 import Foundation
 
-var canvasBounds: (xMin: Int, yMin: Int, xMax: Int, yMax: Int) = (0, 0, .max, .max)
+public var canvasBounds: (xMin: Int, yMin: Int, xMax: Int, yMax: Int) = (0, 0, .max, .max)
 
 // Specifies the types of shapes that can be used.
 // These can be combined to produce images composed of multiple primitive types.
 // TODO: put it inside Shape. Or remove completely.
-enum ShapeType: String, CaseIterable {
+public enum ShapeType: String, CaseIterable {
     case rectangle
     case rotatedRectangle
     case triangle
@@ -18,7 +18,7 @@ enum ShapeType: String, CaseIterable {
     case shapeCount
 }
 
-protocol Shape: AnyObject, CustomStringConvertible {
+public protocol Shape: AnyObject, CustomStringConvertible {
     init()
     
     func copy() -> Self
@@ -37,15 +37,15 @@ protocol Shape: AnyObject, CustomStringConvertible {
 
 extension Shape {
 
-    func setup() {
+    public func setup() {
         setup(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
     }
 
-    func mutate() {
+    public func mutate() {
         mutate(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
     }
 
-    func rasterize() -> [Scanline] {
+    public func rasterize() -> [Scanline] {
         rasterize(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
     }
 

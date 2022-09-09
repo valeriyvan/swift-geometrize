@@ -23,8 +23,10 @@ let package = Package(
     
     dependencies: [
         .package(url: "git@github.com:kelvin13/swift-png.git", from: "4.0.1"),
+        .package(path: "/tmp/jpeg/"),
         .package(url: "git@github.com:pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
-        .package(url: "git@github.com:apple/swift-algorithms.git", from: "1.0.0")
+        .package(url: "git@github.com:apple/swift-algorithms.git", from: "1.0.0"),
+        .package(url: "git@github.com:apple/swift-argument-parser.git", from: "1.1.4")
     ],
     
     targets: [
@@ -37,7 +39,12 @@ let package = Package(
         ),
         .executableTarget(
             name: "geometrize-cli",
-            dependencies: ["geometrize"]
+            dependencies: [
+                "geometrize",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "PNG", package: "swift-png"),
+                .product(name: "JPEG", package: "jpeg")
+            ]
         ),
         .testTarget(
             name: "geometrizeTests",

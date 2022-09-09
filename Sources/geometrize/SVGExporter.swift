@@ -3,7 +3,7 @@ import Foundation
 // A hook that an SVG exporter should use to augment shape styling produced by the getSvgShapeData method.
 fileprivate let SVG_STYLE_HOOK = "::svg_style_hook::"
 
-enum RotatedEllipseSVGExportMode {
+public enum RotatedEllipseSVGExportMode {
     // Export as a translated, rotated and scaled svg <ellipse>. OpenFL's SVG library can't handle this
     case ellipseItem
     // Export as a <polygon>, OpenFL's SVG library can handle this, but it looks quite ugly
@@ -11,11 +11,15 @@ enum RotatedEllipseSVGExportMode {
 };
 
 // Represents the options that can be set for the SVG export.
-struct SVGExportOptions {
+public struct SVGExportOptions {
     // Technique to use when exporting rotated ellipses
-    let rotatedEllipseExportMode: RotatedEllipseSVGExportMode = .ellipseItem
+    let rotatedEllipseExportMode: RotatedEllipseSVGExportMode
     // Id to tag the exported SVG shapes with
-    var itemId = 0
+    var itemId: Int
+    public init(rotatedEllipseExportMode: RotatedEllipseSVGExportMode = .ellipseItem, itemId: Int = 0) {
+        self.rotatedEllipseExportMode = rotatedEllipseExportMode
+        self.itemId = itemId
+    }
 }
 
 // Gets the SVG data for a single shape. This is just the <rect>/<path> etc block for the shape itself, not a complete SVG image.
@@ -69,7 +73,7 @@ func exportSingleShapeSVG(color: Rgba, shape: any Shape, width: Int, height: Int
 // @param height The height of the SVG image.
 // @param options additional options used by the exporter.
 // @return A string representing the SVG image.
-func exportSVG(data: [ShapeResult], width: Int, height: Int, options: SVGExportOptions = SVGExportOptions()) -> String {
+public func exportSVG(data: [ShapeResult], width: Int, height: Int, options: SVGExportOptions = SVGExportOptions()) -> String {
     var str = """
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">

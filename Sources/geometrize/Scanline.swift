@@ -2,7 +2,7 @@ import Foundation
 
 // Represents a scanline, a row of pixels running across a bitmap.
 
-internal struct Scanline {
+public struct Scanline {
     
     // Creates empty useless scanline.
     internal init() {
@@ -48,7 +48,7 @@ extension Scanline: Equatable {}
 
 extension Scanline: CustomStringConvertible {
     
-    var description: String {
+    public var description: String {
         "Scanline(y: \(y), x1: \(x1), x2: \(x2))"
     }
 
