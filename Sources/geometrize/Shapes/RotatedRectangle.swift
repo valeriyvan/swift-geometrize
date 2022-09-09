@@ -26,8 +26,7 @@ final class RotatedRectangle: Shape {
     }
 
     func copy() -> RotatedRectangle {
-        let aCopy = RotatedRectangle(x1: x1, y1: y1, x2: x2, y2: y2, angle: angle)
-        return aCopy
+        RotatedRectangle(x1: x1, y1: y1, x2: x2, y2: y2, angle: angle)
     }
     
     func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
