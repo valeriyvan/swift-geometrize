@@ -16,6 +16,21 @@ public enum ShapeType: String, CaseIterable {
     case quadraticBezier
     case polyline
     case shapeCount
+    
+    public var rawValueCapitalized: String {
+        let firstUppercased = rawValue.first!.uppercased()
+        return firstUppercased + rawValue.dropFirst()
+    }
+    
+    // Allows rotatedrectangle and rotated_rectangle, casing doesn't matter.
+    public init?(rawValue: String) {
+        let allCases = ShapeType.allCases
+        let all = allCases.map{ $0.rawValue.lowercased() }
+        guard let index = all.firstIndex(of: rawValue.replacingOccurrences(of: "_", with: "").lowercased()) else {
+            return nil
+        }
+        self = allCases[index]
+    }
 }
 
 public protocol Shape: AnyObject, CustomStringConvertible {

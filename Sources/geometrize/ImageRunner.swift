@@ -31,8 +31,8 @@ public struct ImageRunnerShapeBoundsOptions {
 // Encapsulates preferences/options that the image runner uses.
 public struct ImageRunnerOptions {
     
-    // The shape type that the image runner shall use.
-    var shapeType: ShapeType
+    // The shape types that the image runner shall use.
+    var shapeTypes: Set<ShapeType>
     
     // The alpha/opacity of the shapes (0-255).
     var alpha: UInt8
@@ -53,8 +53,8 @@ public struct ImageRunnerOptions {
     // If zero or do not form a rectangle, the entire target image is used i.e. (0, 0, imageWidth, imageHeight).
     var shapeBounds: ImageRunnerShapeBoundsOptions
     
-    public init(shapeType: ShapeType, alpha: UInt8, shapeCount: Int, maxShapeMutations: UInt32, seed: Int, maxThreads: Int, shapeBounds: ImageRunnerShapeBoundsOptions) {
-        self.shapeType = shapeType
+    public init(shapeTypes: Set<ShapeType>, alpha: UInt8, shapeCount: Int, maxShapeMutations: UInt32, seed: Int, maxThreads: Int, shapeBounds: ImageRunnerShapeBoundsOptions) {
+        self.shapeTypes = shapeTypes
         self.alpha = alpha
         self.shapeCount = shapeCount
         self.maxShapeMutations = maxShapeMutations
@@ -95,9 +95,9 @@ public struct ImageRunner {
     ) -> [ShapeResult]
     {
         let (xMin, yMin, xMax, yMax) = mapShapeBoundsToImage(options: options.shapeBounds, image: m_model.getTarget())
-        let type = options.shapeType
+        let types = options.shapeTypes
         
-        let shapeCreator: () -> any Shape = shapeCreator ?? createDefaultShapeCreator(type: type, xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
+        let shapeCreator: () -> any Shape = shapeCreator ?? createDefaultShapeCreator(types: types, xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
 
         m_model.setSeed(options.seed)
 

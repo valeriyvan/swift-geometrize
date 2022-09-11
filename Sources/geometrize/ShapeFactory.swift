@@ -8,33 +8,14 @@ import Foundation
 // @param xMax The maximum x coordinate of the shapes created.
 // @param yMax The maximum y coordinate of the shapes created.
 // @return The default shape creator.
-func createDefaultShapeCreator(type: ShapeType, xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> () -> any Shape {
-    {
-        let shape = randomShape(type: type)
-        canvasBounds = (xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
-        switch type {
-        case .rectangle:
-            return shape as! Rectangle
-        case .rotatedRectangle:
-            return shape as! RotatedRectangle
-        case .rotatedEllipse:
-            return shape as! RotatedEllipse
-        default:
-            fatalError("Unimplemented")
+public func createDefaultShapeCreator(types: Set<ShapeType>, xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> () -> any Shape {
+    canvasBounds = (xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
+    return {
+        switch types[types.index(types.startIndex, offsetBy: randomRange(min: 0, max: types.count - 1))] {
+        case .rectangle: return Rectangle()
+        case .rotatedRectangle: return RotatedRectangle()
+        case .rotatedEllipse: return RotatedEllipse()
+        default: fatalError()
         }
-    }
-}
-
-// Creates a random shape from the types supplied.
-// @param t The types of shape to possibly create.
-// @return The new shape.
-// Original C++ implementation allows mask parameter and so different shapes
-// could be used.
-func randomShape(type: ShapeType) -> any Shape {
-    switch type {
-    case .rectangle: return Rectangle()
-    case .rotatedRectangle: return RotatedRectangle()
-    case .rotatedEllipse: return RotatedEllipse()
-    default: fatalError()
     }
 }

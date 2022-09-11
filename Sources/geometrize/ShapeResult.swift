@@ -4,7 +4,7 @@ import Foundation
 public struct ShapeResult {
     let score: Double
     let color: Rgba
-    let shape: any Shape
+    public let shape: any Shape
     
     public init(score: Double, color: Rgba, shape: any Shape) {
         self.score = score

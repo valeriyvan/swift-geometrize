@@ -7,6 +7,7 @@ import JPEG
 struct GeometrizeOptions: ParsableArguments {
     @Option(name: .shortAndLong, help: "Input file pathname.") var inputPath: String
     @Option(name: .shortAndLong, help: "Output file pathname.") var outputPath: String
+    @Option(name: [.customShort("t"), .long], help: "The types of shapes to generate.") var shapeTypes: String = "rectangle"
     @Option(name: .shortAndLong, help: "The number of shapes to generate for the final output.") var shapeCount: UInt?
 }
 
@@ -62,12 +63,27 @@ guard outputUrl.pathExtension.caseInsensitiveCompare("svg") == .orderedSame else
     exit(1)
 }
 
+let shapeTypes = options.shapeTypes.components(separatedBy: .whitespacesAndNewlines)
+let shapesOrNil = shapeTypes.map(ShapeType.init)
+let indexOfNil = shapesOrNil.firstIndex(of: nil)
+if let indexOfNil = indexOfNil {
+    print("Not recognised shape type \(shapeTypes[indexOfNil]). Allowed shape types:")
+    ShapeType.allCases.forEach {
+        print($0.rawValueCapitalized)
+    }
+    print("Case insensitive, underscores are ignored, white spaces are delimiters.")
+    exit(1)
+}
+
+let shapes = Set(shapesOrNil.compactMap{$0})
+print("Using shapes: \(shapes.map(\.rawValueCapitalized).joined(separator: ", ")).")
+
 canvasBounds = (0, 0, width, height)
 
 let shapeCount: Int = Int(options.shapeCount ?? 100)
 
 let runnerOptions = ImageRunnerOptions(
-    shapeType: .rotatedEllipse,
+    shapeTypes: shapes,
     alpha: 128,
     shapeCount: 500,
     maxShapeMutations: 100,
@@ -91,7 +107,12 @@ var counter = 0
 while shapeData.count <= shapeCount /* Here set count of shapes final image should have. Remember background is the first shape. */ {
     print("Step \(counter)", terminator: "")
     let shapes = runner.step(options: runnerOptions, shapeCreator: nil, energyFunction: defaultEnergyFunction, addShapePrecondition: defaultAddShapePrecondition)
-    print(", \(shapes.isEmpty ? "no" : String(shapes.count)) shape(s) was/were added. Total count of shapes \(shapeData.count ).")
+    if shapes.isEmpty {
+        print(", no shapes added.", terminator: "")
+    } else {
+        print(", \(shapes.map(\.shape).map(\.description).joined(separator: ", ")) added.", terminator: "")
+    }
+    print(" Total count of shapes \(shapeData.count ).")
     shapeData.append(contentsOf: shapes)
     counter += 1
 }
