@@ -78,7 +78,7 @@ final class RotatedEllipse: Shape {
     }
     
     var description: String {
-        "RotatedEllipse(x=\(x), y=\(y), rx=\(rx), ry=\(ry)), angle=\(angle)"
+        "RotatedEllipse(x=\(x), y=\(y), rx=\(rx), ry=\(ry), angle=\(angle))"
     }
 
 }
