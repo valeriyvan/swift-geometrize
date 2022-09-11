@@ -49,7 +49,8 @@ public final class Rectangle: Shape {
         var lines: [Scanline] = []
         for y in y1...y2 {
             let scanline = Scanline(y: y, x1: x1, x2: x2)
-            guard let trimmed = scanline.trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) else { continue
+            guard let trimmed = scanline.trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) else {
+                continue
             }
             lines.append(trimmed)
         }
