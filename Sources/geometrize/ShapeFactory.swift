@@ -16,6 +16,7 @@ public func createDefaultShapeCreator(types: Set<ShapeType>, xMin: Int, yMin: In
         case .rotatedRectangle: return RotatedRectangle()
         case .rotatedEllipse: return RotatedEllipse()
         case .triangle: return Triangle()
+        case .circle: return Circle()
         default: fatalError()
         }
     }

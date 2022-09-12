@@ -107,6 +107,10 @@ fileprivate func getSvgShapeData(triangle t: Triangle) -> String {
     "<polygon points=\"\(t.x1),\(t.y1) \(t.x2),\(t.y2) \(t.x3),\(t.y3)\" \(SVG_STYLE_HOOK)/>"
 }
 
+fileprivate func getSvgShapeData(circle c: Circle) -> String {
+    "<circle cx=\"\(c.x)\" cy=\"\(c.y)\" r=\"\(c.r)\" \(SVG_STYLE_HOOK)/>"
+}
+
 fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) -> String {
     switch s.type() {
     case .rectangle:
@@ -117,6 +121,8 @@ fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) 
         return getSvgShapeData(rotatedRectangle: s as! RotatedEllipse)
     case .triangle:
         return getSvgShapeData(triangle: s as! Triangle)
+    case .circle:
+        return getSvgShapeData(circle: s as! Circle)
     default:
         fatalError("Unimplemented")
     }
