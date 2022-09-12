@@ -1,6 +1,7 @@
 import Foundation
 
 public final class Triangle: Shape {
+    
     var x1: Double // First x-coordinate.
     var y1: Double // First y-coordinate.
     var x2: Double // Second x-coordinate.
@@ -47,9 +48,11 @@ public final class Triangle: Shape {
         case 1:
             x2 = Double((Int(x2) + randomRange(min: -32, max: 32)).clamped(to: xMin...xMax - 1))
             y2 = Double((Int(y2) + randomRange(min: -32, max: 32)).clamped(to: yMin...yMax - 1))
-        default:
+        case 2:
             x3 = Double((Int(x2) + randomRange(min: -32, max: 32)).clamped(to: xMin...xMax - 1))
             y3 = Double((Int(y2) + randomRange(min: -32, max: 32)).clamped(to: yMin...yMax - 1))
+        default:
+            fatalError()
         }
     }
 

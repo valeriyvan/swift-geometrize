@@ -2,6 +2,7 @@ import Foundation
 
 // Represents a rectangle.
 public final class Rectangle: Shape {
+    
     var x1, y1, x2, y2: Double
     
     required public init() {
@@ -34,9 +35,11 @@ public final class Rectangle: Shape {
         case 0:
             x1 = Double((Int(x1) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
             y1 = Double((Int(y1) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax - 1))
-        default:
+        case 1:
             x2 = Double((Int(x2) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
             y2 = Double((Int(y2) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax - 1))
+        default:
+            fatalError()
         }
     }
 

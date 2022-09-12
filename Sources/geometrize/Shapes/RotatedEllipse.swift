@@ -2,6 +2,7 @@ import Foundation
 
 // Represents a rotated ellipse.
 final class RotatedEllipse: Shape {
+    
     var x: Double // x-coordinate.
     var y: Double // y-coordinate.
     var rx: Double // x-radius.
