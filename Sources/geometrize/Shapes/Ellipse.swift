@@ -55,19 +55,24 @@ public final class Ellipse: Shape {
             if ((y1 < yMin || y1 >= yMax) && (y2 < yMin || y2 >= yMax)) {
                 continue
             }
-            let v = sqrt(ry * ry - Double(dy * dy)) * aspect
-            var x1 = Int(x - v)
+            let v: Int = Int(sqrt(ry * ry - Double(dy * dy)) * aspect)
+            var x1: Int = Int(x) - v
             if x1 < xMin {
                 x1 = xMin
             }
-            var x2 = Int(x + v)
+            var x2: Int = Int(x) + v
             if x2 >= xMax {
                 x2 = xMax - 1
             }
-            if let line = Scanline(y: y1, x1: x1, x2: x2).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax),
-               y1 >= xMin && y1 < yMax || y2 >= yMin && y2 < yMax && dy > 0
-            {
-                lines.append(line)
+            if y1 >= xMin && y1 < yMax {
+                if let line = Scanline(y: y1, x1: x1, x2: x2).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
+                    lines.append(line)
+                }
+            }
+            if y2 >= yMin && y2 < yMax && dy > 0 {
+                if let line = Scanline(y: y2, x1: x1, x2: x2).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
+                    lines.append(line)
+                }
             }
         }
         return lines
