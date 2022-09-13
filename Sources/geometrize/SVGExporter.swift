@@ -115,6 +115,10 @@ fileprivate func getSvgShapeData(ellipse e: Ellipse) -> String {
     "<ellipse cx=\"\(e.x)\" cy=\"\(e.y)\" rx=\"\(e.rx)\" ry=\"\(e.ry)\" \(SVG_STYLE_HOOK)/>"
 }
 
+fileprivate func getSvgShapeData(line l: Line) -> String {
+    "<line x1=\"\(l.x1)\" y1=\"\(l.y1)\" x2=\"\(l.x2)\" y2=\"\(l.y2)\" \(SVG_STYLE_HOOK)/>";
+}
+
 fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) -> String {
     switch s.type() {
     case .rectangle:
@@ -129,7 +133,11 @@ fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) 
         return getSvgShapeData(circle: s as! Circle)
     case .ellipse:
         return getSvgShapeData(ellipse: s as! Ellipse)
-    default:
+    case .line:
+        return getSvgShapeData(line: s as! Line)
+    case .polyline:
+        fatalError("Unimplemented")
+    case .quadraticBezier:
         fatalError("Unimplemented")
     }
 }

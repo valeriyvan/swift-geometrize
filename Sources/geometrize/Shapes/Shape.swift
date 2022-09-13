@@ -15,7 +15,6 @@ public enum ShapeType: String, CaseIterable {
     case line
     case quadraticBezier
     case polyline
-    case shapeCount
     
     public var rawValueCapitalized: String {
         let firstUppercased = rawValue.first!.uppercased()

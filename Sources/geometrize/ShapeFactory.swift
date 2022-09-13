@@ -18,7 +18,9 @@ public func createDefaultShapeCreator(types: Set<ShapeType>, xMin: Int, yMin: In
         case .triangle: return Triangle()
         case .circle: return Circle()
         case .ellipse: return Ellipse()
-        default: fatalError()
+        case .line: return Line()
+        case .polyline: fatalError("Unimplemented")
+        case .quadraticBezier: fatalError("Unimplemented")
         }
     }
 }
