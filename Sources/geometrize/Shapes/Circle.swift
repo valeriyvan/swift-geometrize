@@ -31,9 +31,8 @@ public final class Circle: Shape {
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         switch randomRange(min: 0, max: 1) {
         case 0:
-            let range = xMin...xMax - 1
-            x = Double((Int(x) + randomRange(min: -16, max: 16)).clamped(to: range))
-            y = Double((Int(y) + randomRange(min: -16, max: 16)).clamped(to: range))
+            x = Double((Int(x) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
+            y = Double((Int(y) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax - 1))
         case 1:
             r = Double((Int(r) + randomRange(min: -16, max: 16)).clamped(to: 1...xMax - 1)) // clamp incorect
         default:
