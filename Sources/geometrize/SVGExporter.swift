@@ -119,6 +119,10 @@ fileprivate func getSvgShapeData(line l: Line) -> String {
     "<line x1=\"\(l.x1)\" y1=\"\(l.y1)\" x2=\"\(l.x2)\" y2=\"\(l.y2)\" \(SVG_STYLE_HOOK)/>";
 }
 
+fileprivate func getSvgShapeData(polyline l: Polyline) -> String {
+    "<polyline points=\"" + l.points.map{ "\($0.x),\($0.y)" }.joined(separator: " ") + "\" \(SVG_STYLE_HOOK) />"
+}
+
 fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) -> String {
     switch s.type() {
     case .rectangle:
@@ -136,7 +140,7 @@ fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) 
     case .line:
         return getSvgShapeData(line: s as! Line)
     case .polyline:
-        fatalError("Unimplemented")
+        return getSvgShapeData(polyline: s as! Polyline)
     case .quadraticBezier:
         fatalError("Unimplemented")
     }
