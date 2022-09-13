@@ -9,6 +9,7 @@ struct GeometrizeOptions: ParsableArguments {
     @Option(name: .shortAndLong, help: "Output file pathname.") var outputPath: String
     @Option(name: [.customShort("t"), .long], help: "The types of shapes to generate.") var shapeTypes: String = "rectangle"
     @Option(name: .shortAndLong, help: "The number of shapes to generate for the final output.") var shapeCount: UInt?
+    @Flag(name: .shortAndLong, help: "Verbose output.") var verbose: Bool = false
 }
 
 // If you prefer writing in a "script" style, you can call `parseOrExit()` to
@@ -105,14 +106,22 @@ shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape
 
 var counter = 0
 while shapeData.count <= shapeCount /* Here set count of shapes final image should have. Remember background is the first shape. */ {
-    print("Step \(counter)", terminator: "")
+    if options.verbose {
+        print("Step \(counter)", terminator: "")
+    }
     let shapes = runner.step(options: runnerOptions, shapeCreator: nil, energyFunction: defaultEnergyFunction, addShapePrecondition: defaultAddShapePrecondition)
     if shapes.isEmpty {
-        print(", no shapes added.", terminator: "")
+        if options.verbose {
+            print(", no shapes added.", terminator: "")
+        }
     } else {
-        print(", \(shapes.map(\.shape).map(\.description).joined(separator: ", ")) added.", terminator: "")
+        if options.verbose {
+            print(", \(shapes.map(\.shape).map(\.description).joined(separator: ", ")) added.", terminator: "")
+        }
     }
-    print(" Total count of shapes \(shapeData.count ).")
+    if options.verbose {
+        print(" Total count of shapes \(shapeData.count ).")
+    }
     shapeData.append(contentsOf: shapes)
     counter += 1
 }
