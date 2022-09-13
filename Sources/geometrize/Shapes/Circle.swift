@@ -54,9 +54,11 @@ public final class Circle: Shape {
             let range = xMin...xMax - 1
             let x1 = (Int(x) + xScanFirst).clamped(to: range)
             let x2 = (Int(x) + xScanLast).clamped(to: range)
-            lines.append(Scanline(y: fy, x1: x1, x2: x2))
+            if let line = Scanline(y: fy, x1: x1, x2: x2).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
+                lines.append(line)
+            }
         }
-        return lines.trimmedScanlines(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+        return lines
     }
 
     public func type() -> ShapeType {
