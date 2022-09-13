@@ -57,6 +57,9 @@ public final class Circle: Shape {
                 lines.append(line)
             }
         }
+        if lines.isEmpty {
+            print("Warning: \(#function) produced no scanlines")
+        }
         return lines
     }
 

@@ -75,6 +75,9 @@ public final class Ellipse: Shape {
                 }
             }
         }
+        if lines.isEmpty {
+            print("Warning: \(#function) produced no scanlines")
+        }
         return lines
     }
 

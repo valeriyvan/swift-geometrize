@@ -54,10 +54,15 @@ final class RotatedEllipse: Shape {
     }
 
     func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+        let lines =
         try! Polygon(vertices: points(20)
             .map(Point<Int>.init))
-            .scanlines()
-            .trimmedScanlines(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+        .scanlines()
+        .trimmedScanlines(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+        if lines.isEmpty {
+            print("Warning: \(#function) produced no scanlines")
+        }
+        return lines
     }
 
     private func points(_ count: Int) -> [Point<Double>] {

@@ -57,14 +57,19 @@ public final class Triangle: Shape {
     }
 
     public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
-        try! // TODO: !!!
-        Polygon(vertices:
-            [Point<Int>(x: Int(x1), y: Int(y1)),
-             Point<Int>(x: Int(x2), y: Int(y2)),
-             Point<Int>(x: Int(x3), y: Int(y3))]
-        )
-        .scanlines()
-        .trimmedScanlines(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+        let lines =
+            try! // TODO: !!!
+            Polygon(vertices:
+                        [Point<Int>(x: Int(x1), y: Int(y1)),
+                         Point<Int>(x: Int(x2), y: Int(y2)),
+                         Point<Int>(x: Int(x3), y: Int(y3))]
+            )
+            .scanlines()
+            .trimmedScanlines(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+        if lines.isEmpty {
+            print("Warning: \(#function) produced no scanlines")
+        }
+        return lines
     }
     
     public func type() -> ShapeType {

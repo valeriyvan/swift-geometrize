@@ -57,6 +57,9 @@ public final class Rectangle: Shape {
             }
             lines.append(trimmed)
         }
+        if lines.isEmpty {
+            print("Warning: \(#function) produced no scanlines")
+        }
         return lines
     }
 

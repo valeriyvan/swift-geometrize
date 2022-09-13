@@ -51,11 +51,16 @@ public final class Line: Shape {
     }
 
     public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
-        bresenham(from: Point(x: Int(x1), y: Int(y1)), to: Point(x: Int(x2), y: Int(y2)))
-        .compactMap {
-            Scanline(y: $0.y, x1: $0.x, x2: $0.x)
-            .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+        let lines =
+            bresenham(from: Point(x: Int(x1), y: Int(y1)), to: Point(x: Int(x2), y: Int(y2)))
+            .compactMap {
+                Scanline(y: $0.y, x1: $0.x, x2: $0.x)
+                .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+            }
+        if lines.isEmpty {
+            print("Warning: \(#function) produced no scanlines")
         }
+        return lines
     }
 
     public func type() -> ShapeType {
