@@ -62,11 +62,11 @@ func computeColor(
 ) -> Rgba {
     // Early out to avoid integer divide by 0
     guard !lines.isEmpty else {
-        print("Warning: there are no scanlines")
+        print("Warning: there are no scanlines.")
         return .black
     }
     guard alpha != 0 else {
-        print("Warning: alpha cannot be 0")
+        print("Warning: alpha cannot be 0.")
         return .black
     }
 
