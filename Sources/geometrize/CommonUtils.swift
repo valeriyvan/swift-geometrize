@@ -1,26 +1,29 @@
 import Foundation
 
-// https://www.advancedswift.com/swift-random-numbers/
-fileprivate struct RandomNumberGeneratorWithSeed: RandomNumberGenerator {
-    init(_ seed: Int) {
-        srand48(seed)
+// Borrowed https://github.com/apple/swift-argument-parser/blob/main/Examples/roll/SplitMix64.swift
+fileprivate struct SplitMix64: RandomNumberGenerator {
+    private var state: UInt64
+
+    init(seed: UInt64) {
+        state = seed
     }
 
-    func next() -> UInt64 {
-        // drand48() returns a Double, transform to UInt64
-        withUnsafeBytes(of: drand48()) { bytes in
-            bytes.load(as: UInt64.self)
-        }
+    mutating func next() -> UInt64 {
+        state &+= 0x9e3779b97f4a7c15
+        var z: UInt64 = state
+        z = (z ^ (z &>> 30)) &* 0xbf58476d1ce4e5b9
+        z = (z ^ (z &>> 27)) &* 0x94d049bb133111eb
+        return z ^ (z &>> 31)
     }
 }
 
-fileprivate var generator = RandomNumberGeneratorWithSeed(0)
+fileprivate var generator = SplitMix64(seed: 0)
 
 // seedRandomGenerator Seeds the (thread-local) random number generators.
 // @param seed The random seed.
 // TODO: make it thread-local
-func seedRandomGenerator(_ seed: Int) {
-    generator = RandomNumberGeneratorWithSeed(seed)
+func seedRandomGenerator(_ seed: UInt64) {
+    generator = SplitMix64(seed: seed)
 }
 
 var randomRangeImplementationReference = randomRangeImplementation
