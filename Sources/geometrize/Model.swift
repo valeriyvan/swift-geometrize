@@ -120,12 +120,12 @@ struct Model {
         }
 
         // State with min score
-        guard let it = states.min(by: { $0.m_score < $1.m_score }) else {
+        guard let it = states.min(by: { $0.score < $1.score }) else {
             fatalError("Failed to get a state with min score.")
         }
         
         // Draw the shape onto the image
-        let shape = it.m_shape.copy()
+        let shape = it.shape.copy()
         let lines: [Scanline] = shape.rasterize()
         let color: Rgba = computeColor(target: targetBitmap, current: currentBitmap, lines: lines, alpha: alpha)
         let before: Bitmap = currentBitmap

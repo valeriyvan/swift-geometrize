@@ -246,12 +246,12 @@ func hillClimb(
 ) -> State {
     var s: State = state.copy()
     var bestState: State = state.copy()
-    var bestEnergy: Double = bestState.m_score
+    var bestEnergy: Double = bestState.score
     var age: UInt32 = 0
     while age < maxAge {
         let undo: State = s.mutate()
-        s.m_score = energyFunction(s.m_shape.rasterize(), UInt(s.m_alpha), target, current, &buffer, lastScore)
-        let energy: Double = s.m_score
+        s.score = energyFunction(s.shape.rasterize(), UInt(s.alpha), target, current, &buffer, lastScore)
+        let energy: Double = s.score
         if energy >= bestEnergy {
             s = undo.copy()
         } else {
@@ -288,12 +288,12 @@ fileprivate func bestRandomState(
     energyFunction: EnergyFunction
 ) -> State {
     var bestState: State = State(shape: shapeCreator(), alpha: UInt8(alpha))
-    bestState.m_score = energyFunction(bestState.m_shape.rasterize(), UInt(bestState.m_alpha), target, current, &buffer, lastScore)
-    var bestEnergy: Double = bestState.m_score
+    bestState.score = energyFunction(bestState.shape.rasterize(), UInt(bestState.alpha), target, current, &buffer, lastScore)
+    var bestEnergy: Double = bestState.score
     for i in 0...n {
         var state: State = State(shape: shapeCreator(), alpha: UInt8(alpha))
-        state.m_score = energyFunction(state.m_shape.rasterize(), UInt(state.m_alpha), target, current, &buffer, lastScore)
-        let energy: Double = state.m_score
+        state.score = energyFunction(state.shape.rasterize(), UInt(state.alpha), target, current, &buffer, lastScore)
+        let energy: Double = state.score
         if i == 0 || energy < bestEnergy {
             bestEnergy = energy
             bestState = state.copy()
