@@ -123,6 +123,11 @@ fileprivate func getSvgShapeData(polyline l: Polyline) -> String {
     "<polyline points=\"" + l.points.map{ "\($0.x),\($0.y)" }.joined(separator: " ") + "\" \(SVG_STYLE_HOOK) />"
 }
 
+fileprivate func getSvgShapeData(quadraticBezier q: QuadraticBezier) -> String {
+    // TODO: have to do something with double coordinates in shapes
+    "<path d=\"M\(Int(q.x1)) \(Int(q.y1)) Q \(Int(q.cx)) \(Int(q.cy)) \(Int(q.x2)) \(Int(q.y2))\" \(SVG_STYLE_HOOK)/>"
+}
+
 fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) -> String {
     switch s.type() {
     case .rectangle:
@@ -142,7 +147,7 @@ fileprivate func getSvgShapeData(shape s: any Shape, options: SVGExportOptions) 
     case .polyline:
         return getSvgShapeData(polyline: s as! Polyline)
     case .quadraticBezier:
-        fatalError("Unimplemented")
+        return getSvgShapeData(quadraticBezier: s as! QuadraticBezier)
     }
 }
 

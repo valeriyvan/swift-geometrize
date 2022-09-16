@@ -20,7 +20,7 @@ public func createDefaultShapeCreator(types: Set<ShapeType>, xMin: Int, yMin: In
         case .ellipse: return Ellipse()
         case .line: return Line()
         case .polyline: return Polyline()
-        case .quadraticBezier: fatalError("Unimplemented")
+        case .quadraticBezier: return QuadraticBezier()
         }
     }
 }
