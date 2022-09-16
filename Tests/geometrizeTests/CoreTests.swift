@@ -138,7 +138,7 @@ final class CoreTests: XCTestCase {
         //}
         let state = State(score: 0.169823, alpha: 128, shape: rectangle)
         
-        // hillClimb return state State(m_score: 0.162824, m_alpha: 128, m_shape: Rectangle(x1=272,y1=113,x2=355,y2=237))
+        // hillClimb return state State(score: 0.162824, alpha: 128, shape: Rectangle(x1=272,y1=113,x2=355,y2=237))
 
         let rectangleOnExit = Rectangle(x1: 272, y1: 113, x2: 355, y2: 237)
         //rectangleOnExit.setupImplementation = { r in
@@ -162,9 +162,9 @@ final class CoreTests: XCTestCase {
             energyFunction: defaultEnergyFunction
         )
 
-        XCTAssertEqual(stateOnExit.m_score, stateOnExitSample.m_score, accuracy: 0.000001)
-        XCTAssertEqual(stateOnExit.m_alpha, stateOnExitSample.m_alpha)
-        XCTAssertTrue(stateOnExit.m_shape == stateOnExitSample.m_shape)
+        XCTAssertEqual(stateOnExit.score, stateOnExitSample.score, accuracy: 0.000001)
+        XCTAssertEqual(stateOnExit.alpha, stateOnExitSample.alpha)
+        XCTAssertTrue(stateOnExit.shape == stateOnExitSample.shape)
 
         XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit)
     }
