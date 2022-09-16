@@ -39,12 +39,12 @@ struct Model {
     
     // Creates a model that will aim to replicate the target bitmap with shapes.
     // @param target The target bitmap to replicate with shapes.
-    init(target: Bitmap) {
-        m_target = target
-        m_current = Bitmap(width: target.width, height: target.height, color: m_target.averageColor())
-        m_lastScore = differenceFull(first: m_target, second: m_current)
-        m_baseRandomSeed = 0
-        m_randomSeedOffset = 0
+    init(targetBitmap: Bitmap) {
+        self.targetBitmap = targetBitmap
+        currentBitmap = Bitmap(width: targetBitmap.width, height: targetBitmap.height, color: targetBitmap.averageColor())
+        lastScore = differenceFull(first: targetBitmap, second: currentBitmap)
+        baseRandomSeed = 0
+        randomSeedOffset = 0
     }
 
     // Creates a model that will optimize for the given target bitmap, starting from the given initial bitmap.
@@ -52,24 +52,24 @@ struct Model {
     // @param target The target bitmap to replicate with shapes.
     // @param initial The starting bitmap.
     init(target: Bitmap, initial: Bitmap) {
-        m_target = target
-        m_current = initial
-        m_lastScore = differenceFull(first: m_target, second: m_current)
-        m_baseRandomSeed = 0
-        m_randomSeedOffset = 0
-        assert(m_target.width == m_current.width)
-        assert(m_target.height == m_current.height)
+        targetBitmap = target
+        currentBitmap = initial
+        lastScore = differenceFull(first: target, second: currentBitmap)
+        baseRandomSeed = 0
+        randomSeedOffset = 0
+        assert(target.width == currentBitmap.width)
+        assert(target.height == currentBitmap.height)
     }
 
     // Resets the model back to the state it was in when it was created.
     // @param backgroundColor The starting background color to use.
     mutating func reset(backgroundColor: Rgba) {
-        m_current.fill(color: backgroundColor)
-        m_lastScore = differenceFull(first: m_target, second: m_current);
+        currentBitmap.fill(color: backgroundColor)
+        lastScore = differenceFull(first: targetBitmap, second: currentBitmap);
     }
 
-    var width: Int { m_target.width }
-    var height: Int { m_target.height }
+    var width: Int { targetBitmap.width }
+    var height: Int { targetBitmap.height }
 
     private mutating func getHillClimbState(
         shapeCreator: () -> any Shape,
@@ -82,14 +82,14 @@ struct Model {
         // Ensure that the results of the random generation are the same between tasks with identical settings
         // The RNG is thread-local and std::async may use a thread pool (which is why this is necessary)
         // Note this implementation requires maxThreads to be the same between tasks for each task to produce the same results.
-        let seed = m_baseRandomSeed + m_randomSeedOffset
-        m_randomSeedOffset += 1
-        seedRandomGenerator(seed)
+        let seed = baseRandomSeed + randomSeedOffset
+        randomSeedOffset += 1
+        seedRandomGenerator(UInt64(seed))
 
-        let lastScore = m_lastScore
+        let lastScore = lastScore
         
-        var buffer: Bitmap = m_current
-        let state = bestHillClimbState(shapeCreator: shapeCreator, alpha: UInt(alpha), n: shapeCount, age: maxShapeMutations, target: m_target, current: m_current, buffer: &buffer, lastScore: lastScore, customEnergyFunction: energyFunction)
+        var buffer: Bitmap = currentBitmap
+        let state = bestHillClimbState(shapeCreator: shapeCreator, alpha: UInt(alpha), n: shapeCount, age: maxShapeMutations, target: targetBitmap, current: currentBitmap, buffer: &buffer, lastScore: lastScore, customEnergyFunction: energyFunction)
         
         return [state]
     }
@@ -127,22 +127,22 @@ struct Model {
         // Draw the shape onto the image
         let shape = it.m_shape.copy()
         let lines: [Scanline] = shape.rasterize()
-        let color: Rgba = computeColor(target: m_target, current: m_current, lines: lines, alpha: alpha)
-        let before: Bitmap = m_current
-        m_current.draw(lines: lines, color: color)
+        let color: Rgba = computeColor(target: targetBitmap, current: currentBitmap, lines: lines, alpha: alpha)
+        let before: Bitmap = currentBitmap
+        currentBitmap.draw(lines: lines, color: color)
 
         // Check for an improvement - if not, roll back and return no result
-        let newScore: Double = differencePartial(target: m_target, before: before, after: m_current, score: m_lastScore, lines: lines)
+        let newScore: Double = differencePartial(target: targetBitmap, before: before, after: currentBitmap, score: lastScore, lines: lines)
         let addShapeCondition = addShapePrecondition ?? defaultAddShapePrecondition
-        guard addShapeCondition(m_lastScore, newScore, shape, lines, color, before, m_current, m_target) else {
-            m_current = before
+        guard addShapeCondition(lastScore, newScore, shape, lines, color, before, currentBitmap, targetBitmap) else {
+            currentBitmap = before
             return []
         }
 
         // Improvement - set new baseline and return the new shape
-        m_lastScore = newScore
+        lastScore = newScore
         
-        let result: ShapeResult = ShapeResult(score: m_lastScore, color: color, shape: shape)
+        let result: ShapeResult = ShapeResult(score: lastScore, color: color, shape: shape)
         return [result]
     }
 
@@ -155,39 +155,39 @@ struct Model {
     // @return Data about the shape drawn on the model.
     mutating func draw(shape: any Shape, color: Rgba) -> ShapeResult {
         let lines: [Scanline] = shape.rasterize()
-        let before: Bitmap = m_current
-        m_current.draw(lines: lines, color: color)
-        m_lastScore = differencePartial(target: m_target, before: before, after: m_current, score: m_lastScore, lines: lines)
-        return ShapeResult(score: m_lastScore, color: color, shape: shape)
+        let before: Bitmap = currentBitmap
+        currentBitmap.draw(lines: lines, color: color)
+        lastScore = differencePartial(target: targetBitmap, before: before, after: currentBitmap, score: lastScore, lines: lines)
+        return ShapeResult(score: lastScore, color: color, shape: shape)
     }
 
      // Gets the target bitmap.
      // @return The target bitmap.
-    func getTarget() -> Bitmap { m_target }
+    func getTarget() -> Bitmap { targetBitmap }
 
     // Sets the seed that the random number generators of this model use.
     // Note that the model also uses an internal seed offset which is incremented when the model is stepped.
     // @param seed The random number generator seed.
     mutating func setSeed(_ seed: Int) {
-        m_baseRandomSeed = seed
+        baseRandomSeed = seed
     }
 
     // The target bitmap, the bitmap we aim to approximate.
-    private var m_target: Bitmap
+    private var targetBitmap: Bitmap
     
     // The current bitmap.
-    private var m_current: Bitmap
+    private var currentBitmap: Bitmap
     
     // Score derived from calculating the difference between bitmaps.
-    var m_lastScore: Double
+    var lastScore: Double
     
     private static let defaultMaxThreads: Int = 4
     
     // The base value used for seeding the random number generator (the one the user has control over)
-    var m_baseRandomSeed: Int // TODO: atomic
+    var baseRandomSeed: Int // TODO: atomic
     
     // Seed used for random number generation.
     // Note: incremented by each std::async call used for model stepping.
-    var m_randomSeedOffset: Int // TODO: atomic
+    var randomSeedOffset: Int // TODO: atomic
 
 }

@@ -70,7 +70,7 @@ public struct ImageRunner {
     // Creates a new image runner with the given target bitmap.
     // Uses the average color of the target as the starting image.
     public init(targetBitmap: Bitmap) {
-        m_model = Model(target: targetBitmap)
+        m_model = Model(targetBitmap: targetBitmap)
     }
 
     // Creates an image runner with the given target bitmap, starting from the given initial bitmap.
