@@ -65,7 +65,7 @@ public final class Triangle: Shape {
                          Point<Int>(x: Int(x3), y: Int(y3))]
             )
             .scanlines()
-            .trimmedScanlines(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+            .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
         if lines.isEmpty {
             print("Warning: \(#function) produced no scanlines")
         }

@@ -58,7 +58,7 @@ final class RotatedEllipse: Shape {
         try! Polygon(vertices: points(20)
             .map(Point<Int>.init))
         .scanlines()
-        .trimmedScanlines(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+        .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
         if lines.isEmpty {
             print("Warning: \(#function) produced no scanlines")
         }

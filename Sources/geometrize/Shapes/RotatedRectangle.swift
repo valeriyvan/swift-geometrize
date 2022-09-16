@@ -55,7 +55,7 @@ final class RotatedRectangle: Shape {
     func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
         let cornerPoints = cornerPoints
         let lines = try! Polygon(vertices: [Point<Int>(cornerPoints.0), Point<Int>(cornerPoints.1), Point<Int>(cornerPoints.2), Point<Int>(cornerPoints.3)]).scanlines()
-            .trimmedScanlines(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+            .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
         if lines.isEmpty {
             print("Warning: \(#function) produced no scanlines")
         }

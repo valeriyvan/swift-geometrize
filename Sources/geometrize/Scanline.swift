@@ -87,7 +87,7 @@ extension Array where Element == Scanline {
      // @param maxX The maximum x value to crop to.
      // @param maxY The maximum y value to crop to.
      // @return A new vector of cropped scanlines.
-    func trimmedScanlines(minX: Int, minY: Int, maxX: Int, maxY: Int) -> Self {
+    func trimmed(minX: Int, minY: Int, maxX: Int, maxY: Int) -> Self {
         var trimmedScanlines = Self()
         for line in self {
             if line.y < minY || line.y >= maxY {
