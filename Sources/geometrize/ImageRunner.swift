@@ -70,7 +70,7 @@ public struct ImageRunner {
     // Creates a new image runner with the given target bitmap.
     // Uses the average color of the target as the starting image.
     public init(targetBitmap: Bitmap) {
-        m_model = Model(targetBitmap: targetBitmap)
+        model = Model(targetBitmap: targetBitmap)
     }
 
     // Creates an image runner with the given target bitmap, starting from the given initial bitmap.
@@ -78,7 +78,7 @@ public struct ImageRunner {
     // @param targetBitmap The target bitmap to replicate with shapes.
     // @param initialBitmap The starting bitmap.
     public init(targetBitmap: Bitmap, initialBitmap: Bitmap) {
-        m_model = Model(target: targetBitmap, initial: initialBitmap)
+        model = Model(target: targetBitmap, initial: initialBitmap)
     }
 
     // Updates the internal model once.
@@ -94,14 +94,14 @@ public struct ImageRunner {
         addShapePrecondition: ShapeAcceptancePreconditionFunction? = nil
     ) -> [ShapeResult]
     {
-        let (xMin, yMin, xMax, yMax) = mapShapeBoundsToImage(options: options.shapeBounds, image: m_model.getTarget())
+        let (xMin, yMin, xMax, yMax) = mapShapeBoundsToImage(options: options.shapeBounds, image: model.getTarget())
         let types = options.shapeTypes
         
         let shapeCreator: () -> any Shape = shapeCreator ?? createDefaultShapeCreator(types: types, xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
 
-        m_model.setSeed(options.seed)
+        model.setSeed(options.seed)
 
-        let result: [ShapeResult] = m_model.step(
+        let result: [ShapeResult] = model.step(
             shapeCreator: shapeCreator,
             alpha: options.alpha,
             shapeCount: options.shapeCount,
@@ -115,6 +115,6 @@ public struct ImageRunner {
     }
 
     // The model for the primitive optimization/fitting algorithm.
-    private var m_model: Model
+    private var model: Model
 }
 
