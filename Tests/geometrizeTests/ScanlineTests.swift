@@ -17,7 +17,7 @@ final class ScanlineTests: XCTestCase {
         XCTAssertEqual(scanline.x2, 3)
     }
 
-    func testTrimmedScanlines() throws {
+    func testTrimmed() throws {
         let scanlines = [
             Scanline(y: 3, x1: 3, x2: 13),
             Scanline(y: 4, x1: 3, x2: 13),
