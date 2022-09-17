@@ -48,10 +48,13 @@ final class BitmapTests: XCTestCase {
         ]
         var bitmap = Bitmap(width: 5, height: 3, data: data)
         XCTAssertEqual(bitmap[0, 0], Rgba(r: 0, g: 0, b: 0, a: 0))
+        XCTAssertEqual(bitmap[Point(x: 0, y: 0)], Rgba(r: 0, g: 0, b: 0, a: 0))
         XCTAssertEqual(bitmap[4, 2], Rgba(r: 24, g: 24, b: 24, a: 24))
+        XCTAssertEqual(bitmap[Point(x: 4, y: 2)], Rgba(r: 24, g: 24, b: 24, a: 24))
         XCTAssertEqual(bitmap[1, 1], Rgba(r: 11, g: 11, b: 11, a: 11))
+        XCTAssertEqual(bitmap[Point(x: 1, y: 1)], Rgba(r: 11, g: 11, b: 11, a: 11))
         bitmap[1, 1] = Rgba(r: 111, g: 111, b: 111, a: 111)
-        bitmap[3, 2] = Rgba(r: 222, g: 222, b: 222, a: 222)
+        bitmap[Point(x: 3, y: 2)] = Rgba(r: 222, g: 222, b: 222, a: 222)
         XCTAssertEqual(
             bitmap.backing, [
                 0,0,0,0,     1,1,1,1,         2,2,2,2,     3,3,3,3,         4,4,4,4,

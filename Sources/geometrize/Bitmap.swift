@@ -89,6 +89,15 @@ public struct Bitmap {
         }
     }
 
+    public subscript(_ point: Point<Int>) -> Rgba {
+        get {
+            self[point.x, point.y]
+        }
+        set {
+            self[point.x, point.y] = newValue
+        }
+    }
+
     // Fills the bitmap with the given color.
     // @param color The color to fill the bitmap with.
     public mutating func fill(color: Rgba) {
