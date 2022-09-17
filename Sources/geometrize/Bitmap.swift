@@ -272,3 +272,11 @@ extension Bitmap: ExpressibleByStringLiteral {
     }
     
 }
+
+extension Bitmap: CustomStringConvertible {
+    
+    public var description: String {
+        "width: \(width), height: \(height)\n" + backing.map(String.init).joined(separator: ",")
+    }
+    
+}
