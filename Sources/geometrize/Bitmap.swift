@@ -47,6 +47,7 @@ public struct Bitmap {
     }
 
     public init(width: Int, height: Int, initializer: (_: Int, _: Int) -> Rgba) {
+        assert(width > 0 && height > 0)
         self.width = width
         self.height = height
         self.backing = ContiguousArray.init(unsafeUninitializedCapacity: width * height * 4) {
