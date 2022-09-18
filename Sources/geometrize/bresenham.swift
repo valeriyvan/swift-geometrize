@@ -16,10 +16,8 @@ func bresenham<N: SignedInteger>(from: Point<N>, to: Point<N>) -> [Point<N>] {
                 error -= dx;
                 from.y += iy
             }
-
             error += dy
             from.x += ix
-            
             points.append(from)
         }
     } else {
@@ -29,10 +27,8 @@ func bresenham<N: SignedInteger>(from: Point<N>, to: Point<N>) -> [Point<N>] {
                 error -= dy
                 from.x += ix
             }
-
             error += dx
             from.y += iy
-
             points.append(from)
         }
     }
