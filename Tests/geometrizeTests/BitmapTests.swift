@@ -40,6 +40,26 @@ final class BitmapTests: XCTestCase {
         XCTAssertEqual(bitmap.backing, ContiguousArray<UInt8>(data))
     }
 
+    func testInitInitializer() throws {
+        XCTAssertEqual(
+            Bitmap(width: 3, height: 4) {
+                Rgba(r: UInt8($0 * $1),
+                     g: UInt8($0 * $1 + 1),
+                     b: UInt8($0 * $1 + 2),
+                     a: UInt8($0 * $1 + 3)
+                )
+            },
+            Bitmap(width: 3, height: 4,
+                data:
+                    [0,1,2,3, 0,1,2,3, 0,1,2,3,
+                     0,1,2,3, 1,2,3,4, 2,3,4,5,
+                     0,1,2,3, 2,3,4,5, 4,5,6,7,
+                     0,1,2,3, 3,4,5,6, 6,7,8,9
+                    ]
+            )
+        )
+    }
+
     func testSubscript() throws {
         let data: [UInt8] = [
             0,0,0,0,     1,1,1,1,     2,2,2,2,     3,3,3,3,     4,4,4,4,

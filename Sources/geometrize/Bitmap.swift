@@ -46,6 +46,25 @@ public struct Bitmap {
         self.backing = ContiguousArray(data)
     }
 
+    public init(width: Int, height: Int, initializer: (_: Int, _: Int) -> Rgba) {
+        self.width = width
+        self.height = height
+        self.backing = ContiguousArray.init(unsafeUninitializedCapacity: width * height * 4) {
+            buffer, initializedCapacity in
+            for y in 0..<height {
+                for x in 0..<width {
+                    let rgba = initializer(x, y)
+                    let offset = (width * y + x) * 4
+                    buffer[offset + 0] = rgba.r
+                    buffer[offset + 1] = rgba.g
+                    buffer[offset + 2] = rgba.b
+                    buffer[offset + 3] = rgba.a
+                }
+            }
+            initializedCapacity = width * height * 4
+        }
+    }
+    
     // Width of the bitmap.
     public private(set) var width: Int
 
