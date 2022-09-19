@@ -17,7 +17,7 @@ public struct Bitmap {
     // height The height of the bitmap.
     // @param color The starting color of the bitmap (RGBA format).
     public init(width: Int, height: Int, color: Rgba) {
-        assert(width > 0 && height > 0)
+        assert(width >= 0 && height >= 0)
         self.width = width
         self.height = height
         let pixelCount = width * height
@@ -78,9 +78,10 @@ public struct Bitmap {
     public private(set) var backing: ContiguousArray<UInt8> // C ordering, row by row
 
 
+    // Bitmap has no pixels.
     @inlinable
     @inline(__always)
-    public var isEmpty: Bool { width == 0 && height == 0 }
+    public var isEmpty: Bool { width == 0 || height == 0 }
 
     public subscript(x: Int, y: Int) -> Rgba {
         // Gets a pixel color value.

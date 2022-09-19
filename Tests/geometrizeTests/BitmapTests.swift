@@ -60,6 +60,14 @@ final class BitmapTests: XCTestCase {
         )
     }
 
+    func testIsEmpty() {
+        XCTAssertTrue(Bitmap().isEmpty)
+        XCTAssertTrue(Bitmap(width: 0, height: 2, color: .white).isEmpty)
+        XCTAssertTrue(Bitmap(width: 2, height: 0, color: .white).isEmpty)
+        XCTAssertTrue(Bitmap(width: 0, height: 0, color: .white).isEmpty)
+        XCTAssertFalse(Bitmap(width: 3, height: 2, color: .white).isEmpty)
+    }
+    
     func testSubscript() throws {
         let data: [UInt8] = [
             0,0,0,0,     1,1,1,1,     2,2,2,2,     3,3,3,3,     4,4,4,4,
