@@ -16,6 +16,10 @@ public struct Rgba {
         self.a = a
     }
         
+    public func withAlphaComponent(_ alpha: UInt8) -> Rgba {
+        Rgba(r: r, g: g, b: b, a: alpha)
+    }
+    
     public static var black: Rgba { Rgba(r: 0, g: 0, b: 0, a: 255) }
     public static var white: Rgba { Rgba(r: 255, g: 255, b: 255, a: 255) }
     public static var red: Rgba { Rgba(r: 255, g: 0, b: 0, a: 255) }
