@@ -69,14 +69,17 @@ public struct Bitmap {
     // Width of the bitmap.
     public private(set) var width: Int
 
+    public var widthIndices: Range<Int> { 0..<width }
+
     // Height of the bitmap.
     public private(set) var height: Int
+
+    public var heightIndices: Range<Int> { 0..<height }
 
     public var pixelCount: Int { width * height }
     
     // Raw bitmap data.
     public private(set) var backing: ContiguousArray<UInt8> // C ordering, row by row
-
 
     // Bitmap has no pixels.
     @inlinable
