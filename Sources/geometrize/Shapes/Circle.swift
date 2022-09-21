@@ -43,16 +43,20 @@ public final class Circle: Shape {
     public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
         var lines: [Scanline] = []
         let r = Int(r)
-        for y in -r...r {
+        let r² = r * r
+        let rRange = -r...r
+        for y in rRange {
             var xScan: [Int] = []
-            for x in -r...r where x * x + y * y <= r * r {
+            let y² = y * y
+            for x in rRange where x * x + y² <= r² {
                 xScan.append(x)
             }
             guard let xScanFirst = xScan.first, let xScanLast = xScan.last else { continue }
             let fy = Int(self.y) + y
-            let range = xMin...xMax - 1
-            let x1 = (Int(x) + xScanFirst).clamped(to: range)
-            let x2 = (Int(x) + xScanLast).clamped(to: range)
+            let xRange = xMin...xMax - 1
+            let intX = Int(x)
+            let x1 = (intX + xScanFirst).clamped(to: xRange)
+            let x2 = (intX + xScanLast).clamped(to: xRange)
             if let line = Scanline(y: fy, x1: x1, x2: x2).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
                 lines.append(line)
             }
