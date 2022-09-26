@@ -78,6 +78,10 @@ public struct Bitmap {
 
     public var pixelCount: Int { width * height }
     
+    @inlinable
+    @inline(__always)
+    public var componentCount: Int { pixelCount * 4 }
+
     // Raw bitmap data.
     public private(set) var backing: ContiguousArray<UInt8> // C ordering, row by row
 
