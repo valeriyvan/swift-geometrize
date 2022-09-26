@@ -50,7 +50,7 @@ public struct Bitmap {
         assert(width > 0 && height > 0)
         self.width = width
         self.height = height
-        self.backing = ContiguousArray.init(unsafeUninitializedCapacity: width * height * 4) {
+        self.backing = ContiguousArray(unsafeUninitializedCapacity: width * height * 4) {
             buffer, initializedCapacity in
             for y in 0..<height {
                 for x in 0..<width {
