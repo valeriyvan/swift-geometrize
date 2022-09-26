@@ -35,11 +35,10 @@ public struct Scanline {
     
     // Returned nil means trimming eliminates scanline completely.
     func trimmed(minX: Int, minY: Int, maxX: Int, maxY: Int) -> Self? {
-        guard minY...maxY ~= y && x2 >= x1 else { // TODO: should it be x2 >= x1 or x2 > x1 ?
-            return nil
-        }
-        let x1 = x1.clamped(to: minX...maxX - 1) // -1 here should be removed or
-        let x2 = x2.clamped(to: minX...maxX - 1) // func definition should be changed.
+        guard minY...maxY - 1 ~= y && x2 >= x1 else { return nil }
+        let xRange = minX...maxX - 1
+        let x1 = x1.clamped(to: xRange)
+        let x2 = x2.clamped(to: xRange)
         return Scanline(y: y, x1: x1, x2: x2)
     }
 }
@@ -89,15 +88,12 @@ extension Array where Element == Scanline {
      // @return A new vector of cropped scanlines.
     func trimmed(minX: Int, minY: Int, maxX: Int, maxY: Int) -> Self {
         var trimmedScanlines = Self()
+        let xRange = minX...maxX - 1
+        let yRange = minY...maxY - 1
         for line in self {
-            if line.y < minY || line.y >= maxY {
-                continue
-            }
-            if line.x1 > line.x2 {
-                continue
-            }
-            let x1 = line.x1.clamped(to: minX...maxX - 1) // -1 here should be removed or
-            let x2 = line.x2.clamped(to: minX...maxX - 1) // func definition should be changed.
+            guard yRange ~= line.y && line.x2 >= line.x1 else { continue }
+            let x1 = line.x1.clamped(to: xRange)
+            let x2 = line.x2.clamped(to: xRange)
             trimmedScanlines.append(Scanline(y: line.y, x1: x1, x2: x2))
         }
         return trimmedScanlines
