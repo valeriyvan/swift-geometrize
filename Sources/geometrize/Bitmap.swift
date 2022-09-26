@@ -161,8 +161,8 @@ public struct Bitmap {
         let newHeight = height + inset * 2
         let newCapacity = newWidth * newHeight * 4
         let newBacking = ContiguousArray<UInt8>(unsafeUninitializedCapacity: newCapacity) { buffer, initializedCapacity in
-            for x in 0..<newWidth {
-                for y in 0..<newHeight {
+            for y in 0..<newHeight {
+                for x in 0..<newWidth {
                     let targetOffset =  (newWidth * y + x) * 4
                     if (inset..<newWidth-inset ~= x) && (inset..<newHeight-inset ~= y) {
                         let sourceOffset = (width * (y - inset) + (x - inset)) * 4
