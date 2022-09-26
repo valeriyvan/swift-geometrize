@@ -7,7 +7,7 @@ let package = Package(
     name: "geometrize",
     
     platforms: [
-        .macOS(.v10_15), .iOS(.v15)
+        .macOS(.v10_15), .iOS(.v14)
     ],
     
     products: [
