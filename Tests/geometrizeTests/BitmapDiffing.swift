@@ -10,6 +10,7 @@ extension XCTAttachment {
 }
 
 extension Diffing where Value == Bitmap {
+    
     /// A pixel-diffing strategy for UIImage's which requires a 100% match.
     public static let image = Diffing.image(precision: 1.0)
     
@@ -23,7 +24,7 @@ extension Diffing where Value == Bitmap {
             fromData: { try! .init(pngData: $0) }
         ) { old, new -> (String, [XCTAttachment])? in
             guard !old.compare(with: new, precision: precision) else { return nil }
-            let difference = diff_(old, new)
+            let difference = old.diff(with: new)
             let message = new.width == old.width && new.height == old.height
             ? "Newly-taken snapshot does not match reference."
             : "Newly-taken snapshot@\(new.width),\(new.height) does not match reference@\(old.width),\(old.height)."
@@ -42,30 +43,37 @@ extension Diffing where Value == Bitmap {
     
 }
 
-private func diff<U: UnsignedInteger>(_ l: U, _ r: U) -> U {
-    if l > r {
-        return l - r
-    } else if r > l {
-        return r - l
-    } else {
-        return l
-    }
-}
-
-private func diff_(_ old: Bitmap, _ new: Bitmap) -> Bitmap {
-    if old.isEmpty {
-        return new
-    } else if new.isEmpty {
-        return old
-    } else {
-        let width = max(old.width, new.width)
-        let height = max(old.height, new.height)
-        return Bitmap(width: width, height: height) { x, y in
-            // https://en.wikipedia.org/wiki/Blend_modes
-            // https://imagineer.in/blog/math-behind-blend-modes/
-            let o = old.widthIndices ~= x && old.heightIndices ~= y ? old[x, y] : .black
-            let n = new.widthIndices ~= x && new.heightIndices ~= y ?  new[x, y] : .black
-            return Rgba(r: diff(o.r, n.r), g: diff(o.g, n.g), b: diff(o.b, n.b), a: diff(o.a, n.a))
+// Diffing like compare from imagemagick when difference is highlighted in red and
+// original image is dimmed (drawn with 10% of its alpha).
+fileprivate extension Bitmap {
+    
+    func diff(with other: Bitmap) -> Bitmap {
+        if isEmpty {
+            return other
+        } else if other.isEmpty {
+            return self
+        } else {
+            let width = max(width, other.width)
+            let height = max(height, other.height)
+            return Bitmap(width: width, height: height) { x, y in
+                // https://en.wikipedia.org/wiki/Blend_modes
+                // https://imagineer.in/blog/math-behind-blend-modes/
+                let o = widthIndices ~= x && heightIndices ~= y ? self[x, y] : .white
+                let n = other.widthIndices ~= x && other.heightIndices ~= y ?  other[x, y] : .white
+                return o.diff(with: n)
+            }
         }
     }
+    
+}
+
+fileprivate extension Rgba {
+    
+    func diff(with other: Rgba) -> Rgba {
+        guard self != other else {
+            return withAlphaComponent(a / 10)
+        }
+        return .red
+    }
+    
 }
