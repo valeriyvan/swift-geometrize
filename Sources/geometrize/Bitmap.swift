@@ -323,3 +323,29 @@ extension Bitmap: CustomStringConvertible {
     }
     
 }
+
+extension Bitmap {
+    
+    public func compare(with other: Bitmap, precision: Double) -> Bool {
+        guard width != 0 else { return false }
+        guard other.width != 0 else { return false }
+        guard width == other.width else { return false }
+        guard height != 0 else { return false }
+        guard other.height != 0 else { return false }
+        guard height == other.height else { return false }
+        var differentPixelCount = 0
+        let threshold = 1 - precision
+        let componentCount = Double(componentCount)
+        for y in heightIndices {
+            for x in widthIndices {
+                if self[x, y] != other[x, y] {
+                    if precision >= 0 { return false }
+                    differentPixelCount += 1
+                }
+                if Double(differentPixelCount) / Double(componentCount) > threshold { return false }
+            }
+        }
+        return true
+    }
+
+}
