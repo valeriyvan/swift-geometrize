@@ -69,13 +69,19 @@ public struct Bitmap {
     // Width of the bitmap.
     public private(set) var width: Int
 
+    @inlinable
+    @inline(__always)
     public var widthIndices: Range<Int> { 0..<width }
 
     // Height of the bitmap.
     public private(set) var height: Int
 
+    @inlinable
+    @inline(__always)
     public var heightIndices: Range<Int> { 0..<height }
 
+    @inlinable
+    @inline(__always)
     public var pixelCount: Int { width * height }
     
     @inlinable
