@@ -2,12 +2,12 @@ import Foundation
 
 public final class QuadraticBezier: Shape {
 
-    var cx: Double // Control point x-coordinate.
-    var cy: Double // Control point y-coordinate.
-    var x1: Double // First x-coordinate.
-    var y1: Double // First y-coordinate.
-    var x2: Double // Second x-coordinate.
-    var y2: Double // Second y-coordinate.
+    public var cx: Double // Control point x-coordinate.
+    public var cy: Double // Control point y-coordinate.
+    public var x1: Double // First x-coordinate.
+    public var y1: Double // First y-coordinate.
+    public var x2: Double // Second x-coordinate.
+    public var y2: Double // Second y-coordinate.
 
     public init() {
         cx = 0.0
