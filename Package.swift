@@ -22,7 +22,7 @@ let package = Package(
     ],
     
     dependencies: [
-        .package(url: "git@github.com:kelvin13/swift-png.git", from: "4.0.1"),
+        .package(url: "git@github.com:kelvin13/swift-png.git", from: "4.0.2"),
         .package(url: "git@github.com:valeriyvan/jpeg.git", branch: "allFixesMerged"),
         .package(url: "git@github.com:pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
         .package(url: "git@github.com:apple/swift-algorithms.git", from: "1.0.0"),
