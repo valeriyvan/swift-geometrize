@@ -1,0 +1,59 @@
+{
+  "pins" : [
+    {
+      "identity" : "jpeg",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:valeriyvan/jpeg.git",
+      "state" : {
+        "branch" : "allFixesMerged",
+        "revision" : "6ab5fffa49626116ff6b46510fe9828b71b708af"
+      }
+    },
+    {
+      "identity" : "swift-algorithms",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:apple/swift-algorithms.git",
+      "state" : {
+        "revision" : "b14b7f4c528c942f121c8b860b9410b2bf57825e",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:apple/swift-argument-parser.git",
+      "state" : {
+        "revision" : "9f39744e025c7d377987f30b03770805dcb0bcd1",
+        "version" : "1.1.4"
+      }
+    },
+    {
+      "identity" : "swift-numerics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-numerics",
+      "state" : {
+        "revision" : "0a5bc04095a675662cf24757cc0640aa2204253b",
+        "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "swift-png",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:kelvin13/swift-png.git",
+      "state" : {
+        "revision" : "075dfb248ae327822635370e9d4f94a5d3fe93b2",
+        "version" : "4.0.2"
+      }
+    },
+    {
+      "identity" : "swift-snapshot-testing",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:pointfreeco/swift-snapshot-testing.git",
+      "state" : {
+        "revision" : "f29e2014f6230cf7d5138fc899da51c7f513d467",
+        "version" : "1.10.0"
+      }
+    }
+  ],
+  "version" : 2
+}
