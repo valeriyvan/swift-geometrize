@@ -3,11 +3,11 @@ import Foundation
 // Represents a rotated rectangle.
 final class RotatedRectangle: Shape {
     
-    var x1: Double
-    var y1: Double
-    var x2: Double
-    var y2: Double
-    var angle: Double
+    public var x1: Double
+    public var y1: Double
+    public var x2: Double
+    public var y2: Double
+    public var angle: Double
 
     required init() {
         x1 = 0.0

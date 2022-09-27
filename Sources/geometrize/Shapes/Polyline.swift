@@ -2,7 +2,7 @@ import Foundation
 
 public final class Polyline: Shape {
     
-    var points: [Point<Double>]
+    public var points: [Point<Double>]
     
     public init() {
         points = []

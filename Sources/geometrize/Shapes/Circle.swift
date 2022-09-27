@@ -2,9 +2,9 @@ import Foundation
 
 public final class Circle: Shape {
     
-    var x: Double // x-coordinate.
-    var y: Double // y-coordinate.
-    var r: Double // Radius.
+    public var x: Double // x-coordinate.
+    public var y: Double // y-coordinate.
+    public var r: Double // Radius.
     
     public init() {
         x = 0.0

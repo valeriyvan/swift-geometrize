@@ -2,7 +2,7 @@ import Foundation
 
 public final class Line: Shape {
     
-    var x1, y1, x2, y2: Double
+    public var x1, y1, x2, y2: Double
     
     public init() {
         x1 = 0.0

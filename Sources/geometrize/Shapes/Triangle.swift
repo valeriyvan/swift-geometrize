@@ -2,12 +2,12 @@ import Foundation
 
 public final class Triangle: Shape {
     
-    var x1: Double // First x-coordinate.
-    var y1: Double // First y-coordinate.
-    var x2: Double // Second x-coordinate.
-    var y2: Double // Second y-coordinate.
-    var x3: Double // Third x-coordinate.
-    var y3: Double // Third y-coordinate.
+    public var x1: Double // First x-coordinate.
+    public var y1: Double // First y-coordinate.
+    public var x2: Double // Second x-coordinate.
+    public var y2: Double // Second y-coordinate.
+    public var x3: Double // Third x-coordinate.
+    public var y3: Double // Third y-coordinate.
     
     public init() {
         x1 = 0.0

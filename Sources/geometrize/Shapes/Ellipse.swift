@@ -2,10 +2,10 @@ import Foundation
 
 public final class Ellipse: Shape {
     
-    var x: Double // x-coordinate.
-    var y: Double // y-coordinate.
-    var rx: Double // x-radius.
-    var ry: Double // y-radius.
+    public var x: Double // x-coordinate.
+    public var y: Double // y-coordinate.
+    public var rx: Double // x-radius.
+    public var ry: Double // y-radius.
 
     public init() {
         x = 0.0

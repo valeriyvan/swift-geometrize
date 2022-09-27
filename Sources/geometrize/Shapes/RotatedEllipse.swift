@@ -3,11 +3,11 @@ import Foundation
 // Represents a rotated ellipse.
 final class RotatedEllipse: Shape {
     
-    var x: Double // x-coordinate.
-    var y: Double // y-coordinate.
-    var rx: Double // x-radius.
-    var ry: Double // y-radius.
-    var angle: Double // Rotation angle.
+    public var x: Double // x-coordinate.
+    public var y: Double // y-coordinate.
+    public var rx: Double // x-radius.
+    public var ry: Double // y-radius.
+    public var angle: Double // Rotation angle.
     
     required init() {
         x = 0.0
