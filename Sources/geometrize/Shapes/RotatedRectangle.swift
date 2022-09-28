@@ -1,7 +1,7 @@
 import Foundation
 
 // Represents a rotated rectangle.
-final class RotatedRectangle: Shape {
+public final class RotatedRectangle: Shape {
     
     public var x1: Double
     public var y1: Double
@@ -9,7 +9,7 @@ final class RotatedRectangle: Shape {
     public var y2: Double
     public var angle: Double
 
-    required init() {
+    public required init() {
         x1 = 0.0
         y1 = 0.0
         x2 = 0.0
@@ -17,7 +17,7 @@ final class RotatedRectangle: Shape {
         angle = 0.0
     }
     
-    init(x1: Double, y1: Double, x2: Double, y2: Double, angle: Double) {
+    public init(x1: Double, y1: Double, x2: Double, y2: Double, angle: Double) {
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -25,11 +25,11 @@ final class RotatedRectangle: Shape {
         self.angle = angle
     }
 
-    func copy() -> RotatedRectangle {
+    public func copy() -> RotatedRectangle {
         RotatedRectangle(x1: x1, y1: y1, x2: x2, y2: y2, angle: angle)
     }
     
-    func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
+    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         x1 = Double(randomRange(min: xMin, max: xMax - 1))
         y1 = Double(randomRange(min: yMin, max: yMax - 1))
         x2 = Double((Int(x1) + randomRange(min: 1, max: 32)).clamped(to: xMin...xMax - 1))
@@ -37,7 +37,7 @@ final class RotatedRectangle: Shape {
         angle = Double(randomRange(min: 0, max: 360))
     }
 
-    func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
+    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         switch randomRange(min: 0, max: 2) {
         case 0:
             x1 = Double((Int(x1) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
@@ -52,7 +52,7 @@ final class RotatedRectangle: Shape {
         }
     }
 
-    func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+    public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
         let cornerPoints = cornerPoints
         let lines = try! Polygon(vertices: [Point<Int>(cornerPoints.0), Point<Int>(cornerPoints.1), Point<Int>(cornerPoints.2), Point<Int>(cornerPoints.3)]).scanlines()
             .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
@@ -62,7 +62,7 @@ final class RotatedRectangle: Shape {
         return lines
     }
 
-    var cornerPoints: (Point<Double>, Point<Double>, Point<Double>, Point<Double>) {
+    public var cornerPoints: (Point<Double>, Point<Double>, Point<Double>, Point<Double>) {
         let _x1 = min(x1, x2)
         let _x2 = max(x1, x2)
         let _y1 = min(y1, y2)
@@ -88,7 +88,7 @@ final class RotatedRectangle: Shape {
         return (ul, ur, br, bl)
     }
     
-    func type() -> ShapeType {
+    public func type() -> ShapeType {
         .rotatedRectangle
     }
     
@@ -96,7 +96,7 @@ final class RotatedRectangle: Shape {
         x1 == x2 || y1 == y2
     }
 
-    var description: String {
+    public var description: String {
         "RotatedRectangle(x1=\(x1), y1=\(y1), x2=\(x2), y2=\(y2)), angle=\(angle))"
     }
     
