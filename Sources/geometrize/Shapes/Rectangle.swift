@@ -68,7 +68,7 @@ public final class Rectangle: Shape {
     }
     
     public var isDegenerate: Bool {
-        x1 == x2 && y1 == y2
+        x1 == x2 || y1 == y2
     }
 
     public var description: String {
