@@ -85,6 +85,10 @@ public final class Ellipse: Shape {
         .ellipse
     }
     
+    public var isDegenerate: Bool {
+        rx == 0.0 || ry == 0.0
+    }
+
     public var description: String {
         "Ellipse(x=\(x), y=\(y), rx=\(rx), ry=\(ry))"
     }

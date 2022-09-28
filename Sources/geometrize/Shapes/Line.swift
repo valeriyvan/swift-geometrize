@@ -67,6 +67,10 @@ public final class Line: Shape {
         .line
     }
     
+    public var isDegenerate: Bool {
+        x1 == x2 && y1 == y2
+    }
+
     public var description: String {
         "Line(x1=\(x1), y1=\(y1), x2=\(x2), y2=\(y2))"
     }

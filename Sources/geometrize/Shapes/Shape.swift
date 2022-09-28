@@ -47,6 +47,8 @@ public protocol Shape: AnyObject, CustomStringConvertible {
     func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline];
 
     func type() -> ShapeType
+    
+    var isDegenerate: Bool { get }
 }
 
 extension Shape {
@@ -61,6 +63,10 @@ extension Shape {
 
     public func rasterize() -> [Scanline] {
         rasterize(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
+    }
+    
+    public var isDegenerate: Bool {
+        false
     }
 
 }
