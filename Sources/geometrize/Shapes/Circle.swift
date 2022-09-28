@@ -71,6 +71,10 @@ public final class Circle: Shape {
         .circle
     }
     
+    public var isDegenerate: Bool {
+        r == 0.0
+    }
+    
     public var description: String {
         "Circle(x=\(x), y=\(y), r=\(r))"
     }

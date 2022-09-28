@@ -83,6 +83,10 @@ final class RotatedEllipse: Shape {
         .rotatedEllipse
     }
     
+    public var isDegenerate: Bool {
+        rx == 0.0 || ry == 0.0
+    }
+
     var description: String {
         "RotatedEllipse(x=\(x), y=\(y), rx=\(rx), ry=\(ry), angle=\(angle))"
     }
