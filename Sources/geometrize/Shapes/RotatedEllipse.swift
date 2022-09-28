@@ -1,7 +1,7 @@
 import Foundation
 
 // Represents a rotated ellipse.
-final class RotatedEllipse: Shape {
+public final class RotatedEllipse: Shape {
     
     public var x: Double // x-coordinate.
     public var y: Double // y-coordinate.
@@ -9,7 +9,7 @@ final class RotatedEllipse: Shape {
     public var ry: Double // y-radius.
     public var angle: Double // Rotation angle.
     
-    required init() {
+    public required init() {
         x = 0.0
         y = 0.0
         rx = 0.0
@@ -17,7 +17,7 @@ final class RotatedEllipse: Shape {
         angle = 0.0
     }
     
-    init(x: Double, y: Double, rx: Double, ry: Double, angle: Double) {
+    public init(x: Double, y: Double, rx: Double, ry: Double, angle: Double) {
         self.x = x
         self.y = y
         self.rx = rx
@@ -25,11 +25,11 @@ final class RotatedEllipse: Shape {
         self.angle = angle
     }
     
-    func copy() -> RotatedEllipse {
+    public func copy() -> RotatedEllipse {
         RotatedEllipse(x: x, y: y, rx: rx, ry: ry, angle: angle)
     }
 
-    func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
+    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         x = Double(randomRange(min: xMin, max: xMax - 1))
         y = Double(randomRange(min: yMin, max: yMax - 1))
         rx = Double(randomRange(min: 1, max: 32))
@@ -37,7 +37,7 @@ final class RotatedEllipse: Shape {
         angle = Double(randomRange(min: 0, max: 360))
     }
 
-    func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
+    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         switch randomRange(min: 0, max: 3) {
         case 0:
             x = Double((Int(x) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
@@ -53,7 +53,7 @@ final class RotatedEllipse: Shape {
         }
     }
 
-    func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+    public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
         let lines =
         try! Polygon(vertices: points(20)
             .map(Point<Int>.init))
@@ -79,7 +79,7 @@ final class RotatedEllipse: Shape {
         return points
     }
     
-    func type() -> ShapeType {
+    public func type() -> ShapeType {
         .rotatedEllipse
     }
     
@@ -87,7 +87,7 @@ final class RotatedEllipse: Shape {
         rx == 0.0 || ry == 0.0
     }
 
-    var description: String {
+    public var description: String {
         "RotatedEllipse(x=\(x), y=\(y), rx=\(rx), ry=\(ry), angle=\(angle))"
     }
 
