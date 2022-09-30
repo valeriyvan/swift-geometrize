@@ -66,10 +66,11 @@ public final class RotatedEllipse: Shape {
     }
 
     private func points(_ count: Int) -> [Point<Double>] {
+        var points = [Point<Double>]()
+        points.reserveCapacity(count)
         let rads = angle * (.pi / 180.0)
         let co = cos(rads)
         let si = sin(rads)
-        var points = [Point<Double>]()
         for i in 0..<count {
             let angle = 360.0 / Double(count) * Double(i) * (.pi / 180.0)
             let crx = rx * cos(angle)
