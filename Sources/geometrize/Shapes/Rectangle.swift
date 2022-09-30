@@ -6,10 +6,10 @@ public final class Rectangle: Shape {
     public var x1, y1, x2, y2: Double
     
     required public init() {
-        x1 = 0
-        y1 = 0
-        x2 = 0
-        y2 = 0
+        x1 = 0.0
+        y1 = 0.0
+        x2 = 0.0
+        y2 = 0.0
     }
     
     public init(x1: Double, y1: Double, x2: Double, y2: Double) {
