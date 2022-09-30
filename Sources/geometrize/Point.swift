@@ -1,15 +1,15 @@
 import Foundation
 
 public struct Point<N: Numeric> {
-    var x, y: N
+    public var x, y: N
     
-    init(x: N, y: N) {
+    public init(x: N, y: N) {
         self.x = x
         self.y = y
     }
 }
 
-extension Point<Int> {
+public extension Point<Int> {
     init(_ p: Point<Double>) {
         x = Int(p.x)
         y = Int(p.y)
