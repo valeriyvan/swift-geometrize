@@ -63,6 +63,13 @@ public final class Rectangle: Shape {
         return lines
     }
 
+    public var cornerPoints: (Point<Double>, Point<Double>, Point<Double>, Point<Double>) {
+        (Point<Double>(x: x1, y: y1),
+         Point<Double>(x: x2, y: y1),
+         Point<Double>(x: x2, y: y2),
+         Point<Double>(x: x1, y: y2))
+    }
+
     public func type() -> ShapeType {
         .rectangle
     }
