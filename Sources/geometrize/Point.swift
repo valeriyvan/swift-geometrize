@@ -25,3 +25,23 @@ extension Point: CustomStringConvertible where N: CustomStringConvertible {
         "Point(x=\(x), y=\(y))"
     }
 }
+
+#if canImport(CoreGraphics)
+
+import struct CoreGraphics.CGPoint
+
+public extension CGPoint {
+    init(_ point: Point<Double>) {
+        self.init(x: point.x, y: point.y)
+    }
+}
+
+public extension Point<Double> {
+    
+    init(_ point: CGPoint) {
+        self.init(x: point.x, y: point.y)
+    }
+    
+}
+
+#endif
