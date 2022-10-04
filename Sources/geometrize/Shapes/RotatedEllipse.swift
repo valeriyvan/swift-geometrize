@@ -2,13 +2,13 @@ import Foundation
 
 // Represents a rotated ellipse.
 public final class RotatedEllipse: Shape {
-    
+
     public var x: Double // x-coordinate.
     public var y: Double // y-coordinate.
     public var rx: Double // x-radius.
     public var ry: Double // y-radius.
     public var angle: Double // Rotation angle.
-    
+
     public required init() {
         x = 0.0
         y = 0.0
@@ -16,7 +16,7 @@ public final class RotatedEllipse: Shape {
         ry = 0.0
         angle = 0.0
     }
-    
+
     public init(x: Double, y: Double, rx: Double, ry: Double, angle: Double) {
         self.x = x
         self.y = y
@@ -24,7 +24,7 @@ public final class RotatedEllipse: Shape {
         self.ry = ry
         self.angle = angle
     }
-    
+
     public func copy() -> RotatedEllipse {
         RotatedEllipse(x: x, y: y, rx: rx, ry: ry, angle: angle)
     }
@@ -54,13 +54,14 @@ public final class RotatedEllipse: Shape {
     }
 
     public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
-        let lines =
-        try! Polygon(vertices: points(20)
-            .map(Point<Int>.init))
-        .scanlines()
-        .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+        guard let polygon = try? Polygon(vertices: points(20).map(Point<Int>.init)) else {
+            return []
+        }
+        let lines = polygon
+            .scanlines()
+            .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
         if lines.isEmpty {
-            print("Warning: \(#function) produced no scanlines")
+            print("Warning: \(#function) produced no scanlines.")
         }
         return lines
     }
@@ -79,11 +80,11 @@ public final class RotatedEllipse: Shape {
         }
         return points
     }
-    
+
     public func type() -> ShapeType {
         .rotatedEllipse
     }
-    
+
     public var isDegenerate: Bool {
         rx == 0.0 || ry == 0.0
     }
