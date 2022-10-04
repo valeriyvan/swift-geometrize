@@ -8,7 +8,7 @@ final class CircleTests: XCTestCase {
       super.setUp()
       diffTool = "compare"
     }
-    
+
     func testRasterize() throws {
         let xMax = 500, yMax = 500
         var bitmap = Bitmap(width: xMax, height: yMax, color: .white)
