@@ -48,6 +48,9 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "PNG", package: "swift-png"),
                 .product(name: "JPEG", package: "jpeg")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLint", package: "SwiftLintPlugin")
             ]
         ),
         .testTarget(
@@ -85,6 +88,9 @@ let package = Package(
                 .copy("Resources/hillClimb randomRange.txt"),
                 .copy("Resources/Фото документы.png"),
                 .copy("Resources/kris.png")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLint", package: "SwiftLintPlugin")
             ]
         )
     ]
