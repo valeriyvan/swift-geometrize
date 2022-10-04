@@ -3,31 +3,31 @@ import Algorithms
 
 struct Polygon<N: SignedInteger> {
     var vertices: [Point<N>]
-    
+
     init(vertices: [Point<N>]) throws {
         guard vertices.count > 2 else {
-            fatalError("Polygon should have more than 2 vertices")
+            fatalError("Polygon should have more than 2 vertices.")
         }
         // TODO: check if vertices really form a polygon
         self.vertices = vertices
     }
-    
+
     init(vertices v: (Point<N>, Point<N>, Point<N>)) {
         self.vertices = [v.0, v.1, v.2]
     }
-    
+
     init(vertices v: (Point<N>, Point<N>, Point<N>, Point<N>)) {
         self.vertices = [v.0, v.1, v.2, v.3]
 
     }
-    
+
     init(vertices v: (Point<N>, Point<N>, Point<N>, Point<N>, Point<N>)) {
         self.vertices = [v.0, v.1, v.2, v.3, v.4]
     }
 }
 
 extension Polygon {
-    
+
     func scanlines() -> [Scanline] {
         var edges = [Point<N>]()
         for i in vertices.indices {
