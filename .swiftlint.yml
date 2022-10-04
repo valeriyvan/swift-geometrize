@@ -1,0 +1,10 @@
+###
+### Rule modifications 
+###
+
+identifier_name:
+    min_length:
+        error: 0
+        warning: 0
+
+large_tuple: 5
