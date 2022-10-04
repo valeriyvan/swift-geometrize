@@ -12,8 +12,6 @@ struct GeometrizeOptions: ParsableArguments {
     @Flag(name: .shortAndLong, help: "Verbose output.") var verbose: Bool = false
 }
 
-// If you prefer writing in a "script" style, you can call `parseOrExit()` to
-// parse a single `ParsableArguments` type from command-line arguments.
 let options = GeometrizeOptions.parseOrExit()
 
 let inputUrl = URL(fileURLWithPath: options.inputPath)
@@ -34,16 +32,16 @@ case "png":
 
     let rgba: [PNG.RGBA<UInt8>] = image.unpack(as: PNG.RGBA<UInt8>.self)
     (width, height) = image.size
-            
+
     let data: [UInt8] = rgba.flatMap({ [$0.r, $0.g, $0.b, $0.a] })
     targetBitmap = Bitmap(width: width, height: height, data: data)
 case "jpeg", "jpg":
-    guard let spectral:JPEG.Data.Spectral<JPEG.Common> = try .decompress(path: inputUrl.path) else {
+    guard let spectral: JPEG.Data.Spectral<JPEG.Common> = try .decompress(path: inputUrl.path) else {
         print("Cannot read or decode input file.")
         exit(1)
     }
-    
-    guard let image:JPEG.Data.Rectangular<JPEG.Common> = try .decompress(path: inputUrl.path) else {
+
+    guard let image: JPEG.Data.Rectangular<JPEG.Common> = try .decompress(path: inputUrl.path) else {
         print("Cannot read or decode input file.")
         exit(1)
     }
@@ -76,7 +74,7 @@ if let indexOfNil = indexOfNil {
     exit(1)
 }
 
-let shapes = Set(shapesOrNil.compactMap{$0})
+let shapes = Set(shapesOrNil.compactMap { $0 })
 print("Using shapes: \(shapes.map(\.rawValueCapitalized).joined(separator: ", ")).")
 
 canvasBounds = (0, 0, width, height)
@@ -125,7 +123,7 @@ while shapeData.count <= shapeCount /* Here set count of shapes final image shou
     shapeData.append(contentsOf: shapes)
     counter += 1
 }
-        
+
 let svg = exportSVG(data: shapeData, width: width, height: height)
 
 do {

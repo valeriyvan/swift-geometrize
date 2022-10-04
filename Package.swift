@@ -26,7 +26,8 @@ let package = Package(
         .package(url: "git@github.com:valeriyvan/jpeg.git", branch: "allFixesMerged"),
         .package(url: "git@github.com:pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
         .package(url: "git@github.com:apple/swift-algorithms.git", from: "1.0.0"),
-        .package(url: "git@github.com:apple/swift-argument-parser.git", from: "1.1.4")
+        .package(url: "git@github.com:apple/swift-argument-parser.git", from: "1.1.4"),
+        .package(url: "git@github.com:lukepistrol/SwiftLintPlugin.git", from: "0.0.4")
     ],
     
     targets: [
@@ -35,7 +36,10 @@ let package = Package(
             dependencies: [
                 .product(name: "Algorithms", package: "swift-algorithms")
             ],
-            path: "Sources/geometrize"
+            path: "Sources/geometrize",
+            plugins: [
+                .plugin(name: "SwiftLint", package: "SwiftLintPlugin")
+            ]
         ),
         .executableTarget(
             name: "geometrize-cli",
@@ -44,6 +48,9 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "PNG", package: "swift-png"),
                 .product(name: "JPEG", package: "jpeg")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLint", package: "SwiftLintPlugin")
             ]
         ),
         .testTarget(
@@ -81,6 +88,9 @@ let package = Package(
                 .copy("Resources/hillClimb randomRange.txt"),
                 .copy("Resources/Фото документы.png"),
                 .copy("Resources/kris.png")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLint", package: "SwiftLintPlugin")
             ]
         )
     ]

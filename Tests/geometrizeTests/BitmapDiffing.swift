@@ -5,24 +5,24 @@ import PNG
 
 extension XCTAttachment {
     convenience init(bitmap: Bitmap) {
-        self.init(data: try! bitmap.pngData(), uniformTypeIdentifier: "public.png")
+        self.init(data: try! bitmap.pngData(), uniformTypeIdentifier: "public.png") // swiftlint:disable:this force_try
     }
 }
 
 extension Diffing where Value == Bitmap {
-    
+
     /// A pixel-diffing strategy for UIImage's which requires a 100% match.
     public static let image = Diffing.image(precision: 1.0)
-    
+
     /// A pixel-diffing strategy for UIImage that allows customizing how precise the matching must be.
     ///
     /// - Parameter precision: A value between 0 and 1, where 1 means the images must match 100% of their pixels.
     /// - Returns: A new diffing strategy.
     public static func image(precision: Double) -> Diffing {
         Diffing(
-            toData: { try! $0.pngData() },
-            fromData: { try! .init(pngData: $0) }
-        ) { old, new -> (String, [XCTAttachment])? in
+            toData: { try! $0.pngData() }, // swiftlint:disable:this force_try
+            fromData: { try! .init(pngData: $0) } // swiftlint:disable:this force_try
+        ) { old, new -> (String, [XCTAttachment])? in // swiftlint:disable:this multiple_closures_with_trailing_closure
             guard !old.compare(with: new, precision: precision) else { return nil }
             let difference = old.diff(with: new)
             let message = new.width == old.width && new.height == old.height
@@ -40,13 +40,13 @@ extension Diffing where Value == Bitmap {
             )
         }
     }
-    
+
 }
 
 // Diffing like compare from imagemagick when difference is highlighted in red and
 // original image is dimmed (drawn with 10% of its alpha).
 fileprivate extension Bitmap {
-    
+
     func diff(with other: Bitmap) -> Bitmap {
         if isEmpty {
             return other
@@ -64,16 +64,16 @@ fileprivate extension Bitmap {
             }
         }
     }
-    
+
 }
 
 fileprivate extension Rgba {
-    
+
     func diff(with other: Rgba) -> Rgba {
         guard self != other else {
             return withAlphaComponent(a / 10)
         }
         return .red
     }
-    
+
 }

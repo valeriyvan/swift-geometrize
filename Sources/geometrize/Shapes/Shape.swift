@@ -15,16 +15,16 @@ public enum ShapeType: String, CaseIterable {
     case line
     case quadraticBezier
     case polyline
-    
+
     public var rawValueCapitalized: String {
         let firstUppercased = rawValue.first!.uppercased()
         return firstUppercased + rawValue.dropFirst()
     }
-    
+
     // Allows rotatedrectangle and rotated_rectangle, casing doesn't matter.
     public init?(rawValue: String) {
         let allCases = ShapeType.allCases
-        let all = allCases.map{ $0.rawValue.lowercased() }
+        let all = allCases.map { $0.rawValue.lowercased() }
         guard let index = all.firstIndex(of: rawValue.replacingOccurrences(of: "_", with: "").lowercased()) else {
             return nil
         }
@@ -34,20 +34,20 @@ public enum ShapeType: String, CaseIterable {
 
 public protocol Shape: AnyObject, CustomStringConvertible {
     init()
-    
+
     func copy() -> Self
-    
+
     func setup()
-    func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int);
+    func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int)
 
     func mutate()
-    func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int);
+    func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int)
 
     func rasterize() -> [Scanline]
-    func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline];
+    func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline]
 
     func type() -> ShapeType
-    
+
     var isDegenerate: Bool { get }
 }
 
@@ -64,15 +64,14 @@ extension Shape {
     public func rasterize() -> [Scanline] {
         rasterize(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
     }
-    
+
     public var isDegenerate: Bool {
         false
     }
 
 }
 
-
-func ==(lhs: any Shape, rhs: any Shape) -> Bool {
+func == (lhs: any Shape, rhs: any Shape) -> Bool {
     switch (lhs, rhs) {
     case (let lhs as Rectangle, let rhs as Rectangle): return lhs == rhs
     default: return false

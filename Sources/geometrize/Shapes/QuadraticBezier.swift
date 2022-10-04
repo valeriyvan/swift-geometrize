@@ -17,7 +17,7 @@ public final class QuadraticBezier: Shape {
         x2 = 0.0
         y2 = 0.0
     }
-    
+
     public init(cx: Double, cy: Double, x1: Double, y1: Double, x2: Double, y2: Double) {
         self.cx = cx
         self.cy = cy
@@ -26,7 +26,7 @@ public final class QuadraticBezier: Shape {
         self.x2 = x2
         self.y2 = y2
     }
-    
+
     public func copy() -> QuadraticBezier {
         QuadraticBezier(cx: cx, cy: cy, x1: x1, y1: y1, x2: x2, y2: y2)
     }
@@ -88,14 +88,12 @@ public final class QuadraticBezier: Shape {
         return lines
     }
 
-
     public func type() -> ShapeType {
         .quadraticBezier
     }
-    
+
     public var description: String {
         "QuadraticBezier(cx=\(cx), cy=\(cy), x1=\(x1), y1=\(y1), x2=\(x2), y2=\(y2))"
     }
 
-    
 }

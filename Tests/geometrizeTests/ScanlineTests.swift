@@ -2,7 +2,7 @@ import XCTest
 @testable import geometrize
 
 final class ScanlineTests: XCTestCase {
-    
+
     func testInit() throws {
         let scanline = Scanline()
         XCTAssertEqual(scanline.y, 0)
@@ -29,7 +29,7 @@ final class ScanlineTests: XCTestCase {
         ]
         XCTAssertEqual(trimmed, trimmedSample)
     }
-    
+
     func testStringConversion() {
         let line = Scanline(y: 3, x1: 3, x2: 13)
         XCTAssertEqual(Scanline(stringLiteral: line.description), line)

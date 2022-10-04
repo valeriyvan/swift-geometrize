@@ -1,8 +1,8 @@
 import Foundation
 
-// Represents a rotated rectangle.
+/// Represents a rotated rectangle.
 public final class RotatedRectangle: Shape {
-    
+
     public var x1: Double
     public var y1: Double
     public var x2: Double
@@ -16,7 +16,7 @@ public final class RotatedRectangle: Shape {
         y2 = 0.0
         angle = 0.0
     }
-    
+
     public init(x1: Double, y1: Double, x2: Double, y2: Double, angle: Double) {
         self.x1 = x1
         self.y1 = y1
@@ -28,7 +28,7 @@ public final class RotatedRectangle: Shape {
     public func copy() -> RotatedRectangle {
         RotatedRectangle(x1: x1, y1: y1, x2: x2, y2: y2, angle: angle)
     }
-    
+
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         x1 = Double(randomRange(min: xMin, max: xMax - 1))
         y1 = Double(randomRange(min: yMin, max: yMax - 1))
@@ -54,27 +54,37 @@ public final class RotatedRectangle: Shape {
 
     public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
         let cornerPoints = cornerPoints
-        let lines = try! Polygon(vertices: [Point<Int>(cornerPoints.0), Point<Int>(cornerPoints.1), Point<Int>(cornerPoints.2), Point<Int>(cornerPoints.3)]).scanlines()
+        let vertices = [
+            Point<Int>(cornerPoints.0),
+            Point<Int>(cornerPoints.1),
+            Point<Int>(cornerPoints.2),
+            Point<Int>(cornerPoints.3)
+        ]
+        guard let polygon = try? Polygon(vertices: vertices) else {
+            print("Warning: \(#function) produced no scanlines.")
+            return []
+        }
+        let lines = polygon.scanlines()
             .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
         if lines.isEmpty {
-            print("Warning: \(#function) produced no scanlines")
+            print("Warning: \(#function) produced no scanlines.")
         }
         return lines
     }
 
     public var cornerPoints: (Point<Double>, Point<Double>, Point<Double>, Point<Double>) {
-        let _x1 = min(x1, x2)
-        let _x2 = max(x1, x2)
-        let _y1 = min(y1, y2)
-        let _y2 = max(y1, y2)
+        let xx1 = min(x1, x2)
+        let xx2 = max(x1, x2)
+        let yy1 = min(y1, y2)
+        let yy2 = max(y1, y2)
 
-        let cx = (_x2 + _x1) / 2.0
-        let cy = (_y2 + y1) / 2.0
+        let cx = (xx2 + xx1) / 2.0
+        let cy = (yy2 + y1) / 2.0
 
-        let ox1 = _x1 - cx
-        let ox2 = _x2 - cx
-        let oy1 = _y1 - cy
-        let oy2 = _y2 - cy
+        let ox1 = xx1 - cx
+        let ox2 = xx2 - cx
+        let oy1 = yy1 - cy
+        let oy2 = yy2 - cy
 
         let rads = angle * .pi / 180.0
         let c = cos(rads)
@@ -87,11 +97,11 @@ public final class RotatedRectangle: Shape {
 
         return (ul, ur, br, bl)
     }
-    
+
     public func type() -> ShapeType {
         .rotatedRectangle
     }
-    
+
     public var isDegenerate: Bool {
         x1 == x2 || y1 == y2
     }
@@ -99,5 +109,5 @@ public final class RotatedRectangle: Shape {
     public var description: String {
         "RotatedRectangle(x1=\(x1), y1=\(y1), x2=\(x2), y2=\(y2)), angle=\(angle))"
     }
-    
+
 }
