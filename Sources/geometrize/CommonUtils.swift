@@ -1,7 +1,7 @@
 import Foundation
 
 // Borrowed https://github.com/apple/swift-argument-parser/blob/main/Examples/roll/SplitMix64.swift
-fileprivate struct SplitMix64: RandomNumberGenerator {
+private struct SplitMix64: RandomNumberGenerator {
     private var state: UInt64
 
     init(seed: UInt64) {
@@ -17,11 +17,11 @@ fileprivate struct SplitMix64: RandomNumberGenerator {
     }
 }
 
-fileprivate var generator = SplitMix64(seed: 0)
+private var generator = SplitMix64(seed: 0)
 
-// seedRandomGenerator Seeds the (thread-local) random number generators.
-// @param seed The random seed.
 // TODO: make it thread-local
+/// Seeds the (thread-local) random number generators.
+/// - Parameter seed: The random seed.
 func seedRandomGenerator(_ seed: UInt64) {
     generator = SplitMix64(seed: seed)
 }
@@ -33,19 +33,21 @@ private func randomRangeImplementation(_ min: Int, _ max: Int) -> Int {
     return random
 }
 
-// Returns a random integer in the range, inclusive. Uses thread-local random number generators under the hood.
-// To ensure deterministic shape generation that can be repeated for different seeds, this should be used for shape mutation, but nothing else.
-// @param min The lower bound.
-// @param max The upper bound.
-// @return The random integer in the range.
+/// Returns a random integer in the range, inclusive. Uses thread-local random number generators under the hood.
+/// To ensure deterministic shape generation that can be repeated for different seeds, this should be used for shape mutation, but nothing else.
+/// - Parameters:
+///   - min: The lower bound.
+///   - max: The upper bound.
+/// - Returns: The random integer in the range.
 func randomRange(min: Int, max: Int) -> Int {
     randomRangeImplementationReference(min, max)
 }
 
-// Maps the given shape bound percentages to the given image, returning a bounding rectangle, or the whole image if the bounds were invalid
-// @param The options to map to the image
-// @param The image to map the options around
-// @return The mapped shape bounds (xMin, yMin, xMax, yMax)
+/// Maps the given shape bound percentages to the given image, returning a bounding rectangle, or the whole image if the bounds were invalid.
+/// - Parameters:
+///   - options: The options to map to the image.
+///   - image: The image to map the options around.
+/// - Returns: The mapped shape bounds (xMin, yMin, xMax, yMax)
 func mapShapeBoundsToImage(options: ImageRunnerShapeBoundsOptions, image: Bitmap) -> (xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
 
     guard options.enabled else {
