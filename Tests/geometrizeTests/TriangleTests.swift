@@ -3,7 +3,7 @@ import SnapshotTesting
 @testable import geometrize
 
 final class TriangleTests: XCTestCase {
-    
+
     func testRasterize() throws {
         let xMax = 500, yMax = 500
         var bitmap = Bitmap(width: xMax, height: yMax, color: .white)
