@@ -2,16 +2,16 @@ import Foundation
 
 // Represents a rectangle.
 public final class Rectangle: Shape {
-    
+
     public var x1, y1, x2, y2: Double
-    
+
     required public init() {
         x1 = 0.0
         y1 = 0.0
         x2 = 0.0
         y2 = 0.0
     }
-    
+
     public init(x1: Double, y1: Double, x2: Double, y2: Double) {
         self.x1 = x1
         self.y1 = y1
@@ -22,7 +22,7 @@ public final class Rectangle: Shape {
     public func copy() -> Rectangle {
         Rectangle(x1: x1, y1: y1, x2: x2, y2: y2)
     }
-    
+
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         x1 = Double(randomRange(min: xMin, max: xMax - 1))
         y1 = Double(randomRange(min: yMin, max: yMax - 1))
@@ -73,7 +73,7 @@ public final class Rectangle: Shape {
     public func type() -> ShapeType {
         .rectangle
     }
-    
+
     public var isDegenerate: Bool {
         x1 == x2 || y1 == y2
     }
@@ -85,10 +85,9 @@ public final class Rectangle: Shape {
 }
 
 extension Rectangle: Equatable {
-    
+
     public static func == (lhs: Rectangle, rhs: Rectangle) -> Bool {
         lhs.x1 == rhs.x1 && lhs.y1 == rhs.y1 && lhs.x2 == rhs.x2 && lhs.y2 == rhs.y2
     }
-    
-}
 
+}
