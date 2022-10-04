@@ -3,7 +3,7 @@ import SnapshotTesting
 @testable import geometrize
 
 final class QuadraticBezierTests: XCTestCase {
-    
+
     func testRasterize() throws {
         let xMax = 471, yMax = 590
         var bitmap = Bitmap(width: xMax, height: yMax, color: .red)
