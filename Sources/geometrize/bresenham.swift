@@ -13,7 +13,7 @@ func bresenham<N: SignedInteger>(from: Point<N>, to: Point<N>) -> [Point<N>] {
         var error = dy - (dx >> 1)
         while from.x != to.x {
             if error >= 0 && (error != 0 || ix > 0) {
-                error -= dx;
+                error -= dx
                 from.y += iy
             }
             error += dy
