@@ -1,21 +1,21 @@
 import Foundation
 
-// Helper class for working with bitmap data.
-// Pixels are ordered line by line, like arrays in C.
-
+/// Helper class for working with bitmap data.
+/// Pixels are ordered line by line, like arrays in C.
 public struct Bitmap {
-    
-    // Creates useless empty bitmap.
+
+    /// Creates useless empty bitmap.
     public init() {
         width = 0
         height = 0
         backing = ContiguousArray<UInt8>()
     }
-    
-    // Creates a new bitmap.
-    // @param width The width of the bitmap.
-    // height The height of the bitmap.
-    // @param color The starting color of the bitmap (RGBA format).
+
+    /// Creates a new bitmap.
+    /// - Parameters:
+    ///   - width: The width of the bitmap.
+    ///   - height: The height of the bitmap.
+    ///   - color: The starting color of the bitmap (RGBA format).
     public init(width: Int, height: Int, color: Rgba) {
         assert(width >= 0 && height >= 0)
         self.width = width
@@ -33,11 +33,12 @@ public struct Bitmap {
             initializedCapacity = capacity
         }
     }
-    
-    // Creates a new bitmap from the supplied byte data.
-    // width The width of the bitmap.
-    // height The height of the bitmap.
-    // @param data The byte data to fill the bitmap with, must be width * height * depth (4) long.
+
+    /// Creates a new bitmap from the supplied byte data.
+    /// - Parameters:
+    ///   - width: The width of the bitmap.
+    ///   - height: The height of the bitmap.
+    ///   - data: The byte data to fill the bitmap with, must be width * height * depth (4) long.
     public init(width: Int, height: Int, data: [UInt8]) {
         assert(width > 0 && height > 0)
         assert(width * height * 4 == data.count)
@@ -51,7 +52,7 @@ public struct Bitmap {
         self.width = width
         self.height = height
         self.backing = ContiguousArray(unsafeUninitializedCapacity: width * height * 4) {
-            buffer, initializedCapacity in
+            buffer, initializedCapacity in // swiftlint:disable:this closure_parameter_position
             for y in 0..<height {
                 for x in 0..<width {
                     let rgba = initializer(x, y)
@@ -65,15 +66,15 @@ public struct Bitmap {
             initializedCapacity = width * height * 4
         }
     }
-    
-    // Width of the bitmap.
+
+    /// Width of the bitmap.
     public private(set) var width: Int
 
     @inlinable
     @inline(__always)
     public var widthIndices: Range<Int> { 0..<width }
 
-    // Height of the bitmap.
+    /// Height of the bitmap.
     public private(set) var height: Int
 
     @inlinable
@@ -83,34 +84,26 @@ public struct Bitmap {
     @inlinable
     @inline(__always)
     public var pixelCount: Int { width * height }
-    
+
     @inlinable
     @inline(__always)
     public var componentCount: Int { pixelCount * 4 }
 
-    // Raw bitmap data.
+    /// Raw bitmap data.
     public private(set) var backing: ContiguousArray<UInt8> // C ordering, row by row
 
-    // Bitmap has no pixels.
+    /// Bitmap has no pixels.
     @inlinable
     @inline(__always)
     public var isEmpty: Bool { width == 0 || height == 0 }
 
     public subscript(x: Int, y: Int) -> Rgba {
-        // Gets a pixel color value.
-        // @param x The x-coordinate of the pixel.
-        // @param y The y-coordinate of the pixel.
-        // @return The pixel RGBA color value.
         get {
             backing.withUnsafeBufferPointer {
                 let offset = offset(x: x, y: y)
                 return Rgba(r: $0[offset], g: $0[offset + 1], b: $0[offset + 2], a: $0[offset + 3])
             }
         }
-        // Sets a pixel color value.
-        // @param x The x-coordinate of the pixel.
-        // @param y The y-coordinate of the pixel.
-        // @param color The pixel RGBA color value.
         set {
             let offset = offset(x: x, y: y)
             backing.withUnsafeMutableBufferPointer {
@@ -132,8 +125,8 @@ public struct Bitmap {
         }
     }
 
-    // Fills the bitmap with the given color.
-    // @param color The color to fill the bitmap with.
+    /// Fills the bitmap with the given color.
+    /// - Parameter color: The color to fill the bitmap with.
     public mutating func fill(color: Rgba) {
         let count = pixelCount
         backing.withUnsafeMutableBufferPointer {
@@ -146,14 +139,14 @@ public struct Bitmap {
             }
         }
     }
-    
+
     @inlinable
     @inline(__always)
     internal func offset(x: Int, y: Int) -> Int {
         assert(0..<width ~= x && 0..<height ~= y)
         return (width * y + x) * 4
     }
-    
+
     public mutating func addFrame(width inset: Int, color: Rgba) {
         assert(inset >= 0)
         guard inset > 0 else { return }
@@ -193,9 +186,9 @@ extension Bitmap: Equatable {
 }
 
 extension Bitmap {
-    
-    // Computes the average RGB color of the pixels in the bitmap.
-    // @return The average RGB color of the image, RGBA8888 format. Alpha is set to opaque (255).
+
+    /// Computes the average RGB color of the pixels in the bitmap.
+    /// - Returns: The average RGB color of the image, RGBA8888 format. Alpha is set to opaque (255).
     // TODO: carefully check implementation for overflows.
     // TODO: make it internal
     public func averageColor() -> Rgba {
@@ -211,7 +204,7 @@ extension Bitmap {
                 totalBlue += Int($0[i + 2])
             }
         }
-        
+
         let pixelCount = self.pixelCount
         return Rgba(
             r: UInt8(totalRed / pixelCount),
@@ -224,10 +217,11 @@ extension Bitmap {
 }
 
 extension Bitmap {
-    
-    // Draws scanlines onto an image.
-    // @param color The color of the scanlines.
-    // @param lines The scanlines to draw.
+
+    /// Draws scanlines onto an image.
+    /// - Parameters:
+    ///   - lines: The color of the scanlines.
+    ///   - color: The scanlines to draw.
     mutating func draw(lines: [Scanline], color: Rgba) {
         // Convert the non-premultiplied color to alpha-premultiplied 16-bits per channel RGBA
         // In other words, scale the rgb color components by the alpha component
@@ -263,10 +257,10 @@ extension Bitmap {
 
     }
 
-    // Copies source pixels to a destination defined by a set of scanlines.
-    // @param destination The destination bitmap to copy the lines to.
-    // @param source The source bitmap to copy the lines from.
-    // @param lines The scanlines that comprise the source to destination copying mask.
+    /// Copies source pixels defined by a set of scanlines.
+    /// - Parameters:
+    ///   - lines: The scanlines that comprise the source to destination copying mask.
+    ///   - source: The source bitmap to copy the lines from.
     mutating func copy(lines: [Scanline], source: Bitmap) {
         for line in lines {
             let y = line.y
@@ -282,7 +276,7 @@ extension Bitmap {
 // One hints is here https://forums.swift.org/t/how-to-make-expressiblebystringliteral-init-either-failable-somehow-or-throws/47973/3:
 
 extension Bitmap: ExpressibleByStringLiteral {
-    
+
     public init(stringLiteral value: String) {
         let scanner = Scanner(string: value)
         scanner.charactersToBeSkipped = .whitespacesAndNewlines
@@ -298,9 +292,9 @@ extension Bitmap: ExpressibleByStringLiteral {
         self.width = width
         self.height = height
         backing = ContiguousArray<UInt8>(repeating: 0, count: width * height * 4)
-        
+
         var counter: Int = 0
-        
+
         repeat {
             guard let int = scanner.scanInt(), 0...255 ~= int else {
                 fatalError()
@@ -308,24 +302,25 @@ extension Bitmap: ExpressibleByStringLiteral {
             backing[counter] = UInt8(int)
             counter += 1
         } while scanner.scanString(",") != nil
-        
+
         guard counter == width * height * 4 else {
             fatalError()
         }
     }
-    
+
 }
 
 extension Bitmap: CustomStringConvertible {
-    
+
     public var description: String {
         "width: \(width), height: \(height)\n" + backing.map(String.init).joined(separator: ",")
     }
-    
+
 }
 
 extension Bitmap {
-    
+
+    // swiftlint:disable:next cyclomatic_complexity
     public func compare(with other: Bitmap, precision: Double) -> Bool {
         guard width != 0 else { return false }
         guard other.width != 0 else { return false }
