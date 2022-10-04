@@ -21,16 +21,17 @@ public typealias EnergyFunction = (
     _ score: Double
 ) -> Double
 
-// The default/built-in energy function that calculates a measure of the improvement adding
-// the scanlines of a shape provides - lower energy is better.
-// @param lines The scanlines of the shape.
-// @param alpha The alpha of the scanlines.
-// @param target The target bitmap.
-// @param current The current bitmap.
-// @param buffer The buffer bitmap. // TODO: explain it better.
-// @param score The score.
-// @return The energy measure.
-public func defaultEnergyFunction(
+/// The default/built-in energy function that calculates a measure of the improvement adding
+/// the scanlines of a shape provides - lower energy is better.
+/// - Parameters:
+///   - lines: The scanlines of the shape.
+///   - alpha:  The alpha of the scanlines.
+///   - target: The target bitmap.
+///   - current: The current bitmap.
+///   - buffer: The buffer bitmap. // TODO: explain it better.
+///   - score: The score.
+/// - Returns: The energy measure.
+public func defaultEnergyFunction( // swiftlint:disable:this function_parameter_count
     _ lines: [Scanline],
     _ alpha: UInt, // TODO: why not UInt8???
     _ target: Bitmap,
@@ -82,7 +83,7 @@ func computeColor(
             // Get the overlapping target and current colors
             let t: Rgba = target[x, y]
             let c: Rgba = current[x, y]
-            
+
             let tr: Int32 = Int32(t.r)
             let tg: Int32 = Int32(t.g)
             let tb: Int32 = Int32(t.b)
@@ -126,7 +127,7 @@ func differenceFull(first: Bitmap, second: Bitmap) -> Double {
         for x in 0..<width {
             let f: Rgba = first[x, y]
             let s: Rgba = second[x, y]
-            
+
             let dr: Int32 = Int32(f.r) - Int32(s.r)
             let dg: Int32 = Int32(f.g) - Int32(s.g)
             let db: Int32 = Int32(f.b) - Int32(s.b)
@@ -134,20 +135,20 @@ func differenceFull(first: Bitmap, second: Bitmap) -> Double {
             total += Int64(dr * dr + dg * dg + db * db + da * da)
         }
     }
-    
+
     return sqrt(Double(total) / (Double(width) * Double(height) * 4.0)) / 255.0
 }
 
-// Calculates the root-mean-square error between the parts of the two bitmaps within the scanline mask.
-// This is for optimization purposes, it lets us calculate new error values only for parts of the image
-// we know have changed.
-// @param target The target bitmap.
-// @param before The bitmap before the change.
-// @param after The bitmap after the change.
-// @param score The score.
-// @param lines The scanlines.
-// @return The difference/error between the two bitmaps, masked by the scanlines.
-
+/// Calculates the root-mean-square error between the parts of the two bitmaps within the scanline mask.
+/// This is for optimization purposes, it lets us calculate new error values only for parts of the image
+/// we know have changed.
+/// - Parameters:
+///   - target: The target bitmap.
+///   - before: The bitmap before the change.
+///   - after: The bitmap after the change.
+///   - score: The score.
+///   - lines: The scanlines.
+/// - Returns: The difference/error between the two bitmaps, masked by the scanlines.
 func differencePartial(
     target: Bitmap,
     before: Bitmap,
@@ -182,18 +183,19 @@ func differencePartial(
     return sqrt(Double(total) / Double(rgbaCount)) / 255.0
 }
 
-// Gets the best state using a hill climbing algorithm.
-// @param shapeCreator A function that will create the shapes that will be chosen from.
-// @param alpha The opacity of the shape.
-// @param n The number of random states to generate.
-// @param age The number of hillclimbing steps.
-// @param target The target bitmap.
-// @param current The current bitmap.
-// @param buffer The buffer bitmap. // TODO: better explain this.
-// @param lastScore The last score.
-// @param customEnergyFunction An optional function to calculate the energy (if unspecified a default implementation is used).
-// @return The best state acquired from hill climbing i.e. the one with the lowest energy.
-func bestHillClimbState(
+/// Gets the best state using a hill climbing algorithm.
+/// - Parameters:
+///   - shapeCreator: A function that will create the shapes that will be chosen from.
+///   - alpha: The opacity of the shape.
+///   - n: The number of random states to generate.
+///   - age: The number of hillclimbing steps.
+///   - target: The target bitmap.
+///   - current: The current bitmap.
+///   - buffer: The buffer bitmap. // TODO: better explain this.
+///   - lastScore: The last score.
+///   - customEnergyFunction: An optional function to calculate the energy (if unspecified a default implementation is used).
+/// - Returns: The best state acquired from hill climbing i.e. the one with the lowest energy.
+func bestHillClimbState( // swiftlint:disable:this function_parameter_count
     shapeCreator: () -> any Shape,
     alpha: UInt,
     n: UInt,
@@ -226,16 +228,18 @@ func bestHillClimbState(
     )
 }
 
-// Hill climbing optimization algorithm, attempts to minimize energy (the error/difference).
-// https://en.wikipedia.org/wiki/Hill_climbing
-// @param state The state to optimize.
-// @param maxAge The maximum age.
-// @param target The target bitmap.
-// @param current The current bitmap.
-// @param buffer The buffer bitmap.
-// @param lastScore The last score.
-// @return The best state found from hillclimbing.
-func hillClimb(
+/// Hill climbing optimization algorithm, attempts to minimize energy (the error/difference).
+/// https://en.wikipedia.org/wiki/Hill_climbing
+/// - Parameters:
+///   - state: The state to optimize.
+///   - maxAge: The maximum age.
+///   - target: The target bitmap.
+///   - current: The current bitmap.
+///   - buffer: The buffer bitmap.
+///   - lastScore: The last score.
+///   - energyFunction: An energy function to be used.
+/// - Returns: The best state found from hillclimbing.
+func hillClimb( // swiftlint:disable:this function_parameter_count
     state: State,
     maxAge: UInt32,
     target: Bitmap,
@@ -268,16 +272,18 @@ func hillClimb(
     return bestState
 }
 
-// @brief bestRandomState Gets the best state using a random algorithm.
-// @param shapeCreator A function that will create the shapes that will be chosen from.
-// @param alpha The opacity of the shape.
-// @param n The number of states to try.
-// @param target The target bitmap.
-// @param current The current bitmap.
-// @param buffer The buffer bitmap.
-// @param lastScore The last score.
-// @return The best random state i.e. the one with the lowest energy.
-fileprivate func bestRandomState(
+/// Gets the best state using a random algorithm.
+/// - Parameters:
+///   - shapeCreator: A function that will create the shapes that will be chosen from.
+///   - alpha: The opacity of the shape.
+///   - n: The number of states to try.
+///   - target: The target bitmap.
+///   - current: The current bitmap.
+///   - buffer: The buffer bitmap.
+///   - lastScore: The last score.
+///   - energyFunction: An energy function to be used.
+/// - Returns: The best random state i.e. the one with the lowest energy.
+private func bestRandomState( // swiftlint:disable:this function_parameter_count
     shapeCreator: () -> any Shape,
     alpha: UInt,
     n: UInt,
