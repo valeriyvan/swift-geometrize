@@ -2,10 +2,10 @@ import XCTest
 @testable import geometrize
 
 final class CoreTests: XCTestCase {
-    
+
     func testDifferenceFull() throws {
         let blackBitmap = Bitmap(width: 10, height: 10, color: .black)
-        
+
         // Difference with itself is 0
         XCTAssertEqual(differenceFull(first: blackBitmap, second: blackBitmap), 0)
 
@@ -13,12 +13,11 @@ final class CoreTests: XCTestCase {
         blackBitmapOnePixelChanged[0, 0] = .white
         var blackBitmapTwoPixelsChanged = blackBitmapOnePixelChanged
         blackBitmapTwoPixelsChanged[0, 1] = .white
-        
+
         // Changing two pixels means there's more difference than changing one.
         XCTAssertTrue(differenceFull(first: blackBitmap, second: blackBitmapTwoPixelsChanged) > differenceFull(first: blackBitmap, second: blackBitmapOnePixelChanged))
 
         // Now the same for white image
-        
         let whiteBitmap = Bitmap(width: 10, height: 10, color: .white)
 
         // Difference with itself is 0
@@ -28,7 +27,7 @@ final class CoreTests: XCTestCase {
         whiteBitmapOnePixelChanged[0, 0] = .black
         var whiteBitmapTwoPixelsChanged = whiteBitmapOnePixelChanged
         whiteBitmapTwoPixelsChanged[0, 1] = .black
-        
+
         // Changing two pixels means there's more difference than changing one.
         XCTAssertTrue(differenceFull(first: whiteBitmap, second: whiteBitmapTwoPixelsChanged) > differenceFull(first: whiteBitmap, second: whiteBitmapOnePixelChanged))
     }
@@ -40,7 +39,7 @@ final class CoreTests: XCTestCase {
         let bitmapSecond = Bitmap(stringLiteral: try String(contentsOf: secondUrl))
         XCTAssertEqual(differenceFull(first: bitmapFirst, second: bitmapSecond), 0.170819, accuracy: 0.000001)
     }
-    
+
     func testDifferencePartialComparingResultWithCPlusPlus() throws {
         let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap target", withExtension: "txt")!))
         let bitmapBefore = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap before", withExtension: "txt")!))
@@ -52,7 +51,7 @@ final class CoreTests: XCTestCase {
             components[i] += ")"
         }
         let scanlines = components.map(Scanline.init)
-        
+
         XCTAssertEqual(
             differencePartial(
                 target: bitmapTarget,
@@ -65,7 +64,7 @@ final class CoreTests: XCTestCase {
             accuracy: 0.000001
         )
     }
-    
+
     func testDefaultEnergyFunctionComparingResultWithCPlusPlus() throws {
         let scanlinesString = try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction scanlines", withExtension: "txt")!)
         var components = scanlinesString.components(separatedBy: "),")
@@ -73,7 +72,7 @@ final class CoreTests: XCTestCase {
             components[i] += ")"
         }
         let scanlines = components.map(Scanline.init)
-        
+
         let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction target bitmap", withExtension: "txt")!))
         let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction current bitmap", withExtension: "txt")!))
         var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap", withExtension: "txt")!))
@@ -91,12 +90,12 @@ final class CoreTests: XCTestCase {
             0.162776,
             accuracy: 0.000001
         )
-        
+
         XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit)
     }
 
+    // swiftlint:disable:next function_body_length
     func testHillClimbComparingResultWithCPlusPlus() throws {
-        
         let randomNumbersString = try String(contentsOf: Bundle.module.url(forResource: "hillClimb randomRange", withExtension: "txt")!)
         let lines = randomNumbersString.components(separatedBy: .newlines)
         var counter = 0
@@ -108,10 +107,10 @@ final class CoreTests: XCTestCase {
             guard
                 let random = scanner.scanInt(),
                 scanner.scanString("(min:") != nil,
-                let min_ = scanner.scanInt(),
+                let theMin = scanner.scanInt(),
                 scanner.scanString(",max:") != nil,
-                let max_ = scanner.scanInt(),
-                min == min_, max == max_
+                let theMax = scanner.scanInt(),
+                min == theMin, max == theMax
             else {
                 fatalError()
             }
@@ -119,7 +118,7 @@ final class CoreTests: XCTestCase {
             return random
         }
         randomRangeImplementationReference = randomRangeFromFile
-        
+
         let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb target bitmap", withExtension: "txt")!))
         let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb current bitmap", withExtension: "txt")!))
         var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap", withExtension: "txt")!))
@@ -127,38 +126,38 @@ final class CoreTests: XCTestCase {
 
         let rectangle = Rectangle(x1: 281, y1: 193, x2: 309, y2: 225)
         canvasBounds = (xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
-        //rectangle.setupImplementation = { r in
-        //    r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
-        //}
-        //rectangle.mutateImplementation = { r in
-        //    r.mutate(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
-        //}
-        //rectangle.rasterizeImplementation = { r in
-        //    rectangle.rasterize(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
-        //}
+        // rectangle.setupImplementation = { r in
+        //     r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        // }
+        // rectangle.mutateImplementation = { r in
+        //     r.mutate(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        // }
+        // rectangle.rasterizeImplementation = { r in
+        //     rectangle.rasterize(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        // }
         let state = State(score: 0.169823, alpha: 128, shape: rectangle)
-        
+
         // hillClimb return state State(score: 0.162824, alpha: 128, shape: Rectangle(x1=272,y1=113,x2=355,y2=237))
 
         let rectangleOnExit = Rectangle(x1: 272, y1: 113, x2: 355, y2: 237)
-        //rectangleOnExit.setupImplementation = { r in
-        //    r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
-        //}
-        //rectangleOnExit.mutateImplementation = { r in
-        //    r.mutate(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
-        //}
-        //rectangleOnExit.rasterizeImplementation = { r in
-        //    r.rasterize(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
-        //}
+        // rectangleOnExit.setupImplementation = { r in
+        //     r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        // }
+        // rectangleOnExit.mutateImplementation = { r in
+        //     r.mutate(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        // }
+        // rectangleOnExit.rasterizeImplementation = { r in
+        //     r.rasterize(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        // }
         let stateOnExitSample = State(score: 0.162824, alpha: 128, shape: rectangleOnExit)
-        
+
         let stateOnExit = hillClimb(
             state: state,
             maxAge: 100,
             target: bitmapTarget,
             current: bitmapCurrent,
             buffer: &bitmapBuffer,
-            lastScore: 0.170819, 
+            lastScore: 0.170819,
             energyFunction: defaultEnergyFunction
         )
 
