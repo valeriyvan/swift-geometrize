@@ -1,20 +1,20 @@
 import Foundation
 
-// Represents a scanline, a row of pixels running across a bitmap.
-
+/// Represents a scanline, a row of pixels running across a bitmap.
 public struct Scanline {
-    
-    // Creates empty useless scanline.
+
+    /// Creates empty useless scanline.
     internal init() {
         y = 0
         x1 = 0
         x2 = 0
     }
-    
-    // Creates a new scanline.
-    // @param y The y-coordinate.
-    // @param x1 The leftmost x-coordinate.
-    // @param x2 The rightmost x-coordinate.
+
+    /// Creates a new scanline.
+    /// - Parameters:
+    ///   - y: The y-coordinate.
+    ///   - x1: The leftmost x-coordinate.
+    ///   - x2: The rightmost x-coordinate.
     internal init(y: Int, x1: Int, x2: Int) {
         self.y = y
         self.x1 = x1
@@ -23,17 +23,17 @@ public struct Scanline {
             print("Warning: Scanline has x1(\(x1)) > x2(\(x2). This makes scanline invisible..")
         }
     }
-    
-    // The y-coordinate of the scanline.
+
+    /// The y-coordinate of the scanline.
     internal let y: Int
-    
-    // The leftmost x-coordinate of the scanline.
+
+    /// The leftmost x-coordinate of the scanline.
     internal let x1: Int
-    
-    // The rightmost x-coordinate of the scanline.
+
+    /// The rightmost x-coordinate of the scanline.
     internal let x2: Int
-    
-    // Returned nil means trimming eliminates scanline completely.
+
+    /// Returned nil means trimming eliminates scanline completely.
     func trimmed(minX: Int, minY: Int, maxX: Int, maxY: Int) -> Self? {
         guard minY...maxY - 1 ~= y && x2 >= x1 else { return nil }
         let xRange = minX...maxX - 1
@@ -46,7 +46,7 @@ public struct Scanline {
 extension Scanline: Equatable {}
 
 extension Scanline: CustomStringConvertible {
-    
+
     public var description: String {
         "Scanline(y: \(y), x1: \(x1), x2: \(x2))"
     }
@@ -80,12 +80,13 @@ extension Scanline: ExpressibleByStringLiteral {
 
 extension Array where Element == Scanline {
 
-     // Crops the scanning width of an array of scanlines so they do not scan outside of the given area.
-     // @param minX The minimum x value to crop to.
-     // @param minY The minimum y value to crop to.
-     // @param maxX The maximum x value to crop to.
-     // @param maxY The maximum y value to crop to.
-     // @return A new vector of cropped scanlines.
+    /// Crops the scanning width of an array of scanlines so they do not scan outside of the given area.
+    /// - Parameters:
+    ///   - minX: The minimum x value to crop to.
+    ///   - minY: The minimum y value to crop to.
+    ///   - maxX: The maximum x value to crop to.
+    ///   - maxY: The maximum y value to crop to.
+    /// - Returns: A new vector of cropped scanlines.
     func trimmed(minX: Int, minY: Int, maxX: Int, maxY: Int) -> Self {
         var trimmedScanlines = Self()
         let xRange = minX...maxX - 1
@@ -99,49 +100,4 @@ extension Array where Element == Scanline {
         return trimmedScanlines
     }
 
-    /*
-    // Returns true if the scanlines contain transparent pixels in the given image
-    // @param image The image whose pixels to check
-    // @param minAlpha The minimum alpha level (0-255) to consider transparent
-    // @return True if the scanlines contains any transparent pixels
-    // TODO: Minimum alpha level is implemented wrongly.
-    // TODO: optimize enumerating pixels without trimming which makes a lot of allocations.
-    // But it is not called anyway.
-    func containTransparentPixels(image: Bitmap, minAlpha: UInt8) -> Bool {
-        let trimmedScanlines = self.trimmedScanlines(minX: 0, minY: 0, maxX: image.width, maxY: image.height)
-        for scanline in trimmedScanlines {
-            for x in scanline.x1..<scanline.x2 {
-                if image[x, scanline.y].a < minAlpha {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-    
-    // Is not called
-    func overlap(with another: Self) -> Bool {
-        for f in self {
-            for s in another where f.y == s.y && f.x1 <= s.x2 && f.x2 >= s.x1 {
-                return true
-            }
-        }
-        return false
-    }
-
-    // Is not called
-    func contains(_ another: Self) -> Bool {
-        for s in another {
-            var contained = false
-            for f in self where f.y == s.y && f.x1 <= s.x1 && f.x2 >= s.x2 {
-                contained = true
-                break
-            }
-            guard contained else {
-                return false
-            }
-        }
-        return true
-    }
-    */
 }
