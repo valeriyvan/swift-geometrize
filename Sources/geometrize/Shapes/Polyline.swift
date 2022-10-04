@@ -1,17 +1,17 @@
 import Foundation
 
 public final class Polyline: Shape {
-    
+
     public var points: [Point<Double>]
-    
+
     public init() {
         points = []
     }
-    
+
     public init(points: [Point<Double>]) {
         self.points = points
     }
-    
+
     public func copy() -> Polyline {
         Polyline(points: points)
     }
@@ -36,8 +36,8 @@ public final class Polyline: Shape {
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         let i = randomRange(min: 0, max: points.count - 1)
         var point = points[i]
-        point.x = Double((Int(point.x) + randomRange(min: -64, max:64)).clamped(to: xMin...xMax - 1))
-        point.y = Double((Int(point.y) + randomRange(min: -64, max:64)).clamped(to: yMin...yMax - 1))
+        point.x = Double((Int(point.x) + randomRange(min: -64, max: 64)).clamped(to: xMin...xMax - 1))
+        point.y = Double((Int(point.y) + randomRange(min: -64, max: 64)).clamped(to: yMin...yMax - 1))
         points[i] = point
     }
 
@@ -59,7 +59,7 @@ public final class Polyline: Shape {
             }
         }
         if lines.isEmpty {
-            print("Warning: \(#function) produced no scanlines")
+            print("Warning: \(#function) produced no scanlines.")
         }
         return lines
     }
@@ -67,7 +67,7 @@ public final class Polyline: Shape {
     public func type() -> ShapeType {
         .polyline
     }
-    
+
     public var description: String {
         "Polyline(" + points.map(\.description).joined(separator: ", ") + ")"
     }
