@@ -2,7 +2,7 @@ import XCTest
 @testable import geometrize
 
 final class BitmapTests: XCTestCase {
-    
+
     func testInit() throws {
         let bitmap = Bitmap()
         XCTAssertEqual(bitmap.width, 0)
@@ -29,9 +29,9 @@ final class BitmapTests: XCTestCase {
 
     func testInitSizeAndBitmap() throws {
         let data: [UInt8] = [
-            0,0,0,0,     1,1,1,1,     2,2,2,2,     3,3,3,3,     4,4,4,4,
-            10,10,10,10, 11,11,11,11, 12,12,12,12, 13,13,13,13, 14,14,14,14,
-            20,20,20,20, 21,21,21,21, 22,22,22,22, 23,23,23,23, 24,24,24,24
+            0,0,0,0,     1,1,1,1,     2,2,2,2,     3,3,3,3,     4,4,4,4,     // swiftlint:disable:this comma
+            10,10,10,10, 11,11,11,11, 12,12,12,12, 13,13,13,13, 14,14,14,14, // swiftlint:disable:this comma
+            20,20,20,20, 21,21,21,21, 22,22,22,22, 23,23,23,23, 24,24,24,24  // swiftlint:disable:this comma
         ]
         let bitmap = Bitmap(width: 5, height: 3, data: data)
         XCTAssertEqual(bitmap.width, 5)
@@ -51,10 +51,10 @@ final class BitmapTests: XCTestCase {
             },
             Bitmap(width: 3, height: 4,
                 data:
-                    [0,1,2,3, 0,1,2,3, 0,1,2,3,
-                     0,1,2,3, 1,2,3,4, 2,3,4,5,
-                     0,1,2,3, 2,3,4,5, 4,5,6,7,
-                     0,1,2,3, 3,4,5,6, 6,7,8,9
+                    [0,1,2,3, 0,1,2,3, 0,1,2,3, // swiftlint:disable:this comma
+                     0,1,2,3, 1,2,3,4, 2,3,4,5, // swiftlint:disable:this comma
+                     0,1,2,3, 2,3,4,5, 4,5,6,7, // swiftlint:disable:this comma
+                     0,1,2,3, 3,4,5,6, 6,7,8,9  // swiftlint:disable:this comma
                     ]
             )
         )
@@ -67,12 +67,12 @@ final class BitmapTests: XCTestCase {
         XCTAssertTrue(Bitmap(width: 0, height: 0, color: .white).isEmpty)
         XCTAssertFalse(Bitmap(width: 3, height: 2, color: .white).isEmpty)
     }
-    
+
     func testSubscript() throws {
         let data: [UInt8] = [
-            0,0,0,0,     1,1,1,1,     2,2,2,2,     3,3,3,3,     4,4,4,4,
-            10,10,10,10, 11,11,11,11, 12,12,12,12, 13,13,13,13, 14,14,14,14,
-            20,20,20,20, 21,21,21,21, 22,22,22,22, 23,23,23,23, 24,24,24,24
+            0,0,0,0,     1,1,1,1,     2,2,2,2,     3,3,3,3,     4,4,4,4,     // swiftlint:disable:this comma
+            10,10,10,10, 11,11,11,11, 12,12,12,12, 13,13,13,13, 14,14,14,14, // swiftlint:disable:this comma
+            20,20,20,20, 21,21,21,21, 22,22,22,22, 23,23,23,23, 24,24,24,24  // swiftlint:disable:this comma
         ]
         var bitmap = Bitmap(width: 5, height: 3, data: data)
         XCTAssertEqual(bitmap[0, 0], Rgba(r: 0, g: 0, b: 0, a: 0))
@@ -85,9 +85,9 @@ final class BitmapTests: XCTestCase {
         bitmap[Point(x: 3, y: 2)] = Rgba(r: 222, g: 222, b: 222, a: 222)
         XCTAssertEqual(
             bitmap.backing, [
-                0,0,0,0,     1,1,1,1,         2,2,2,2,     3,3,3,3,         4,4,4,4,
-                10,10,10,10, 111,111,111,111, 12,12,12,12, 13,13,13,13,     14,14,14,14,
-                20,20,20,20, 21,21,21,21,     22,22,22,22, 222,222,222,222, 24,24,24,24
+                0,0,0,0,     1,1,1,1,         2,2,2,2,     3,3,3,3,         4,4,4,4,     // swiftlint:disable:this comma
+                10,10,10,10, 111,111,111,111, 12,12,12,12, 13,13,13,13,     14,14,14,14, // swiftlint:disable:this comma
+                20,20,20,20, 21,21,21,21,     22,22,22,22, 222,222,222,222, 24,24,24,24  // swiftlint:disable:this comma
             ] as ContiguousArray<UInt8>
         )
     }
@@ -99,23 +99,23 @@ final class BitmapTests: XCTestCase {
         let sampleBitmap = Bitmap(width: 5, height: 7, color: color)
         XCTAssertEqual(bitmap, sampleBitmap)
     }
-    
+
     func testAverageColor() {
         XCTAssertEqual(Bitmap(width: 3, height: 5, color: .black).averageColor(), .black)
         XCTAssertEqual(Bitmap(width: 5, height: 3, color: .white).averageColor(), .white)
-        
+
         let bitmap = Bitmap(
             width: 5,
             height: 3,
             data:
-                [ 0,0,0,0,     1,1,1,1,         2,2,2,2,     3,3,3,3,         4,4,4,4,
-                  10,10,10,10, 111,111,111,111, 12,12,12,12, 13,13,13,13,     14,14,14,14,
-                  20,20,20,20, 21,21,21,21,     22,22,22,22, 222,222,222,222, 24,24,24,24
+                [ 0,0,0,0,     1,1,1,1,         2,2,2,2,     3,3,3,3,         4,4,4,4,     // swiftlint:disable:this comma
+                  10,10,10,10, 111,111,111,111, 12,12,12,12, 13,13,13,13,     14,14,14,14, // swiftlint:disable:this comma
+                  20,20,20,20, 21,21,21,21,     22,22,22,22, 222,222,222,222, 24,24,24,24  // swiftlint:disable:this comma
                 ] as [UInt8]
         )
         XCTAssertEqual(bitmap.averageColor(), Rgba(r: 31, g: 31, b: 31, a: 255))
     }
-    
+
     func testAddFrame() {
         let inset = 2
         var bitmap = Bitmap(width: 4, height: 3, color: .black)
@@ -129,7 +129,7 @@ final class BitmapTests: XCTestCase {
             }
         }
     }
-    
+
     func testDraw() {
         var bitmap = Bitmap(width: 4, height: 5, color: .black)
         bitmap.draw(
@@ -157,7 +157,7 @@ final class BitmapTests: XCTestCase {
             }
         }
     }
-    
+
     func testInitFromString() {
         XCTAssertEqual(
             Bitmap(
@@ -170,16 +170,16 @@ final class BitmapTests: XCTestCase {
             ),
             Bitmap(
                 width: 3, height: 2,
-                data: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+                data: Array(1...24)
             )
         )
     }
-    
+
     func testDescription() {
         XCTAssertEqual(
             Bitmap(
                 width: 3, height: 2,
-                data: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+                data: Array(1...24)
             ).description,
             """
             width: 3, height: 2
@@ -187,5 +187,5 @@ final class BitmapTests: XCTestCase {
             """
         )
     }
-    
+
 }
