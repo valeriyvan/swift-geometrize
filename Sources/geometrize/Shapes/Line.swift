@@ -1,23 +1,23 @@
 import Foundation
 
 public final class Line: Shape {
-    
+
     public var x1, y1, x2, y2: Double
-    
+
     public init() {
         x1 = 0.0
         y1 = 0.0
         x2 = 0.0
         y2 = 0.0
     }
-    
+
     public init(x1: Double, y1: Double, x2: Double, y2: Double) {
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
     }
-    
+
     public func copy() -> Line {
         Line(x1: x1, y1: y1, x2: x2, y2: y2)
     }
@@ -66,7 +66,7 @@ public final class Line: Shape {
     public func type() -> ShapeType {
         .line
     }
-    
+
     public var isDegenerate: Bool {
         x1 == x2 && y1 == y2
     }
