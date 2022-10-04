@@ -1,7 +1,7 @@
 import Foundation
 
 public final class Ellipse: Shape {
-    
+
     public var x: Double // x-coordinate.
     public var y: Double // y-coordinate.
     public var rx: Double // x-radius.
@@ -13,14 +13,14 @@ public final class Ellipse: Shape {
         rx = 0.0
         ry = 0.0
     }
-    
+
     public init(x: Double, y: Double, rx: Double, ry: Double) {
         self.x = x
         self.y = y
         self.rx = rx
         self.ry = ry
     }
-    
+
     public func copy() -> Ellipse {
         Ellipse(x: x, y: y, rx: rx, ry: ry)
     }
@@ -52,7 +52,7 @@ public final class Ellipse: Shape {
         for dy in 0..<Int(ry) {
             let y1 = Int(y) - dy
             let y2 = Int(y) + dy
-            if ((y1 < yMin || y1 >= yMax) && (y2 < yMin || y2 >= yMax)) {
+            if (y1 < yMin || y1 >= yMax) && (y2 < yMin || y2 >= yMax) {
                 continue
             }
             let v: Int = Int(sqrt(ry * ry - Double(dy * dy)) * aspect)
@@ -84,7 +84,7 @@ public final class Ellipse: Shape {
     public func type() -> ShapeType {
         .ellipse
     }
-    
+
     public var isDegenerate: Bool {
         rx == 0.0 || ry == 0.0
     }
