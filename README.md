@@ -1,6 +1,12 @@
-This is Swift port of geometrize C++ library.
+## This is Swift port of geometrize C++ library.
 
-Original README:
+## TODO:
+* add stroke width for line, pilyline and bezier cuve;
+* multithreading;
+* fix architectural fault with passing canvas size to shape factory;
+* solve dealing with randomness in tests.
+
+## Original README:
 
 [![Geometrize Logo](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/logo.png?raw=true "Geometrize logo")](https://www.geometrize.co.uk/)
 
