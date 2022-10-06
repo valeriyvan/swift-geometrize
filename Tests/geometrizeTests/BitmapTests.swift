@@ -68,6 +68,23 @@ final class BitmapTests: XCTestCase {
         XCTAssertFalse(Bitmap(width: 3, height: 2, color: .white).isEmpty)
     }
 
+    func testIsInBounds() {
+        let bitmap = Bitmap(width: 3, height: 4, color: .cyan)
+        XCTAssertTrue(bitmap.isInBounds(x: 2, y: 2))
+        XCTAssertTrue(bitmap.isInBounds(Point(x: 2, y: 2)))
+        XCTAssertTrue(bitmap.isInBounds(x: 0, y: 0))
+        XCTAssertTrue(bitmap.isInBounds(Point(x: 0, y: 0)))
+        XCTAssertTrue(bitmap.isInBounds(x: 2, y: 3))
+        XCTAssertTrue(bitmap.isInBounds(Point(x: 2, y: 3)))
+        XCTAssertFalse(bitmap.isInBounds(x: 3, y: 3))
+        XCTAssertFalse(bitmap.isInBounds(x: 2, y: 5))
+        XCTAssertFalse(bitmap.isInBounds(x: 3, y: 5))
+        XCTAssertFalse(bitmap.isInBounds(Point(x: 3, y: 3)))
+        XCTAssertFalse(bitmap.isInBounds(Point(x: 2, y: 5)))
+        XCTAssertFalse(bitmap.isInBounds(Point(x: 3, y: 5)))
+
+    }
+
     func testSubscript() throws {
         let data: [UInt8] = [
             0,0,0,0,     1,1,1,1,     2,2,2,2,     3,3,3,3,     4,4,4,4,     // swiftlint:disable:this comma
