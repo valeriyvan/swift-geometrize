@@ -97,6 +97,18 @@ public struct Bitmap {
     @inline(__always)
     public var isEmpty: Bool { width == 0 || height == 0 }
 
+    @inlinable
+    @inline(__always)
+    public func isInBounds(x: Int, y: Int) -> Bool {
+        x >= 0 && x < width && y >= 0 && y < height
+    }
+
+    @inlinable
+    @inline(__always)
+    public func isInBounds(_ point: Point<Int>) -> Bool {
+        point.x >= 0 && point.x < width && point.y >= 0 && point.y < height
+    }
+
     public subscript(x: Int, y: Int) -> Rgba {
         get {
             backing.withUnsafeBufferPointer {
