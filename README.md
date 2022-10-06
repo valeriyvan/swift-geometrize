@@ -1,7 +1,7 @@
 ## This is Swift port of geometrize C++ library.
 
 ## TODO:
-* add stroke width for line, pilyline and bezier cuve;
+* add stroke width for line, pilyline and bezier curve;
 * multithreading;
 * fix architectural fault with passing canvas size to shape factory;
 * solve dealing with randomness in tests.
