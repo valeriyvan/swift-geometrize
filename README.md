@@ -1,4 +1,4 @@
-## This is Swift port of geometrize C++ library.
+## Swift package for recreating images as geometric primitives. Swift port of geometrize C++ library.
 
 ## TODO:
 * add stroke width for line, pilyline and bezier curve;
