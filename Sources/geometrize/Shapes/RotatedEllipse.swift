@@ -7,26 +7,26 @@ public final class RotatedEllipse: Shape {
     public var y: Double // y-coordinate.
     public var rx: Double // x-radius.
     public var ry: Double // y-radius.
-    public var angle: Double // Rotation angle.
+    public var angleDegrees: Double // Rotation angle in degrees.
 
     public required init() {
         x = 0.0
         y = 0.0
         rx = 0.0
         ry = 0.0
-        angle = 0.0
+        angleDegrees = 0.0
     }
 
-    public init(x: Double, y: Double, rx: Double, ry: Double, angle: Double) {
+    public init(x: Double, y: Double, rx: Double, ry: Double, angleDegrees: Double) {
         self.x = x
         self.y = y
         self.rx = rx
         self.ry = ry
-        self.angle = angle
+        self.angleDegrees = angleDegrees
     }
 
     public func copy() -> RotatedEllipse {
-        RotatedEllipse(x: x, y: y, rx: rx, ry: ry, angle: angle)
+        RotatedEllipse(x: x, y: y, rx: rx, ry: ry, angleDegrees: angleDegrees)
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
@@ -34,7 +34,7 @@ public final class RotatedEllipse: Shape {
         y = Double(randomRange(min: yMin, max: yMax - 1))
         rx = Double(randomRange(min: 1, max: 32))
         ry = Double(randomRange(min: 1, max: 32))
-        angle = Double(randomRange(min: 0, max: 360))
+        angleDegrees = Double(randomRange(min: 0, max: 360))
     }
 
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
@@ -47,7 +47,7 @@ public final class RotatedEllipse: Shape {
         case 2:
             ry = Double((Int(ry) + randomRange(min: -16, max: 16)).clamped(to: 1...yMax - 1))
         case 3:
-            angle = Double((Int(angle) + randomRange(min: -16, max: 16)).clamped(to: 0...360))
+            angleDegrees = Double((Int(angleDegrees) + randomRange(min: -16, max: 16)).clamped(to: 0...360))
         default:
             fatalError()
         }
@@ -70,7 +70,7 @@ public final class RotatedEllipse: Shape {
     private func points(_ count: Int) -> [Point<Double>] {
         var points = [Point<Double>]()
         points.reserveCapacity(count)
-        let rads = angle * (.pi / 180.0)
+        let rads = angleDegrees * (.pi / 180.0)
         let co = cos(rads)
         let si = sin(rads)
         for i in 0..<count {
@@ -91,7 +91,7 @@ public final class RotatedEllipse: Shape {
     }
 
     public var description: String {
-        "RotatedEllipse(x=\(x), y=\(y), rx=\(rx), ry=\(ry), angle=\(angle))"
+        "RotatedEllipse(x=\(x), y=\(y), rx=\(rx), ry=\(ry), angleDegrees=\(angleDegrees))"
     }
 
 }

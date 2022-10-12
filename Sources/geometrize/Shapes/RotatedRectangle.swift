@@ -7,26 +7,26 @@ public final class RotatedRectangle: Shape {
     public var y1: Double
     public var x2: Double
     public var y2: Double
-    public var angle: Double
+    public var angleDegrees: Double
 
     public required init() {
         x1 = 0.0
         y1 = 0.0
         x2 = 0.0
         y2 = 0.0
-        angle = 0.0
+        angleDegrees = 0.0
     }
 
-    public init(x1: Double, y1: Double, x2: Double, y2: Double, angle: Double) {
+    public init(x1: Double, y1: Double, x2: Double, y2: Double, angleDegrees: Double) {
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
-        self.angle = angle
+        self.angleDegrees = angleDegrees
     }
 
     public func copy() -> RotatedRectangle {
-        RotatedRectangle(x1: x1, y1: y1, x2: x2, y2: y2, angle: angle)
+        RotatedRectangle(x1: x1, y1: y1, x2: x2, y2: y2, angleDegrees: angleDegrees)
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
@@ -34,7 +34,7 @@ public final class RotatedRectangle: Shape {
         y1 = Double(randomRange(min: yMin, max: yMax - 1))
         x2 = Double((Int(x1) + randomRange(min: 1, max: 32)).clamped(to: xMin...xMax - 1))
         y2 = Double((Int(y1) + randomRange(min: 1, max: 32)).clamped(to: yMin...yMax - 1))
-        angle = Double(randomRange(min: 0, max: 360))
+        angleDegrees = Double(randomRange(min: 0, max: 360))
     }
 
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
@@ -46,7 +46,7 @@ public final class RotatedRectangle: Shape {
             x2 = Double((Int(x2) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
             y2 = Double((Int(y2) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax - 1))
         case 2:
-            angle = Double((Int(angle) + randomRange(min: -4, max: 4)).clamped(to: 0...360))
+            angleDegrees = Double((Int(angleDegrees) + randomRange(min: -4, max: 4)).clamped(to: 0...360))
         default:
             fatalError()
         }
@@ -86,7 +86,7 @@ public final class RotatedRectangle: Shape {
         let oy1 = yy1 - cy
         let oy2 = yy2 - cy
 
-        let rads = angle * .pi / 180.0
+        let rads = angleDegrees * .pi / 180.0
         let c = cos(rads)
         let s = sin(rads)
 
@@ -107,7 +107,7 @@ public final class RotatedRectangle: Shape {
     }
 
     public var description: String {
-        "RotatedRectangle(x1=\(x1), y1=\(y1), x2=\(x2), y2=\(y2)), angle=\(angle))"
+        "RotatedRectangle(x1=\(x1), y1=\(y1), x2=\(x2), y2=\(y2)), angleDegrees=\(angleDegrees))"
     }
 
 }

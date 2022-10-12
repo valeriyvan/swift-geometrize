@@ -25,10 +25,10 @@ struct State {
 
     /// The score of the state, a measure of the improvement applying the state to the current bitmap will have.
     var score: Double
-    
+
     /// The alpha of the shape.
     var alpha: UInt8
-    
+
     /// The geometric primitive owned by the state.
     var shape: any Shape
 

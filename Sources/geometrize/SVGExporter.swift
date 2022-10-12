@@ -114,7 +114,7 @@ private func getSvgShapeData(rotatedRectangle r: RotatedRectangle) -> String {
 }
 
 private func getSvgShapeData(rotatedRectangle r: RotatedEllipse) -> String {
-    "<g transform=\"translate(\(r.x) \(r.y)) rotate(\(r.angle)) scale(\(r.rx) \(r.ry))\"><ellipse cx=\"0\" cy=\"0\" rx=\"1\" ry=\"1\" \(svg_style_hook) /></g>"
+    "<g transform=\"translate(\(r.x) \(r.y)) rotate(\(r.angleDegrees)) scale(\(r.rx) \(r.ry))\"><ellipse cx=\"0\" cy=\"0\" rx=\"1\" ry=\"1\" \(svg_style_hook) /></g>"
 }
 
 private func getSvgShapeData(triangle t: Triangle) -> String {
