@@ -1,7 +1,7 @@
 import XCTest
 import SnapshotTesting
 import PNG
-@testable import geometrize
+@testable import Geometrize
 
 extension XCTAttachment {
     convenience init(bitmap: Bitmap) {

@@ -1,7 +1,6 @@
 import XCTest
 import PNG
-
-@testable import geometrize
+@testable import Geometrize
 
 final class ImageRunnerTests: XCTestCase {
 
