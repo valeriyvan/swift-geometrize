@@ -1,6 +1,6 @@
 import XCTest
 import SnapshotTesting
-@testable import geometrize
+@testable import Geometrize
 
 final class TriangleTests: XCTestCase {
 

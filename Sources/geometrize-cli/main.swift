@@ -1,5 +1,5 @@
 import Foundation
-import geometrize
+import Geometrize
 import ArgumentParser
 import PNG
 import JPEG

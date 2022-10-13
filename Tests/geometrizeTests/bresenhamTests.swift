@@ -1,8 +1,7 @@
 import XCTest
 import PNG
 import SnapshotTesting
-
-@testable import geometrize
+@testable import Geometrize
 
 final class BresenhamTests: XCTestCase {
 

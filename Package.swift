@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
     
-    name: "geometrize",
+    name: "swift-geometrize",
     
     platforms: [
         .macOS(.v10_15), .iOS(.v14)
@@ -12,8 +12,8 @@ let package = Package(
     
     products: [
         .library(
-            name: "geometrize",
-            targets: ["geometrize"]
+            name: "Geometrize",
+            targets: ["Geometrize"]
         ),
         .executable(
             name: "geometrize-cli",
@@ -32,7 +32,7 @@ let package = Package(
     
     targets: [
         .target(
-            name: "geometrize",
+            name: "Geometrize",
             dependencies: [
                 .product(name: "Algorithms", package: "swift-algorithms")
             ],
@@ -44,7 +44,7 @@ let package = Package(
         .executableTarget(
             name: "geometrize-cli",
             dependencies: [
-                "geometrize",
+                "Geometrize",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "PNG", package: "swift-png"),
                 .product(name: "JPEG", package: "jpeg")
@@ -56,7 +56,7 @@ let package = Package(
         .testTarget(
             name: "geometrizeTests",
             dependencies: [
-                "geometrize",
+                "Geometrize",
                 .product(name: "PNG", package: "swift-png"),
                 .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
             ],
@@ -85,9 +85,7 @@ let package = Package(
                 .copy("Resources/hillClimb current bitmap.txt"),
                 .copy("Resources/hillClimb buffer bitmap.txt"),
                 .copy("Resources/hillClimb buffer bitmap on exit.txt"),
-                .copy("Resources/hillClimb randomRange.txt"),
-                .copy("Resources/Фото документы.png"),
-                .copy("Resources/kris.png")
+                .copy("Resources/hillClimb randomRange.txt")
             ],
             plugins: [
                 .plugin(name: "SwiftLint", package: "SwiftLintPlugin")

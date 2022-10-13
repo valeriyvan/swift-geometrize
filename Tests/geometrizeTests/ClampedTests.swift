@@ -1,5 +1,5 @@
 import XCTest
-@testable import geometrize
+@testable import Geometrize
 
 final class ClampedTests: XCTestCase {
 
