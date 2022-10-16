@@ -2,16 +2,16 @@ import Foundation
 
 // The core functions for Geometrize.
 
-// Type alias for a function that calculates a measure of the improvement adding
-// the scanlines of a shape provides - lower energy is better.
-// @param lines The scanlines of the shape.
-// @param alpha The alpha of the scanlines.
-// @param target The target bitmap.
-// @param current The current bitmap.
-// @param buffer The buffer bitmap. // TODO: explain it better.
-// @param score The score.
-// @return The energy measure.
-
+/// Type alias for a function that calculates a measure of the improvement adding
+/// the scanlines of a shape provides - lower energy is better.
+/// - Parameters:
+///   - lines The scanlines of the shape.
+///   - alpha The alpha of the scanlines.
+///   - target The target bitmap.
+///   - current The current bitmap.
+///   - buffer The buffer bitmap. // TODO: explain it better.
+///   - score The score.
+/// - Returns: The energy measure.
 public typealias EnergyFunction = (
     _ lines: [Scanline],
     _ alpha: UInt, // TODO: why not UInt8???
@@ -49,12 +49,13 @@ public func defaultEnergyFunction( // swiftlint:disable:this function_parameter_
     return differencePartial(target: target, before: current, after: buffer, score: score, lines: lines)
 }
 
- // Calculates the color of the scanlines.
- // @param target The target image.
- // @param current The current image.
- // @param lines The scanlines.
- // @param alpha The alpha of the scanline.
- // @return The color of the scanlines.
+/// Calculates the color of the scanlines.
+/// - Parameters:
+///   - target: The target image.
+///   - current: The current image.
+///   - lines: The scanlines.
+///   - alpha: The alpha of the scanline.
+/// - Returns: The color of the scanlines.
 func computeColor(
     target: Bitmap,
     current: Bitmap,
@@ -111,10 +112,11 @@ func computeColor(
     return Rgba(r: r, g: g, b: b, a: alpha)
 }
 
-// Calculates the root-mean-square error between two bitmaps.
-// @param first The first bitmap.
-// @param second The second bitmap.
-// @return The difference/error measure between the two bitmaps.
+/// Calculates the root-mean-square error between two bitmaps.
+/// - Parameters:
+///   - first: The first bitmap.
+///   - second: The second bitmap.
+/// - Returns: The difference/error measure between the two bitmaps.
 func differenceFull(first: Bitmap, second: Bitmap) -> Double {
     assert(first.width == second.width)
     assert(first.height == second.height)

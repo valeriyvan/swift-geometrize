@@ -76,12 +76,13 @@ func exportSingleShapeSVG(
     """
 }
 
-// Exports shape data as a complete SVG image.
-// @param data The shape data to export.
-// @param width The width of the SVG image.
-// @param height The height of the SVG image.
-// @param options additional options used by the exporter.
-// @return A string representing the SVG image.
+/// Exports shape data as a complete SVG image.
+/// - Parameters:
+///   - data The shape data to export.
+///   - width The width of the SVG image.
+///   - height The height of the SVG image.
+///   - options additional options used by the exporter.
+/// - Returns: A string representing the SVG image.
 public func exportSVG(
     data: [ShapeResult],
     width: Int,
