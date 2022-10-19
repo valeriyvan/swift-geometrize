@@ -1,4 +1,5 @@
 import Foundation
+import Algorithms
 
 public final class QuadraticBezier: Shape {
 
@@ -71,9 +72,8 @@ public final class QuadraticBezier: Shape {
         }
         // Prevent scanline overlap, it messes up the energy functions that rely on the scanlines not intersecting themselves
         var duplicates: Set<Point<Int>> = Set()
-        for i in 0..<points.count - 1 { // TODO: enumerate pairs
-            let points = bresenham(from: points[i], to: points[i + 1])
-            for point in points {
+        for (from, to) in points.adjacentPairs() {
+            for point in bresenham(from: from, to: to) {
                 if !duplicates.contains(point) {
                     duplicates.insert(point)
                     if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
