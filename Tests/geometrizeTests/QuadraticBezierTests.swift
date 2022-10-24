@@ -5,8 +5,9 @@ import SnapshotTesting
 final class QuadraticBezierTests: XCTestCase {
 
     func testRasterize() throws {
-        let xMax = 471, yMax = 590
-        var bitmap = Bitmap(width: xMax, height: yMax, color: .red)
+        let width = 471, height = 590
+        let xMax = width - 1, yMax = height - 1
+        var bitmap = Bitmap(width: width, height: height, color: .red)
         bitmap.draw(
             lines:
                 QuadraticBezier(cx: 327.0, cy: 295.0, x1: 57.0, y1: 542.0, x2: 190.0, y2: 216.0)
@@ -14,7 +15,7 @@ final class QuadraticBezierTests: XCTestCase {
             color:
                 .white
         )
-        bitmap.draw(lines: scaleScanlinesTrimmed(width: 471, height: 590, step: 100), color: .black)
+        bitmap.draw(lines: scaleScanlinesTrimmed(width: width, height: height, step: 100), color: .black)
         assertSnapshot(
             matching: bitmap,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)

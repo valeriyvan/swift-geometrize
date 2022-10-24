@@ -30,8 +30,8 @@ public final class RotatedEllipse: Shape {
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        x = Double(randomRange(min: xMin, max: xMax - 1))
-        y = Double(randomRange(min: yMin, max: yMax - 1))
+        x = Double(randomRange(min: xMin, max: xMax))
+        y = Double(randomRange(min: yMin, max: yMax))
         rx = Double(randomRange(min: 1, max: 32))
         ry = Double(randomRange(min: 1, max: 32))
         angleDegrees = Double(randomRange(min: 0, max: 360))
@@ -40,12 +40,12 @@ public final class RotatedEllipse: Shape {
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         switch randomRange(min: 0, max: 3) {
         case 0:
-            x = Double((Int(x) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
-            y = Double((Int(y) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax - 1))
+            x = Double((Int(x) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax))
+            y = Double((Int(y) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax))
         case 1:
-            rx = Double((Int(rx) + randomRange(min: -16, max: 16)).clamped(to: 1...xMax - 1))
+            rx = Double((Int(rx) + randomRange(min: -16, max: 16)).clamped(to: 1...xMax))
         case 2:
-            ry = Double((Int(ry) + randomRange(min: -16, max: 16)).clamped(to: 1...yMax - 1))
+            ry = Double((Int(ry) + randomRange(min: -16, max: 16)).clamped(to: 1...yMax))
         case 3:
             angleDegrees = Double((Int(angleDegrees) + randomRange(min: -16, max: 16)).clamped(to: 0...360))
         default:

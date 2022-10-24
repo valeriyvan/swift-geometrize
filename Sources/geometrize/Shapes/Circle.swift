@@ -23,18 +23,18 @@ public final class Circle: Shape {
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        x = Double(randomRange(min: xMin, max: xMax - 1))
-        y = Double(randomRange(min: yMin, max: yMax - 1))
+        x = Double(randomRange(min: xMin, max: xMax))
+        y = Double(randomRange(min: yMin, max: yMax))
         r = Double(randomRange(min: 1, max: 32))
     }
 
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         switch randomRange(min: 0, max: 1) {
         case 0:
-            x = Double((Int(x) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
-            y = Double((Int(y) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax - 1))
+            x = Double((Int(x) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax))
+            y = Double((Int(y) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax))
         case 1:
-            r = Double((Int(r) + randomRange(min: -16, max: 16)).clamped(to: 1...xMax - 1)) // clamp incorect
+            r = Double((Int(r) + randomRange(min: -16, max: 16)).clamped(to: 1...xMax))
         default:
             fatalError()
         }
@@ -53,7 +53,7 @@ public final class Circle: Shape {
             }
             guard let xScanFirst = xScan.first, let xScanLast = xScan.last else { continue }
             let fy = Int(self.y) + y
-            let xRange = xMin...xMax - 1
+            let xRange = xMin...xMax
             let intX = Int(x)
             let x1 = (intX + xScanFirst).clamped(to: xRange)
             let x2 = (intX + xScanLast).clamped(to: xRange)

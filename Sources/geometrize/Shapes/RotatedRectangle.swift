@@ -30,21 +30,21 @@ public final class RotatedRectangle: Shape {
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        x1 = Double(randomRange(min: xMin, max: xMax - 1))
-        y1 = Double(randomRange(min: yMin, max: yMax - 1))
-        x2 = Double((Int(x1) + randomRange(min: 1, max: 32)).clamped(to: xMin...xMax - 1))
-        y2 = Double((Int(y1) + randomRange(min: 1, max: 32)).clamped(to: yMin...yMax - 1))
+        x1 = Double(randomRange(min: xMin, max: xMax))
+        y1 = Double(randomRange(min: yMin, max: yMax))
+        x2 = Double((Int(x1) + randomRange(min: 1, max: 32)).clamped(to: xMin...xMax))
+        y2 = Double((Int(y1) + randomRange(min: 1, max: 32)).clamped(to: yMin...yMax))
         angleDegrees = Double(randomRange(min: 0, max: 360))
     }
 
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         switch randomRange(min: 0, max: 2) {
         case 0:
-            x1 = Double((Int(x1) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
-            y1 = Double((Int(y1) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax - 1))
+            x1 = Double((Int(x1) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax))
+            y1 = Double((Int(y1) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax))
         case 1:
-            x2 = Double((Int(x2) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax - 1))
-            y2 = Double((Int(y2) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax - 1))
+            x2 = Double((Int(x2) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax))
+            y2 = Double((Int(y2) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax))
         case 2:
             angleDegrees = Double((Int(angleDegrees) + randomRange(min: -4, max: 4)).clamped(to: 0...360))
         default:

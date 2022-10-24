@@ -19,13 +19,17 @@ final class ScanlineTests: XCTestCase {
 
     func testTrimmed() throws {
         let scanlines = [
-            Scanline(y: 3, x1: 3, x2: 13),
-            Scanline(y: 4, x1: 3, x2: 13),
-            Scanline(y: 5, x1: 3, x2: 13)
+            Scanline(y: 3, x1: 3, x2: 13), // 1
+            Scanline(y: 4, x1: 3, x2: 13), // 2
+            Scanline(y: 5, x1: 3, x2: 13), // 3
+            Scanline(y: 5, x1: 7, x2: 9),  // 4
+            Scanline(y: 6, x1: 3, x2: 13)  // 5
         ]
         let trimmed = scanlines.trimmed(minX: 5, minY: 4, maxX: 10, maxY: 5)
         let trimmedSample = [
-            Scanline(y: 4, x1: 5, x2: 9)
+            Scanline(y: 4, x1: 5, x2: 10), // 2
+            Scanline(y: 5, x1: 5, x2: 10), // 3
+            Scanline(y: 5, x1: 7, x2: 9)   // 4
         ]
         XCTAssertEqual(trimmed, trimmedSample)
     }
