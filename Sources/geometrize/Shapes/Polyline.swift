@@ -19,14 +19,14 @@ public final class Polyline: Shape {
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         let startingPoint = Point(
             x: randomRange(min: xMin, max: xMax),
-            y: randomRange(min: yMin, max: yMax - 1)
+            y: randomRange(min: yMin, max: yMax)
         )
         var points: [Point<Double>] = []
         for _ in 0..<4 {
             points.append(
                 Point(
-                    x: Double((startingPoint.x + randomRange(min: -32, max: 32)).clamped(to: xMin...xMax - 1)),
-                    y: Double((startingPoint.y + randomRange(min: -32, max: 32)).clamped(to: yMin...yMax - 1))
+                    x: Double((startingPoint.x + randomRange(min: -32, max: 32)).clamped(to: xMin...xMax)),
+                    y: Double((startingPoint.y + randomRange(min: -32, max: 32)).clamped(to: yMin...yMax))
                 )
             )
         }
@@ -36,8 +36,8 @@ public final class Polyline: Shape {
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         let i = randomRange(min: 0, max: points.count - 1)
         var point = points[i]
-        point.x = Double((Int(point.x) + randomRange(min: -64, max: 64)).clamped(to: xMin...xMax - 1))
-        point.y = Double((Int(point.y) + randomRange(min: -64, max: 64)).clamped(to: yMin...yMax - 1))
+        point.x = Double((Int(point.x) + randomRange(min: -64, max: 64)).clamped(to: xMin...xMax))
+        point.y = Double((Int(point.y) + randomRange(min: -64, max: 64)).clamped(to: yMin...yMax))
         points[i] = point
     }
 

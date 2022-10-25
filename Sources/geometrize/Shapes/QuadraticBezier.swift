@@ -33,27 +33,25 @@ public final class QuadraticBezier: Shape {
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        cx = Double(randomRange(min: xMin, max: xMax - 1))
-        cy = Double(randomRange(min: yMin, max: yMax - 1))
-        x1 = Double(randomRange(min: xMin, max: xMax - 1))
-        y1 = Double(randomRange(min: yMin, max: yMax - 1))
-        x2 = Double(randomRange(min: xMin, max: xMax - 1))
-        y2 = Double(randomRange(min: yMin, max: yMax - 1))
+        cx = Double(randomRange(min: xMin, max: xMax))
+        cy = Double(randomRange(min: yMin, max: yMax))
+        x1 = Double(randomRange(min: xMin, max: xMax))
+        y1 = Double(randomRange(min: yMin, max: yMax))
+        x2 = Double(randomRange(min: xMin, max: xMax))
+        y2 = Double(randomRange(min: yMin, max: yMax))
     }
 
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         switch randomRange(min: 0, max: 2) {
         case 0:
-            cx = Double((Int(cx) + randomRange(min: -8, max: 8)).clamped(to: xMin...xMax - 1))
-            cy = Double((Int(cy) + randomRange(min: -8, max: 8)).clamped(to: yMin...yMax - 1))
+            cx = Double((Int(cx) + randomRange(min: -8, max: 8)).clamped(to: xMin...xMax))
+            cy = Double((Int(cy) + randomRange(min: -8, max: 8)).clamped(to: yMin...yMax))
         case 1:
-            // NOTE +1 on the minimum values for paranoia reasons as I wrote it that way originally, not sure if it's needed
-            x1 = Double((Int(x1) + randomRange(min: -8, max: 8)).clamped(to: xMin + 1...xMax - 1))
-            y1 = Double((Int(y1) + randomRange(min: -8, max: 8)).clamped(to: yMin + 1...yMax - 1))
+            x1 = Double((Int(x1) + randomRange(min: -8, max: 8)).clamped(to: xMin + 1...xMax))
+            y1 = Double((Int(y1) + randomRange(min: -8, max: 8)).clamped(to: yMin + 1...yMax))
         case 2:
-            // NOTE +1 on the minimum values for paranoia reasons as I wrote it that way originally, not sure if it's needed
-            x2 = Double((Int(x2) + randomRange(min: -8, max: 8)).clamped(to: xMin + 1...xMax - 1))
-            y2 = Double((Int(y2) + randomRange(min: -8, max: 8)).clamped(to: yMin + 1...yMax - 1))
+            x2 = Double((Int(x2) + randomRange(min: -8, max: 8)).clamped(to: xMin + 1...xMax))
+            y2 = Double((Int(y2) + randomRange(min: -8, max: 8)).clamped(to: yMin + 1...yMax))
         default:
             fatalError()
         }

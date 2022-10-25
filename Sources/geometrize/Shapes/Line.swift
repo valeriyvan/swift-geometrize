@@ -25,10 +25,10 @@ public final class Line: Shape {
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
         let startingPoint = Point(
             x: randomRange(min: xMin, max: xMax),
-            y: randomRange(min: yMin, max: yMax - 1)
+            y: randomRange(min: yMin, max: yMax)
         )
-        let rangeX = xMin...xMax - 1
-        let rangeY = yMin...yMax - 1
+        let rangeX = xMin...xMax
+        let rangeY = yMin...yMax
         x1 = Double(startingPoint.x + randomRange(min: -32, max: 32).clamped(to: rangeX))
         y1 = Double(startingPoint.y + randomRange(min: -32, max: 32).clamped(to: rangeY))
         x2 = Double(startingPoint.x + randomRange(min: -32, max: 32).clamped(to: rangeX))
@@ -36,8 +36,8 @@ public final class Line: Shape {
     }
 
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        let rangeX = xMin...xMax - 1
-        let rangeY = yMin...yMax - 1
+        let rangeX = xMin...xMax
+        let rangeY = yMin...yMax
         switch randomRange(min: 0, max: 1) {
         case 0:
             x1 = Double((Int(x1) + randomRange(min: -16, max: 16)).clamped(to: rangeX))

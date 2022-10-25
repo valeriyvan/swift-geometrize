@@ -4,14 +4,10 @@ import SnapshotTesting
 
 final class CircleTests: XCTestCase {
 
-    override func setUp() {
-      super.setUp()
-      diffTool = "compare"
-    }
-
     func testRasterize() throws {
-        let xMax = 500, yMax = 500
-        var bitmap = Bitmap(width: xMax, height: yMax, color: .white)
+        let width = 500, height = 500
+        let xMax = width - 1, yMax = height - 1
+        var bitmap = Bitmap(width: width, height: height, color: .white)
         bitmap.draw(
             lines:
                 Circle(x: 250.0, y: 250.0, r: 275.0)
@@ -47,7 +43,7 @@ final class CircleTests: XCTestCase {
             color:
                 .cyan
         )
-        bitmap.draw(lines: scaleScanlinesTrimmed(width: 500, height: 500, step: 100), color: .black)
+        bitmap.draw(lines: scaleScanlinesTrimmed(width: width, height: height, step: 100), color: .black)
         assertSnapshot(
             matching: bitmap,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
