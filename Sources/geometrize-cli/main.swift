@@ -26,7 +26,7 @@ let width, height: Int
 switch inputUrl.pathExtension.lowercased() {
 case "png":
     guard let image: PNG.Data.Rectangular = try .decompress(path: inputUrl.path) else {
-        print("Cannot read or decode input file.")
+        print("Cannot read or decode input file \(inputUrl.path).")
         exit(1)
     }
 
@@ -37,12 +37,12 @@ case "png":
     targetBitmap = Bitmap(width: width, height: height, data: data)
 case "jpeg", "jpg":
     guard let spectral: JPEG.Data.Spectral<JPEG.Common> = try .decompress(path: inputUrl.path) else {
-        print("Cannot read or decode input file.")
+        print("Cannot read or decode input file \(inputUrl.path).")
         exit(1)
     }
 
     guard let image: JPEG.Data.Rectangular<JPEG.Common> = try .decompress(path: inputUrl.path) else {
-        print("Cannot read or decode input file.")
+        print("Cannot read or decode input file \(inputUrl.path).")
         exit(1)
     }
 
