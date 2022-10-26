@@ -124,7 +124,7 @@ while shapeData.count <= shapeCount /* Here set count of shapes final image shou
     counter += 1
 }
 
-let svg = exportSVG(data: shapeData, width: width, height: height)
+let svg = SVGExporter().export(data: shapeData, width: width, height: height)
 
 do {
     try svg.write(to: outputUrl, atomically: true, encoding: .utf8)
