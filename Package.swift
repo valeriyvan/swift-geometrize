@@ -89,7 +89,8 @@ let package = Package(
                 .copy("Resources/hillClimb current bitmap.txt"),
                 .copy("Resources/hillClimb buffer bitmap.txt"),
                 .copy("Resources/hillClimb buffer bitmap on exit.txt"),
-                .copy("Resources/hillClimb randomRange.txt")
+                .copy("Resources/hillClimb randomRange.txt"),
+                .copy("__Snapshots__")
             ],
             plugins: plugins
         )
