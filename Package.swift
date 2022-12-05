@@ -2,6 +2,21 @@
 
 import PackageDescription
 
+var dependencies: [Package.Dependency] = [
+    .package(url: "git@github.com:kelvin13/swift-png.git", from: "4.0.2"),
+    .package(url: "git@github.com:valeriyvan/jpeg.git", branch: "allFixesMerged"),
+    .package(url: "git@github.com:pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
+    .package(url: "git@github.com:apple/swift-algorithms.git", from: "1.0.0"),
+    .package(url: "git@github.com:apple/swift-argument-parser.git", from: "1.1.4"),
+]
+
+#if !os(Windows)
+    dependencies.append(.package(url: "git@github.com:lukepistrol/SwiftLintPlugin.git", from: "0.0.4"))
+    let plugins: [Target.PluginUsage]? = [.plugin(name: "SwiftLint", package: "SwiftLintPlugin")]
+#else
+    let plugins: [Target.PluginUsage]? = nil
+#endif
+
 let package = Package(
     
     name: "swift-geometrize",
@@ -21,14 +36,7 @@ let package = Package(
         )
     ],
     
-    dependencies: [
-        .package(url: "git@github.com:kelvin13/swift-png.git", from: "4.0.2"),
-        .package(url: "git@github.com:valeriyvan/jpeg.git", branch: "allFixesMerged"),
-        .package(url: "git@github.com:pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
-        .package(url: "git@github.com:apple/swift-algorithms.git", from: "1.0.0"),
-        .package(url: "git@github.com:apple/swift-argument-parser.git", from: "1.1.4"),
-        .package(url: "git@github.com:lukepistrol/SwiftLintPlugin.git", from: "0.0.4")
-    ],
+    dependencies: dependencies,
     
     targets: [
         .target(
@@ -37,9 +45,7 @@ let package = Package(
                 .product(name: "Algorithms", package: "swift-algorithms")
             ],
             path: "Sources/geometrize",
-            plugins: [
-                .plugin(name: "SwiftLint", package: "SwiftLintPlugin")
-            ]
+            plugins: plugins
         ),
         .executableTarget(
             name: "geometrize-cli",
@@ -49,9 +55,7 @@ let package = Package(
                 .product(name: "PNG", package: "swift-png"),
                 .product(name: "JPEG", package: "jpeg")
             ],
-            plugins: [
-                .plugin(name: "SwiftLint", package: "SwiftLintPlugin")
-            ]
+            plugins: plugins
         ),
         .testTarget(
             name: "geometrizeTests",
@@ -87,9 +91,7 @@ let package = Package(
                 .copy("Resources/hillClimb buffer bitmap on exit.txt"),
                 .copy("Resources/hillClimb randomRange.txt")
             ],
-            plugins: [
-                .plugin(name: "SwiftLint", package: "SwiftLintPlugin")
-            ]
+            plugins: plugins
         )
     ]
     
