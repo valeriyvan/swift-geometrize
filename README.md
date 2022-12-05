@@ -1,7 +1,13 @@
+<p align="center" style="padding-bottom:50px;">
+<a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/Swift-5.x-orange.svg?style=flat"/></a> 
+<a href="https://github.com/apple/swift-package-manager"><img src="https://img.shields.io/badge/SPM-compatible-brightgreen.svg"/></a> 
+<a href="https://github.com/valeriyvan/swift-geometrize"><img src="https://img.shields.io/badge/Platforms-macOS%20%7C%20iOS%20%7C%20Linux-lightgrey"/></a> 
+</p>
+
 ## Swift package for recreating images as geometric primitives. Swift port of geometrize C++ library.
 
 ## TODO:
-* add stroke width for line, pilyline and bezier curve;
+* add stroke width for line, polyline and bezier curve;
 * multithreading;
 * fix architectural fault with passing canvas size to shape factory;
 * solve dealing with randomness in tests.
