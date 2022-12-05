@@ -3,16 +3,15 @@
 import PackageDescription
 
 var dependencies: [Package.Dependency] = [
-        .package(url: "git@github.com:kelvin13/swift-png.git", from: "4.0.2"),
-        .package(url: "git@github.com:valeriyvan/jpeg.git", branch: "allFixesMerged"),
-        .package(url: "git@github.com:pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
-        .package(url: "git@github.com:apple/swift-algorithms.git", from: "1.0.0"),
-        .package(url: "git@github.com:apple/swift-argument-parser.git", from: "1.1.4"),
+    .package(url: "git@github.com:kelvin13/swift-png.git", from: "4.0.2"),
+    .package(url: "git@github.com:valeriyvan/jpeg.git", branch: "allFixesMerged"),
+    .package(url: "git@github.com:pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
+    .package(url: "git@github.com:apple/swift-algorithms.git", from: "1.0.0"),
+    .package(url: "git@github.com:apple/swift-argument-parser.git", from: "1.1.4"),
 ]
 
 #if !os(Windows)
     dependencies.append(.package(url: "git@github.com:lukepistrol/SwiftLintPlugin.git", from: "0.0.4"))
-
     let plugins: [Target.PluginUsage]? = [.plugin(name: "SwiftLint", package: "SwiftLintPlugin")]
 #else
     let plugins: [Target.PluginUsage]? = nil
