@@ -3,10 +3,10 @@
     {
       "identity" : "jpeg",
       "kind" : "remoteSourceControl",
-      "location" : "git@github.com:valeriyvan/jpeg.git",
+      "location" : "https://github.com/valeriyvan/jpeg.git",
       "state" : {
-        "branch" : "allFixesMerged",
-        "revision" : "6ab5fffa49626116ff6b46510fe9828b71b708af"
+        "revision" : "6ab5fffa49626116ff6b46510fe9828b71b708af",
+        "version" : "1.0.2"
       }
     },
     {
@@ -39,7 +39,7 @@
     {
       "identity" : "swift-png",
       "kind" : "remoteSourceControl",
-      "location" : "git@github.com:kelvin13/swift-png.git",
+      "location" : "https://github.com/kelvin13/swift-png.git",
       "state" : {
         "revision" : "075dfb248ae327822635370e9d4f94a5d3fe93b2",
         "version" : "4.0.2"
