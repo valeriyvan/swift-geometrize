@@ -1,6 +1,6 @@
 import Foundation
 
-/// Helper class for working with bitmap data.
+/// Helper for working with bitmap data.
 /// Pixels are ordered line by line, like arrays in C.
 public struct Bitmap {
 
