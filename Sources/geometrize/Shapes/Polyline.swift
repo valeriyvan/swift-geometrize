@@ -1,19 +1,22 @@
 import Foundation
 
 public final class Polyline: Shape {
+    public var canvasBoundsProvider: CanvasBoundsProvider
 
     public var points: [Point<Double>]
 
-    public init() {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         points = []
     }
 
-    public init(points: [Point<Double>]) {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, points: [Point<Double>]) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         self.points = points
     }
 
     public func copy() -> Polyline {
-        Polyline(points: points)
+        Polyline(canvasBoundsProvider: canvasBoundsProvider, points: points)
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {

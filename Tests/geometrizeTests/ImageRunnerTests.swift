@@ -17,8 +17,7 @@ final class ImageRunnerTests: XCTestCase {
         let data: [UInt8] = rgba.flatMap({ [$0.r, $0.g, $0.b, $0.a] })
         XCTAssertEqual(data.count, width * height * 4)
         let targetBitmap = Bitmap(width: width, height: height, data: data)
-
-        canvasBounds = (0, 0, width, height)
+        let canvasBoundsProvider = { Bounds(xMin: 0, xMax: width, yMin: 0, yMax: height) }
 
         let options = ImageRunnerOptions(
             shapeTypes: Set([.rotatedEllipse]),
@@ -38,7 +37,7 @@ final class ImageRunnerTests: XCTestCase {
         var shapeData: [ShapeResult] = []
 
         // Hack to add a single background rectangle as the initial shape
-        let rect = Rectangle(x1: 0, y1: 0, x2: Double(targetBitmap.width), y2: Double(targetBitmap.height))
+        let rect = Rectangle(canvasBoundsProvider: canvasBoundsProvider, x1: 0, y1: 0, x2: Double(targetBitmap.width), y2: Double(targetBitmap.height))
         shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape: rect))
 
         var counter = 0

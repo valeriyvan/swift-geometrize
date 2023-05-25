@@ -1,20 +1,23 @@
 import Foundation
 
 public final class Ellipse: Shape {
+    public var canvasBoundsProvider: CanvasBoundsProvider
 
     public var x: Double // x-coordinate.
     public var y: Double // y-coordinate.
     public var rx: Double // x-radius.
     public var ry: Double // y-radius.
 
-    public init() {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         x = 0.0
         y = 0.0
         rx = 0.0
         ry = 0.0
     }
 
-    public init(x: Double, y: Double, rx: Double, ry: Double) {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, x: Double, y: Double, rx: Double, ry: Double) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         self.x = x
         self.y = y
         self.rx = rx
@@ -22,7 +25,7 @@ public final class Ellipse: Shape {
     }
 
     public func copy() -> Ellipse {
-        Ellipse(x: x, y: y, rx: rx, ry: ry)
+        Ellipse(canvasBoundsProvider: canvasBoundsProvider, x: x, y: y, rx: rx, ry: ry)
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {

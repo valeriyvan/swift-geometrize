@@ -9,7 +9,6 @@
 ## TODO:
 * add stroke width for line, polyline and bezier curve;
 * multithreading;
-* fix architectural fault with passing canvas size (canvasBounds global) to shape factory;
 * solve dealing with randomness in tests.
 
 <a href="https://www.buymeacoffee.com/valeriyvan" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>

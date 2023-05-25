@@ -9,19 +9,18 @@ import Foundation
 ///   - xMax: The maximum x coordinate of the shapes created.
 ///   - yMax: The maximum y coordinate of the shapes created.
 /// - Returns: The default shape creator.
-public func createDefaultShapeCreator(types: Set<ShapeType>, xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> () -> any Shape {
-    canvasBounds = (xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
+public func createDefaultShapeCreator(types: Set<ShapeType>, canvasBounds: Bounds) -> () -> any Shape {
     return {
         switch types[types.index(types.startIndex, offsetBy: randomRange(min: 0, max: types.count - 1))] {
-        case .rectangle: return Rectangle()
-        case .rotatedRectangle: return RotatedRectangle()
-        case .rotatedEllipse: return RotatedEllipse()
-        case .triangle: return Triangle()
-        case .circle: return Circle()
-        case .ellipse: return Ellipse()
-        case .line: return Line()
-        case .polyline: return Polyline()
-        case .quadraticBezier: return QuadraticBezier()
+        case .rectangle: return Rectangle(canvasBoundsProvider: { canvasBounds })
+        case .rotatedRectangle: return RotatedRectangle(canvasBoundsProvider: { canvasBounds })
+        case .rotatedEllipse: return RotatedEllipse(canvasBoundsProvider: { canvasBounds })
+        case .triangle: return Triangle(canvasBoundsProvider: { canvasBounds })
+        case .circle: return Circle(canvasBoundsProvider: { canvasBounds })
+        case .ellipse: return Ellipse(canvasBoundsProvider: { canvasBounds })
+        case .line: return Line(canvasBoundsProvider: { canvasBounds })
+        case .polyline: return Polyline(canvasBoundsProvider: { canvasBounds })
+        case .quadraticBezier: return QuadraticBezier(canvasBoundsProvider: { canvasBounds })
         }
     }
 }

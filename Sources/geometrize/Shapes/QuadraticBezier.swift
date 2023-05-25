@@ -2,6 +2,7 @@ import Foundation
 import Algorithms
 
 public final class QuadraticBezier: Shape {
+    public var canvasBoundsProvider: CanvasBoundsProvider
 
     public var cx: Double // Control point x-coordinate.
     public var cy: Double // Control point y-coordinate.
@@ -10,7 +11,8 @@ public final class QuadraticBezier: Shape {
     public var x2: Double // Second x-coordinate.
     public var y2: Double // Second y-coordinate.
 
-    public init() {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         cx = 0.0
         cy = 0.0
         x1 = 0.0
@@ -19,7 +21,8 @@ public final class QuadraticBezier: Shape {
         y2 = 0.0
     }
 
-    public init(cx: Double, cy: Double, x1: Double, y1: Double, x2: Double, y2: Double) {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, cx: Double, cy: Double, x1: Double, y1: Double, x2: Double, y2: Double) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         self.cx = cx
         self.cy = cy
         self.x1 = x1
@@ -29,7 +32,7 @@ public final class QuadraticBezier: Shape {
     }
 
     public func copy() -> QuadraticBezier {
-        QuadraticBezier(cx: cx, cy: cy, x1: x1, y1: y1, x2: x2, y2: y2)
+        QuadraticBezier(canvasBoundsProvider: canvasBoundsProvider, cx: cx, cy: cy, x1: x1, y1: y1, x2: x2, y2: y2)
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
