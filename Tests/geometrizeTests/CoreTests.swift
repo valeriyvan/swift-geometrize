@@ -124,8 +124,9 @@ final class CoreTests: XCTestCase {
         var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap", withExtension: "txt")!))
         let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap on exit", withExtension: "txt")!))
 
-        let rectangle = Rectangle(x1: 281, y1: 193, x2: 309, y2: 225)
-        canvasBounds = (xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
+        let canvasBoundsProvider = { Bounds(xMin: 0, xMax: bitmapTarget.width, yMin: 0, yMax: bitmapTarget.height) }
+
+        let rectangle = Rectangle(canvasBoundsProvider: canvasBoundsProvider, x1: 281, y1: 193, x2: 309, y2: 225)
         // rectangle.setupImplementation = { r in
         //     r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
         // }
@@ -139,7 +140,7 @@ final class CoreTests: XCTestCase {
 
         // hillClimb return state State(score: 0.162824, alpha: 128, shape: Rectangle(x1=272,y1=113,x2=355,y2=237))
 
-        let rectangleOnExit = Rectangle(x1: 272, y1: 113, x2: 355, y2: 237)
+        let rectangleOnExit = Rectangle(canvasBoundsProvider: canvasBoundsProvider, x1: 272, y1: 113, x2: 355, y2: 237)
         // rectangleOnExit.setupImplementation = { r in
         //     r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
         // }

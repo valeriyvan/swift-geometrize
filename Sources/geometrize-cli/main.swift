@@ -77,8 +77,6 @@ if let indexOfNil = indexOfNil {
 let shapes = Set(shapesOrNil.compactMap { $0 })
 print("Using shapes: \(shapes.map(\.rawValueCapitalized).joined(separator: ", ")).")
 
-canvasBounds = (0, 0, width, height)
-
 let shapeCount: Int = Int(options.shapeCount ?? 100)
 
 let runnerOptions = ImageRunnerOptions(
@@ -99,7 +97,10 @@ var runner = ImageRunner(targetBitmap: targetBitmap)
 var shapeData: [ShapeResult] = []
 
 // Hack to add a single background rectangle as the initial shape
-let rect = Rectangle(x1: 0, y1: 0, x2: Double(targetBitmap.width), y2: Double(targetBitmap.height))
+let rect = Rectangle(
+    canvasBoundsProvider: { Bounds(xMin: 0, xMax: targetBitmap.width, yMin: 0, yMax: targetBitmap.height) },
+    x1: 0, y1: 0, x2: Double(targetBitmap.width), y2: Double(targetBitmap.height)
+)
 shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape: rect))
 
 var counter = 0

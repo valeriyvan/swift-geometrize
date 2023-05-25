@@ -1,6 +1,6 @@
 import Foundation
 
-public var canvasBounds: (xMin: Int, yMin: Int, xMax: Int, yMax: Int) = (0, 0, .max, .max)
+//public var canvasBounds: (xMin: Int, yMin: Int, xMax: Int, yMax: Int) = (0, 0, .max, .max)
 
 // Specifies the types of shapes that can be used.
 // These can be combined to produce images composed of multiple primitive types.
@@ -32,8 +32,26 @@ public enum ShapeType: String, CaseIterable {
     }
 }
 
+public struct Bounds {
+    let xMin: Int
+    let xMax: Int
+    let yMin: Int
+    let yMax: Int
+
+    public init(xMin: Int, xMax: Int, yMin: Int, yMax: Int) {
+        self.xMin = xMin
+        self.xMax = xMax
+        self.yMin = yMin
+        self.yMax = yMax
+    }
+}
+
+public typealias CanvasBoundsProvider = () -> Bounds
+
 public protocol Shape: AnyObject, CustomStringConvertible {
-    init()
+    var canvasBoundsProvider: CanvasBoundsProvider { get }
+
+    init(canvasBoundsProvider: @escaping CanvasBoundsProvider)
 
     func copy() -> Self
 
@@ -54,15 +72,18 @@ public protocol Shape: AnyObject, CustomStringConvertible {
 extension Shape {
 
     public func setup() {
+        let canvasBounds = canvasBoundsProvider()
         setup(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
     }
 
     public func mutate() {
+        let canvasBounds = canvasBoundsProvider()
         mutate(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
     }
 
     public func rasterize() -> [Scanline] {
-        rasterize(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
+        let canvasBounds = canvasBoundsProvider()
+        return rasterize(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
     }
 
     public var isDegenerate: Bool {

@@ -1,6 +1,7 @@
 import Foundation
 
 public final class Triangle: Shape {
+    public var canvasBoundsProvider: CanvasBoundsProvider
 
     public var x1: Double // First x-coordinate.
     public var y1: Double // First y-coordinate.
@@ -9,7 +10,8 @@ public final class Triangle: Shape {
     public var x3: Double // Third x-coordinate.
     public var y3: Double // Third y-coordinate.
 
-    public init() {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         x1 = 0.0
         y1 = 0.0
         x2 = 0.0
@@ -18,7 +20,8 @@ public final class Triangle: Shape {
         y3 = 0.0
     }
 
-    public init(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double) {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -28,7 +31,7 @@ public final class Triangle: Shape {
     }
 
     public func copy() -> Triangle {
-        Triangle(x1: x1, y1: y1, x2: x2, y2: y2, x3: x3, y3: y3)
+        Triangle(canvasBoundsProvider: canvasBoundsProvider, x1: x1, y1: y1, x2: x2, y2: y2, x3: x3, y3: y3)
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {

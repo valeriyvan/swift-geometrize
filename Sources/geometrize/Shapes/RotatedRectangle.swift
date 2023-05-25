@@ -2,6 +2,7 @@ import Foundation
 
 /// Represents a rotated rectangle.
 public final class RotatedRectangle: Shape {
+    public var canvasBoundsProvider: CanvasBoundsProvider
 
     public var x1: Double
     public var y1: Double
@@ -9,7 +10,8 @@ public final class RotatedRectangle: Shape {
     public var y2: Double
     public var angleDegrees: Double
 
-    public required init() {
+    public required init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         x1 = 0.0
         y1 = 0.0
         x2 = 0.0
@@ -17,7 +19,8 @@ public final class RotatedRectangle: Shape {
         angleDegrees = 0.0
     }
 
-    public init(x1: Double, y1: Double, x2: Double, y2: Double, angleDegrees: Double) {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, x1: Double, y1: Double, x2: Double, y2: Double, angleDegrees: Double) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -26,7 +29,7 @@ public final class RotatedRectangle: Shape {
     }
 
     public func copy() -> RotatedRectangle {
-        RotatedRectangle(x1: x1, y1: y1, x2: x2, y2: y2, angleDegrees: angleDegrees)
+        RotatedRectangle(canvasBoundsProvider: canvasBoundsProvider, x1: x1, y1: y1, x2: x2, y2: y2, angleDegrees: angleDegrees)
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {

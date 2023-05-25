@@ -1,25 +1,28 @@
 import Foundation
 
 public final class Circle: Shape {
+    public var canvasBoundsProvider: CanvasBoundsProvider
 
     public var x: Double // x-coordinate.
     public var y: Double // y-coordinate.
     public var r: Double // Radius.
 
-    public init() {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         x = 0.0
         y = 0.0
         r = 0.0
     }
 
-    public init(x: Double, y: Double, r: Double) {
+    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, x: Double, y: Double, r: Double) {
+        self.canvasBoundsProvider = canvasBoundsProvider
         self.x = x
         self.y = y
         self.r = r
     }
 
     public func copy() -> Circle {
-        Circle(x: x, y: y, r: r)
+        Circle(canvasBoundsProvider: canvasBoundsProvider, x: x, y: y, r: r)
     }
 
     public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {

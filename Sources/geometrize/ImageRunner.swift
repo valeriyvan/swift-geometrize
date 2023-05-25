@@ -98,7 +98,7 @@ public struct ImageRunner {
         let (xMin, yMin, xMax, yMax) = mapShapeBoundsToImage(options: options.shapeBounds, image: model.getTarget())
         let types = options.shapeTypes
 
-        let shapeCreator: () -> any Shape = shapeCreator ?? createDefaultShapeCreator(types: types, xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
+        let shapeCreator: () -> any Shape = shapeCreator ?? createDefaultShapeCreator(types: types, canvasBounds: Bounds(xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax))
 
         model.setSeed(options.seed)
 
