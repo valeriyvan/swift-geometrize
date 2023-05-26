@@ -10,7 +10,7 @@ var dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.4"),
 ]
 
-#if !os(Windows)
+#if !os(Linux) && !os(Windows)
     dependencies.append(.package(url: "https://github.com/lukepistrol/SwiftLintPlugin.git", from: "0.0.4"))
     let plugins: [Target.PluginUsage]? = [.plugin(name: "SwiftLint", package: "SwiftLintPlugin")]
 #else
