@@ -197,7 +197,7 @@ struct Model {
     private var targetBitmap: Bitmap
 
     /// The current bitmap.
-    private var currentBitmap: Bitmap
+    var currentBitmap: Bitmap
 
     /// Score derived from calculating the difference between bitmaps.
     var lastScore: Double
