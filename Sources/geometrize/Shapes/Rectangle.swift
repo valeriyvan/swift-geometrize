@@ -22,6 +22,14 @@ public final class Rectangle: Shape {
         self.y2 = y2
     }
 
+    // Rectangle taking whole size of canvas
+    convenience init(canvasWidth width: Int, height: Int) {
+        self.init(
+            canvasBoundsProvider: { Bounds(xMin: 0, xMax: width, yMin: 0, yMax: height) },
+            x1: 0.0, y1: 0.0, x2: Double(width), y2: Double(height)
+        )
+    }
+
     public func copy() -> Rectangle {
         Rectangle(canvasBoundsProvider: canvasBoundsProvider, x1: x1, y1: y1, x2: x2, y2: y2)
     }
