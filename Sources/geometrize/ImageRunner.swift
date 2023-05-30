@@ -115,7 +115,7 @@ public struct ImageRunner {
         return result
     }
 
-    var currentBitmap: Bitmap {
+    public var currentBitmap: Bitmap {
         model.currentBitmap
     }
 
