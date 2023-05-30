@@ -115,6 +115,10 @@ public struct ImageRunner {
         return result
     }
 
+    var currentBitmap: Bitmap {
+        model.currentBitmap
+    }
+
     // The model for the primitive optimization/fitting algorithm.
     private var model: Model
 }
