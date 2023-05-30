@@ -189,6 +189,21 @@ public struct Bitmap {
         backing = newBacking
     }
 
+    // Primitive downsample algorithm utilising Bitmap's averageColor function.
+    func downsample(factor: Int) -> Bitmap {
+        assert(factor > 0)
+        guard factor > 1 else { return self }
+        let downsampledWidth = width / factor
+        let downsampledHeight = height / factor
+        let origin = self
+        return Bitmap(width: downsampledWidth, height: downsampledHeight) { x, y in
+            Bitmap(width: factor, height: factor) { sampleX, sampleY in
+                origin[x * factor + sampleX, y * factor + sampleY]
+            }
+            .averageColor()
+        }
+    }
+
 }
 
 extension Bitmap: Equatable {
