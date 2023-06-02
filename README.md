@@ -6,6 +6,18 @@
 
 ## Swift package for recreating images as geometric primitives. Swift port of geometrize C++ library.
 
+## Shape Comparison
+
+The matrix below shows typical results for a combination of circles, triangles, rotated rectangles, rotated ellipses and all supported shapes at 50, 200 and 500 total shapes:
+
+| -                  | 50 Shapes     | 200 Shapes    | 500 Shapes   |
+| ------------------ | ------------- | ------------- | ------------ |
+| Circles            | ![Chicken 50 Circles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/a6be73e5-a050-48db-9aa5-3e1bd89e262a) | ![Chicken 200 Circles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/d8c91920-20d4-4f20-8690-87b04bb57547) | ![Chicken 500 Circles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/92d80ea7-1f32-4479-a4c6-dc9ea7f542f1) |
+| Triangles          |![Chicken 50 Triangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/9f86e1e7-baf2-47dd-95e9-d4edcbb6cb9a) | ![Chicken 200 Triangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/5db19159-00a5-4e39-ba62-969e7832a021) | ![Chicken 500 Triangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/951d6e79-e306-4693-972f-b0eccb76307b) |
+| Rotated Rectangles | ![Chicken 50 RotatedRectangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/24c2ce23-0c51-4c59-9114-097d8a245ad9) | ![Chicken 200 RotatedRectangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/8b67deaa-7975-4df2-b508-4ae75977ed25) | ![Chicken 500 RotatedRectangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/380b5422-60f7-467f-852d-47dc6dfd63e0) |
+| Rotated Ellipses   | ![Chicken 50 RotatedEllipses](https://github.com/valeriyvan/swift-geometrize/assets/1630974/2b9b9f3a-3c83-4c33-b17a-83361c377399) | ![Chicken 200 RotatedEllipses](https://github.com/valeriyvan/swift-geometrize/assets/1630974/f66ead22-d77c-4d1c-a68b-1533e0225b07) |![Chicken 500 RotatedEllipses](https://github.com/valeriyvan/swift-geometrize/assets/1630974/47043915-08e7-4939-9c65-d5962f8f1af9) |
+| All Shapes         | ![Chicken 50 All Shapes](https://github.com/valeriyvan/swift-geometrize/assets/1630974/a92de12f-cc32-45e8-8e51-1738d67e3f67) | ![Chicken 200 All Shapes](https://github.com/valeriyvan/swift-geometrize/assets/1630974/59fc400b-1030-426c-8ed1-ce47dfaf6598) | ![Chicken 500 All Shapes](https://github.com/valeriyvan/swift-geometrize/assets/1630974/32f532a0-7281-44ef-a258-3fa95f060024) |
+
 ## TODO:
 * add stroke width for line, polyline and bezier curve;
 * multithreading;
@@ -42,18 +54,6 @@ Refer to the minimal [example](https://github.com/Tw1ddle/geometrize-lib-example
 | [Documentation](https://github.com/Tw1ddle/geometrize-lib-docs)    |
 
 See the [top level repo](https://github.com/Tw1ddle/geometrize-top-level-repo) for a listing of all the repositories included in the Geometrize project.
-
-## Shape Comparison
-
-The matrix below shows typical results for a combination of circles, triangles, rotated rectangles, rotated ellipses and all supported shapes at 50, 200 and 500 total shapes:
-
-| -                  | 50 Shapes     | 200 Shapes    | 500 Shapes   |
-| ------------------ | ------------- | ------------- | ------------ |
-| Circles            | [![50 Circles](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_50_circles.png?raw=true)](https://www.geometrize.co.uk/) | [![200 Circles](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_200_circles.png?raw=true)](https://www.geometrize.co.uk/) | [![500 Circles](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_500_circles.png?raw=true)](https://www.geometrize.co.uk/) |
-| Triangles          | [![50 Triangles](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_50_triangles.png?raw=true)](https://www.geometrize.co.uk/) | [![200 Triangles](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_200_triangles.png?raw=true)](https://www.geometrize.co.uk/) | [![500 Triangles](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_500_triangles.png?raw=true)](https://www.geometrize.co.uk/) |
-| Rotated Rectangles | [![50 Rotated Rectangles](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_50_rotated_rectangles.png?raw=true)](https://www.geometrize.co.uk/) | [![200 Rotated Rectangles](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_200_rotated_rectangles.png?raw=true)](https://www.geometrize.co.uk/) | [![500 Rotated Rectangles](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_500_rotated_rectangles.png?raw=true)](https://www.geometrize.co.uk/) |
-| Rotated Ellipses   | [![50 Rotated Ellipses](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_50_rotated_ellipses.png?raw=true)](https://www.geometrize.co.uk/) | [![200 Rotated Ellipses](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_200_rotated_ellipses.png?raw=true)](https://www.geometrize.co.uk/) | [![500 Rotated Ellipses](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_500_rotated_ellipses.png?raw=true)](https://www.geometrize.co.uk/) |
-| All Shapes         | [![50 All Shapes](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_50_all_shapes.png?raw=true)](https://www.geometrize.co.uk/) | [![200 All Shapes](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_200_all_shapes.png?raw=true)](https://www.geometrize.co.uk/) | [![500 All Shapes](https://github.com/Tw1ddle/geometrize-lib/blob/master/screenshots/seagull_500_all_shapes.png?raw=true)](https://www.geometrize.co.uk/) |
 
 ## Screenshots
 
