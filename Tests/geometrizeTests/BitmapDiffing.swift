@@ -11,10 +11,10 @@ extension XCTAttachment {
 
 extension Diffing where Value == Bitmap {
 
-    /// A pixel-diffing strategy for UIImage's which requires a 100% match.
+    /// A pixel-diffing strategy for Bitmaps which requires a 100% match.
     public static let image = Diffing.image(precision: 1.0)
 
-    /// A pixel-diffing strategy for UIImage that allows customizing how precise the matching must be.
+    /// A pixel-diffing strategy for Bitmap that allows customizing how precise the matching must be.
     ///
     /// - Parameter precision: A value between 0 and 1, where 1 means the images must match 100% of their pixels.
     /// - Returns: A new diffing strategy.
