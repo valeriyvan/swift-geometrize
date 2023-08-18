@@ -125,7 +125,7 @@ struct Model {
         maxShapeMutations: Int,
         maxThreads: Int,
         energyFunction: @escaping EnergyFunction,
-        addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
+        addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction = defaultAddShapePrecondition
     ) -> [ShapeResult] {
 
         let states: [State] = getHillClimbState(
@@ -155,8 +155,7 @@ struct Model {
 
         // Check for an improvement - if not, roll back and return no result
         let newScore: Double = differencePartial(target: targetBitmap, before: before, after: currentBitmap, score: lastScore, lines: lines)
-        let addShapeCondition = addShapePrecondition ?? defaultAddShapePrecondition
-        guard addShapeCondition(lastScore, newScore, shape, lines, color, before, currentBitmap, targetBitmap) else {
+        guard addShapePrecondition(lastScore, newScore, shape, lines, color, before, currentBitmap, targetBitmap) else {
             currentBitmap = before
             return []
         }
