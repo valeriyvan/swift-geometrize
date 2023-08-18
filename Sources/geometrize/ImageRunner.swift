@@ -92,8 +92,8 @@ public struct ImageRunner {
     public mutating func step(
         options: ImageRunnerOptions,
         shapeCreator: (() -> any Shape)? = nil,
-        energyFunction: EnergyFunction? = nil,
-        addShapePrecondition: ShapeAcceptancePreconditionFunction? = nil
+        energyFunction: @escaping EnergyFunction,
+        addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
     ) -> [ShapeResult] {
         let (xMin, yMin, xMax, yMax) = mapShapeBoundsToImage(options: options.shapeBounds, image: model.getTarget())
         let types = options.shapeTypes
@@ -108,8 +108,8 @@ public struct ImageRunner {
             shapeCount: options.shapeCount,
             maxShapeMutations: options.maxShapeMutations,
             maxThreads: options.maxThreads,
-            energyFunction: energyFunction!, // TODO: !!!
-            addShapePrecondition: addShapePrecondition! // TODO: !!!
+            energyFunction: energyFunction,
+            addShapePrecondition: addShapePrecondition
         )
 
         return result
