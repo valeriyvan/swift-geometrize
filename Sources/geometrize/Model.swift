@@ -77,7 +77,7 @@ struct Model {
         shapeCreator: () -> any Shape,
         alpha: UInt8,
         shapeCount: Int,
-        maxShapeMutations: UInt32,
+        maxShapeMutations: Int,
         maxThreads: Int, // Ignored. Single thread is used at the moment.
         energyFunction: @escaping EnergyFunction
     ) -> [State] {
@@ -122,7 +122,7 @@ struct Model {
         shapeCreator: () -> any Shape,
         alpha: UInt8,
         shapeCount: Int,
-        maxShapeMutations: UInt32,
+        maxShapeMutations: Int,
         maxThreads: Int,
         energyFunction: @escaping EnergyFunction,
         addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
