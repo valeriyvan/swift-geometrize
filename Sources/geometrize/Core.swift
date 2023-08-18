@@ -200,7 +200,7 @@ func differencePartial(
 func bestHillClimbState( // swiftlint:disable:this function_parameter_count
     shapeCreator: () -> any Shape,
     alpha: UInt,
-    n: UInt,
+    n: Int,
     age: UInt32,
     target: Bitmap,
     current: Bitmap,
@@ -288,7 +288,7 @@ func hillClimb( // swiftlint:disable:this function_parameter_count
 private func bestRandomState( // swiftlint:disable:this function_parameter_count
     shapeCreator: () -> any Shape,
     alpha: UInt,
-    n: UInt,
+    n: Int,
     target: Bitmap,
     current: Bitmap,
     buffer: inout Bitmap,
