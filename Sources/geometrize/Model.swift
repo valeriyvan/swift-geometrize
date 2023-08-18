@@ -100,7 +100,7 @@ struct Model {
             current: currentBitmap,
             buffer: &buffer,
             lastScore: lastScore,
-            customEnergyFunction: energyFunction
+            energyFunction: energyFunction
         )
 
         return [state]
@@ -113,9 +113,8 @@ struct Model {
     ///   - shapeCount: The number of random shapes to generate (only 1 is chosen in the end).
     ///   - maxShapeMutations: The maximum number of times to mutate each random shape.
     ///   - maxThreads: The maximum number of threads to use during this step.
-    ///   - energyFunction: An optional function to calculate the energy (if unspecified a default implementation is used).
-    ///   - addShapePrecondition: An optional function to determine whether to accept a shape
-    ///     (if unspecified a default implementation is used).
+    ///   - energyFunction: A function to calculate the energy.
+    ///   - addShapePrecondition: A function to determine whether to accept a shape.
     /// - Returns: A vector containing data about the shapes added to the model in this step.
     ///     This may be empty if no shape that improved the image could be found.
     mutating func step( // swiftlint:disable:this function_parameter_count
@@ -125,7 +124,7 @@ struct Model {
         maxShapeMutations: Int,
         maxThreads: Int,
         energyFunction: @escaping EnergyFunction,
-        addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
+        addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction = defaultAddShapePrecondition
     ) -> [ShapeResult] {
 
         let states: [State] = getHillClimbState(
@@ -155,8 +154,7 @@ struct Model {
 
         // Check for an improvement - if not, roll back and return no result
         let newScore: Double = differencePartial(target: targetBitmap, before: before, after: currentBitmap, score: lastScore, lines: lines)
-        let addShapeCondition = addShapePrecondition ?? defaultAddShapePrecondition
-        guard addShapeCondition(lastScore, newScore, shape, lines, color, before, currentBitmap, targetBitmap) else {
+        guard addShapePrecondition(lastScore, newScore, shape, lines, color, before, currentBitmap, targetBitmap) else {
             currentBitmap = before
             return []
         }

@@ -195,7 +195,7 @@ func differencePartial(
 ///   - current: The current bitmap.
 ///   - buffer: The buffer bitmap. // TODO: better explain this.
 ///   - lastScore: The last score.
-///   - customEnergyFunction: An optional function to calculate the energy (if unspecified a default implementation is used).
+///   - energyFunction: A function to calculate the energy.
 /// - Returns: The best state acquired from hill climbing i.e. the one with the lowest energy.
 func bestHillClimbState( // swiftlint:disable:this function_parameter_count
     shapeCreator: () -> any Shape,
@@ -206,9 +206,8 @@ func bestHillClimbState( // swiftlint:disable:this function_parameter_count
     current: Bitmap,
     buffer: inout Bitmap,
     lastScore: Double,
-    customEnergyFunction: EnergyFunction? = nil
+    energyFunction: EnergyFunction = defaultEnergyFunction
 ) -> State {
-    let energyFunction = customEnergyFunction ?? defaultEnergyFunction
     let state: State = bestRandomState(
         shapeCreator: shapeCreator,
         alpha: alpha,

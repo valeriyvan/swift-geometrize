@@ -86,14 +86,14 @@ public struct ImageRunner {
     /// - Parameters:
     ///   - options: Various configurable settings for doing the step e.g. the shape types to consider.
     ///   - shapeCreator: An optional function for creating and mutating shapes.
-    ///   - energyFunction: An optional function to calculate the energy (if unspecified a default implementation is used).
-    ///   - addShapePrecondition: An optional function to determine whether to accept a shape (if unspecified a default implementation is used).
+    ///   - energyFunction: A function to calculate the energy.
+    ///   - addShapePrecondition: A function to determine whether to accept a shape.
     /// - Returns: A vector containing data about the shapes just added to the internal model.
     public mutating func step(
         options: ImageRunnerOptions,
         shapeCreator: (() -> any Shape)? = nil,
-        energyFunction: EnergyFunction? = nil,
-        addShapePrecondition: ShapeAcceptancePreconditionFunction? = nil
+        energyFunction: @escaping EnergyFunction,
+        addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
     ) -> [ShapeResult] {
         let (xMin, yMin, xMax, yMax) = mapShapeBoundsToImage(options: options.shapeBounds, image: model.getTarget())
         let types = options.shapeTypes
@@ -108,8 +108,8 @@ public struct ImageRunner {
             shapeCount: options.shapeCount,
             maxShapeMutations: options.maxShapeMutations,
             maxThreads: options.maxThreads,
-            energyFunction: energyFunction!, // TODO: !!!
-            addShapePrecondition: addShapePrecondition! // TODO: !!!
+            energyFunction: energyFunction,
+            addShapePrecondition: addShapePrecondition
         )
 
         return result
