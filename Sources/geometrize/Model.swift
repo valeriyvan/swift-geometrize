@@ -76,8 +76,8 @@ struct Model {
     private mutating func getHillClimbState( // swiftlint:disable:this function_parameter_count
         shapeCreator: () -> any Shape,
         alpha: UInt8,
-        shapeCount: UInt,
-        maxShapeMutations: UInt32,
+        shapeCount: Int,
+        maxShapeMutations: Int,
         maxThreads: Int, // Ignored. Single thread is used at the moment.
         energyFunction: @escaping EnergyFunction
     ) -> [State] {
@@ -122,7 +122,7 @@ struct Model {
         shapeCreator: () -> any Shape,
         alpha: UInt8,
         shapeCount: Int,
-        maxShapeMutations: UInt32,
+        maxShapeMutations: Int,
         maxThreads: Int,
         energyFunction: @escaping EnergyFunction,
         addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
@@ -131,7 +131,7 @@ struct Model {
         let states: [State] = getHillClimbState(
             shapeCreator: shapeCreator,
             alpha: alpha,
-            shapeCount: UInt(shapeCount),
+            shapeCount: shapeCount,
             maxShapeMutations: maxShapeMutations,
             maxThreads: maxThreads,
             energyFunction: energyFunction

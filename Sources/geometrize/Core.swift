@@ -200,8 +200,8 @@ func differencePartial(
 func bestHillClimbState( // swiftlint:disable:this function_parameter_count
     shapeCreator: () -> any Shape,
     alpha: UInt,
-    n: UInt,
-    age: UInt32,
+    n: Int,
+    age: Int,
     target: Bitmap,
     current: Bitmap,
     buffer: inout Bitmap,
@@ -243,7 +243,7 @@ func bestHillClimbState( // swiftlint:disable:this function_parameter_count
 /// - Returns: The best state found from hillclimbing.
 func hillClimb( // swiftlint:disable:this function_parameter_count
     state: State,
-    maxAge: UInt32,
+    maxAge: Int,
     target: Bitmap,
     current: Bitmap,
     buffer: inout Bitmap,
@@ -253,7 +253,7 @@ func hillClimb( // swiftlint:disable:this function_parameter_count
     var s: State = state.copy()
     var bestState: State = state.copy()
     var bestEnergy: Double = bestState.score
-    var age: UInt32 = 0
+    var age: Int = 0
     while age < maxAge {
         let undo: State = s.mutate()
         s.score = energyFunction(s.shape.rasterize(), UInt(s.alpha), target, current, &buffer, lastScore)
@@ -263,9 +263,9 @@ func hillClimb( // swiftlint:disable:this function_parameter_count
         } else {
             bestEnergy = energy
             bestState = s.copy()
-            age = UInt32.max // TODO: What's the point??? And following increment overflows.
+            age = Int.max // TODO: What's the point??? And following increment overflows.
         }
-        if age == UInt32.max {
+        if age == Int.max {
             age = 0
         } else {
             age += 1
@@ -288,7 +288,7 @@ func hillClimb( // swiftlint:disable:this function_parameter_count
 private func bestRandomState( // swiftlint:disable:this function_parameter_count
     shapeCreator: () -> any Shape,
     alpha: UInt,
-    n: UInt,
+    n: Int,
     target: Bitmap,
     current: Bitmap,
     buffer: inout Bitmap,

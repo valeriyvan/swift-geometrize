@@ -41,7 +41,7 @@ public struct ImageRunnerOptions {
     var shapeCount: Int
 
     /// The maximum number of times each candidate shape will be modified to attempt to find a better fit.
-    var maxShapeMutations: UInt32
+    var maxShapeMutations: Int
 
     /// The seed for the random number generators used by the image runner.
     var seed: Int
@@ -53,7 +53,7 @@ public struct ImageRunnerOptions {
     /// If zero or do not form a rectangle, the entire target image is used i.e. (0, 0, imageWidth, imageHeight).
     var shapeBounds: ImageRunnerShapeBoundsOptions
 
-    public init(shapeTypes: Set<ShapeType>, alpha: UInt8, shapeCount: Int, maxShapeMutations: UInt32, seed: Int, maxThreads: Int, shapeBounds: ImageRunnerShapeBoundsOptions) {
+    public init(shapeTypes: Set<ShapeType>, alpha: UInt8, shapeCount: Int, maxShapeMutations: Int, seed: Int, maxThreads: Int, shapeBounds: ImageRunnerShapeBoundsOptions) {
         self.shapeTypes = shapeTypes
         self.alpha = alpha
         self.shapeCount = shapeCount
