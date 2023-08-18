@@ -100,7 +100,7 @@ struct Model {
             current: currentBitmap,
             buffer: &buffer,
             lastScore: lastScore,
-            customEnergyFunction: energyFunction
+            energyFunction: energyFunction
         )
 
         return [state]
