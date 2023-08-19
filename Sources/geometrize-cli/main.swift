@@ -104,11 +104,18 @@ let rect = Rectangle(
 shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape: rect))
 
 var counter = 0
-while shapeData.count <= shapeCount /* Here set count of shapes final image should have. Remember background is the first shape. */ {
+// Here in shapeCount set count of shapes final image should have.
+// Remember background is the first shape.
+while shapeData.count <= shapeCount {
     if options.verbose {
         print("Step \(counter)", terminator: "")
     }
-    let shapes = runner.step(options: runnerOptions, shapeCreator: nil, energyFunction: defaultEnergyFunction, addShapePrecondition: defaultAddShapePrecondition)
+    let shapes = runner.step(
+        options: runnerOptions,
+        shapeCreator: nil,
+        energyFunction: defaultEnergyFunction,
+        addShapePrecondition: defaultAddShapePrecondition
+    )
     if shapes.isEmpty {
         if options.verbose {
             print(", no shapes added.", terminator: "")
