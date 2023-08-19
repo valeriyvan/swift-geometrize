@@ -70,7 +70,7 @@ public struct ImageRunner {
     /// Creates a new image runner with the given target bitmap.
     /// Uses the average color of the target as the starting image.
     public init(targetBitmap: Bitmap) {
-        model = Model(targetBitmap: targetBitmap)
+        model = GeometrizeModelHillClimb(targetBitmap: targetBitmap)
     }
 
     /// Creates an image runner with the given target bitmap, starting from the given initial bitmap.
@@ -79,7 +79,7 @@ public struct ImageRunner {
     ///   - targetBitmap: The target bitmap to replicate with shapes.
     ///   - initialBitmap: The starting bitmap.
     public init(targetBitmap: Bitmap, initialBitmap: Bitmap) {
-        model = Model(target: targetBitmap, initial: initialBitmap)
+        model = GeometrizeModelHillClimb(target: targetBitmap, initial: initialBitmap)
     }
 
     /// Updates the internal model once.
@@ -120,5 +120,5 @@ public struct ImageRunner {
     }
 
     // The model for the primitive optimization/fitting algorithm.
-    private var model: Model
+    private var model: GeometrizeModelHillClimb
 }

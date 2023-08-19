@@ -1,7 +1,7 @@
 import Foundation
 
-/// The Model class is the model for the core optimization/fitting algorithm.
-struct Model {
+/// The model class is the model for the core optimization/fitting algorithm.
+struct GeometrizeModelHillClimb {
 
     /// Creates a model that will aim to replicate the target bitmap with shapes.
     /// - Parameter targetBitmap: The target bitmap to replicate with shapes.
