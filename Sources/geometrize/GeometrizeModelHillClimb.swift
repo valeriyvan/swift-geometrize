@@ -1,16 +1,14 @@
 import Foundation
 
-/// The Model class is the model for the core optimization/fitting algorithm.
-struct Model {
+/// The model class is the model for the core optimization/fitting algorithm.
+class GeometrizeModelHillClimb: GeometrizeModelBase {
 
     /// Creates a model that will aim to replicate the target bitmap with shapes.
     /// - Parameter targetBitmap: The target bitmap to replicate with shapes.
-    init(targetBitmap: Bitmap) {
-        self.targetBitmap = targetBitmap
-        currentBitmap = Bitmap(width: targetBitmap.width, height: targetBitmap.height, color: targetBitmap.averageColor())
-        lastScore = differenceFull(first: targetBitmap, second: currentBitmap)
+    override init(targetBitmap: Bitmap) {
         baseRandomSeed = 0
         randomSeedOffset = 0
+        super.init(targetBitmap: targetBitmap)
     }
 
     /// Creates a model that will optimize for the given target bitmap, starting from the given initial bitmap.
@@ -18,27 +16,14 @@ struct Model {
     /// - Parameters:
     ///   - target: The target bitmap to replicate with shapes.
     ///   - initial: The starting bitmap.
-    init(target: Bitmap, initial: Bitmap) {
-        targetBitmap = target
-        currentBitmap = initial
-        lastScore = differenceFull(first: target, second: currentBitmap)
+    override init(target: Bitmap, initial: Bitmap) {
         baseRandomSeed = 0
         randomSeedOffset = 0
-        assert(target.width == currentBitmap.width)
-        assert(target.height == currentBitmap.height)
+        super.init(target: target, initial: initial)
     }
 
-    /// Resets the model back to the state it was in when it was created.
-    /// - Parameter backgroundColor: The starting background color to use.
-    mutating func reset(backgroundColor: Rgba) {
-        currentBitmap.fill(color: backgroundColor)
-        lastScore = differenceFull(first: targetBitmap, second: currentBitmap)
-    }
 
-    var width: Int { targetBitmap.width }
-    var height: Int { targetBitmap.height }
-
-    private mutating func getHillClimbState( // swiftlint:disable:this function_parameter_count
+    private func getHillClimbState( // swiftlint:disable:this function_parameter_count
         shapeCreator: () -> any Shape,
         alpha: UInt8,
         shapeCount: Int,
@@ -82,7 +67,7 @@ struct Model {
     ///   - addShapePrecondition: A function to determine whether to accept a shape.
     /// - Returns: A vector containing data about the shapes added to the model in this step.
     ///     This may be empty if no shape that improved the image could be found.
-    mutating func step( // swiftlint:disable:this function_parameter_count
+    func step( // swiftlint:disable:this function_parameter_count
         shapeCreator: () -> any Shape,
         alpha: UInt8,
         shapeCount: Int,
@@ -131,39 +116,12 @@ struct Model {
         return [result]
     }
 
-    /// Draws a shape on the model. Typically used when to manually add a shape to the image (e.g. when setting an initial background).
-    /// NOTE this unconditionally draws the shape, even if it increases the difference between the source and target image.
-    /// - Parameters:
-    ///   - shape: The shape to draw.
-    ///   - color: The color (including alpha) of the shape.
-    /// - Returns: Data about the shape drawn on the model.
-    mutating func draw(shape: any Shape, color: Rgba) -> ShapeResult {
-        let lines: [Scanline] = shape.rasterize()
-        let before: Bitmap = currentBitmap
-        currentBitmap.draw(lines: lines, color: color)
-        lastScore = differencePartial(target: targetBitmap, before: before, after: currentBitmap, score: lastScore, lines: lines)
-        return ShapeResult(score: lastScore, color: color, shape: shape)
-    }
-
-    /// Gets the target bitmap.
-    /// - Returns: The target bitmap.
-    func getTarget() -> Bitmap { targetBitmap }
-
     /// Sets the seed that the random number generators of this model use.
     /// Note that the model also uses an internal seed offset which is incremented when the model is stepped.
     /// - Parameter seed: The random number generator seed.
-    mutating func setSeed(_ seed: Int) {
+    func setSeed(_ seed: Int) {
         baseRandomSeed = seed
     }
-
-    /// The target bitmap, the bitmap we aim to approximate.
-    private var targetBitmap: Bitmap
-
-    /// The current bitmap.
-    var currentBitmap: Bitmap
-
-    /// Score derived from calculating the difference between bitmaps.
-    var lastScore: Double
 
     private static let defaultMaxThreads: Int = 4
 
