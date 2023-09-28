@@ -1,6 +1,6 @@
 import Foundation
 
-/// Protocol to which models for different geometrizing algorithms should conform
+/// Base class for models for geometrizing algorithms
 class GeometrizeModelBase {
 
     /// Creates a model that will aim to replicate the target bitmap with shapes.
