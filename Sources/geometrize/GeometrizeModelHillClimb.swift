@@ -3,26 +3,6 @@ import Foundation
 /// The model class is the model for the core optimization/fitting algorithm.
 class GeometrizeModelHillClimb: GeometrizeModelBase {
 
-    /// Creates a model that will aim to replicate the target bitmap with shapes.
-    /// - Parameter targetBitmap: The target bitmap to replicate with shapes.
-    override init(targetBitmap: Bitmap) {
-        baseRandomSeed = 0
-        randomSeedOffset = 0
-        super.init(targetBitmap: targetBitmap)
-    }
-
-    /// Creates a model that will optimize for the given target bitmap, starting from the given initial bitmap.
-    /// The target bitmap and initial bitmap must be the same size (width and height).
-    /// - Parameters:
-    ///   - target: The target bitmap to replicate with shapes.
-    ///   - initial: The starting bitmap.
-    override init(target: Bitmap, initial: Bitmap) {
-        baseRandomSeed = 0
-        randomSeedOffset = 0
-        super.init(target: target, initial: initial)
-    }
-
-
     private func getHillClimbState( // swiftlint:disable:this function_parameter_count
         shapeCreator: () -> any Shape,
         alpha: UInt8,
@@ -126,10 +106,10 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
     private static let defaultMaxThreads: Int = 4
 
     /// The base value used for seeding the random number generator (the one the user has control over)
-    var baseRandomSeed: Int // TODO: atomic
+    var baseRandomSeed: Int = 0 // TODO: atomic
 
     /// Seed used for random number generation.
     /// Note: incremented by each std::async call used for model stepping.
-    var randomSeedOffset: Int // TODO: atomic
+    var randomSeedOffset: Int = 0 // TODO: atomic
 
 }
