@@ -5,7 +5,7 @@ import PackageDescription
 var dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/kelvin13/swift-png.git", from: "4.0.2"),
     .package(url: "https://github.com/valeriyvan/jpeg.git", from: "1.0.2"),
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.13.0"),
     .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.0.0"),
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.4"),
 ]
