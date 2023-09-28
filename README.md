@@ -4,6 +4,8 @@
 <a href="https://github.com/valeriyvan/swift-geometrize"><img src="https://img.shields.io/badge/Platforms-macOS%20%7C%20iOS%20%7C%20Linux-lightgrey"/></a> 
 </p>
 
+![Geometrize logo fulltext](https://github.com/valeriyvan/swift-geometrize/assets/1630974/57fec4a6-39f0-41c2-9220-0838b3a0f2c3)
+
 ## swift-geometrize
 
 Swift package for recreating images as geometric primitives. It is Swift port of [C++ library](https://github.com/Tw1ddle/geometrize-lib).
