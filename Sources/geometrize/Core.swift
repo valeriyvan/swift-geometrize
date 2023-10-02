@@ -14,7 +14,7 @@ import Foundation
 /// - Returns: The energy measure.
 public typealias EnergyFunction = (
     _ lines: [Scanline],
-    _ alpha: UInt, // TODO: why not UInt8???
+    _ alpha: UInt8,
     _ target: Bitmap,
     _ curent: Bitmap,
     _ buffer: inout Bitmap,
@@ -33,7 +33,7 @@ public typealias EnergyFunction = (
 /// - Returns: The energy measure.
 public func defaultEnergyFunction( // swiftlint:disable:this function_parameter_count
     _ lines: [Scanline],
-    _ alpha: UInt, // TODO: why not UInt8???
+    _ alpha: UInt8,
     _ target: Bitmap,
     _ current: Bitmap,
     _ buffer: inout Bitmap,
@@ -199,7 +199,7 @@ func differencePartial(
 /// - Returns: The best state acquired from hill climbing i.e. the one with the lowest energy.
 func bestHillClimbState( // swiftlint:disable:this function_parameter_count
     shapeCreator: () -> any Shape,
-    alpha: UInt,
+    alpha: UInt8,
     n: Int,
     age: Int,
     target: Bitmap,
@@ -255,7 +255,7 @@ func hillClimb( // swiftlint:disable:this function_parameter_count
     var age: Int = 0
     while age < maxAge {
         let undo: State = s.mutate()
-        s.score = energyFunction(s.shape.rasterize(), UInt(s.alpha), target, current, &buffer, lastScore)
+        s.score = energyFunction(s.shape.rasterize(), s.alpha, target, current, &buffer, lastScore)
         let energy: Double = s.score
         if energy >= bestEnergy {
             s = undo.copy()
@@ -286,7 +286,7 @@ func hillClimb( // swiftlint:disable:this function_parameter_count
 /// - Returns: The best random state i.e. the one with the lowest energy.
 private func bestRandomState( // swiftlint:disable:this function_parameter_count
     shapeCreator: () -> any Shape,
-    alpha: UInt,
+    alpha: UInt8,
     n: Int,
     target: Bitmap,
     current: Bitmap,
@@ -294,12 +294,12 @@ private func bestRandomState( // swiftlint:disable:this function_parameter_count
     lastScore: Double,
     energyFunction: EnergyFunction
 ) -> State {
-    var bestState: State = State(shape: shapeCreator(), alpha: UInt8(alpha))
-    bestState.score = energyFunction(bestState.shape.rasterize(), UInt(bestState.alpha), target, current, &buffer, lastScore)
+    var bestState: State = State(shape: shapeCreator(), alpha: alpha)
+    bestState.score = energyFunction(bestState.shape.rasterize(), bestState.alpha, target, current, &buffer, lastScore)
     var bestEnergy: Double = bestState.score
     for i in 0...n {
-        var state: State = State(shape: shapeCreator(), alpha: UInt8(alpha))
-        state.score = energyFunction(state.shape.rasterize(), UInt(state.alpha), target, current, &buffer, lastScore)
+        var state: State = State(shape: shapeCreator(), alpha: alpha)
+        state.score = energyFunction(state.shape.rasterize(), state.alpha, target, current, &buffer, lastScore)
         let energy: Double = state.score
         if i == 0 || energy < bestEnergy {
             bestEnergy = energy
