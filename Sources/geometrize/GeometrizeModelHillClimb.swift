@@ -23,7 +23,7 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         var buffer: Bitmap = currentBitmap
         let state = bestHillClimbState(
             shapeCreator: shapeCreator,
-            alpha: UInt(alpha),
+            alpha: alpha,
             n: shapeCount,
             age: maxShapeMutations,
             target: targetBitmap,
