@@ -3,6 +3,10 @@ import Foundation
 /// The model class is the model for the core optimization/fitting algorithm.
 class GeometrizeModelHillClimb: GeometrizeModelBase {
 
+    // Runs concurrently maxThreads optimization sessions and returns array of optimization results.
+    // step function then takes the only result with the best score.
+    // Therefore it does make sense decrease shapeCount proportionally when increasing maxThreads
+    // to achieve same effectiveness.
     private func getHillClimbState( // swiftlint:disable:this function_parameter_count
         shapeCreator: () -> any Shape,
         alpha: UInt8,
