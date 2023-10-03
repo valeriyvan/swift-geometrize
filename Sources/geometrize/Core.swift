@@ -9,7 +9,7 @@ import Foundation
 ///   - alpha The alpha of the scanlines.
 ///   - target The target bitmap.
 ///   - current The current bitmap.
-///   - buffer The buffer bitmap. // TODO: explain it better.
+///   - buffer The buffer bitmap.
 ///   - score The score.
 /// - Returns: The energy measure.
 public typealias EnergyFunction = (
@@ -28,7 +28,7 @@ public typealias EnergyFunction = (
 ///   - alpha:  The alpha of the scanlines.
 ///   - target: The target bitmap.
 ///   - current: The current bitmap.
-///   - buffer: The buffer bitmap. // TODO: explain it better.
+///   - buffer: The buffer bitmap.
 ///   - score: The score.
 /// - Returns: The energy measure.
 public func defaultEnergyFunction( // swiftlint:disable:this function_parameter_count
@@ -193,7 +193,7 @@ func differencePartial(
 ///   - age: The number of hillclimbing steps.
 ///   - target: The target bitmap.
 ///   - current: The current bitmap.
-///   - buffer: The buffer bitmap. // TODO: better explain this.
+///   - buffer: The buffer bitmap.
 ///   - lastScore: The last score.
 ///   - energyFunction: A function to calculate the energy.
 /// - Returns: The best state acquired from hill climbing i.e. the one with the lowest energy.
