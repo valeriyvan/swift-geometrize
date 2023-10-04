@@ -110,25 +110,25 @@ while shapeData.count <= shapeCount {
     if options.verbose {
         print("Step \(counter)", terminator: "")
     }
-    let shapes = runner.step(
+    let shapeResult = runner.step(
         options: runnerOptions,
         shapeCreator: nil,
         energyFunction: defaultEnergyFunction,
         addShapePrecondition: defaultAddShapePrecondition
     )
-    if shapes.isEmpty {
+    if let shapeResult {
+        shapeData.append(shapeResult)
         if options.verbose {
-            print(", no shapes added.", terminator: "")
+            print(", \(shapeResult.shape.description) added.", terminator: "")
         }
     } else {
         if options.verbose {
-            print(", \(shapes.map(\.shape).map(\.description).joined(separator: ", ")) added.", terminator: "")
+            print(", no shapes added.", terminator: "")
         }
     }
     if options.verbose {
         print(" Total count of shapes \(shapeData.count ).")
     }
-    shapeData.append(contentsOf: shapes)
     counter += 1
 }
 

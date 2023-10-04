@@ -43,9 +43,11 @@ final class ImageRunnerTests: XCTestCase {
         var counter = 0
         while shapeData.count <= 1000 /* Here set count of shapes final image should have. Remember background is the first shape. */ {
             print("Step \(counter)", terminator: "")
-            let shapes = runner.step(options: options, shapeCreator: nil, energyFunction: defaultEnergyFunction, addShapePrecondition: defaultAddShapePrecondition)
-            print(", \(shapes.isEmpty ? "no" : String(shapes.count)) shape(s) was/were added. Total count of shapes \(shapeData.count ).")
-            shapeData.append(contentsOf: shapes)
+            let shapeResult = runner.step(options: options, shapeCreator: nil, energyFunction: defaultEnergyFunction, addShapePrecondition: defaultAddShapePrecondition)
+            if let shapeResult {
+                shapeData.append(shapeResult)
+            }
+            print(", \(shapeResult == nil ? "no" : "1") shape was added. Total count of shapes \(shapeData.count ).")
             counter += 1
         }
 

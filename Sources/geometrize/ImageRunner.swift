@@ -82,19 +82,20 @@ public struct ImageRunner {
         model = GeometrizeModelHillClimb(target: targetBitmap, initial: initialBitmap)
     }
 
-    /// Updates the internal model once.
+    /// Makes one step of geometrization trying to add a shape to image improving its geometrization.
     /// - Parameters:
     ///   - options: Various configurable settings for doing the step e.g. the shape types to consider.
     ///   - shapeCreator: An optional function for creating and mutating shapes.
     ///   - energyFunction: A function to calculate the energy.
     ///   - addShapePrecondition: A function to determine whether to accept a shape.
-    /// - Returns: A vector containing data about the shapes just added to the internal model.
+    /// - Returns: a ShapeResult representing a shape added to image or nil if a shape improving image
+    /// geometrization wasn't found.
     public mutating func step(
         options: ImageRunnerOptions,
         shapeCreator: (() -> any Shape)? = nil,
         energyFunction: @escaping EnergyFunction,
         addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
-    ) -> [ShapeResult] {
+    ) -> ShapeResult? {
         let (xMin, yMin, xMax, yMax) = mapShapeBoundsToImage(options: options.shapeBounds, image: model.getTarget())
         let types = options.shapeTypes
 
@@ -102,7 +103,7 @@ public struct ImageRunner {
 
         model.setSeed(options.seed)
 
-        let result: [ShapeResult] = model.step(
+        return model.step(
             shapeCreator: shapeCreator,
             alpha: options.alpha,
             shapeCount: options.shapeCount,
@@ -111,8 +112,6 @@ public struct ImageRunner {
             energyFunction: energyFunction,
             addShapePrecondition: addShapePrecondition
         )
-
-        return result
     }
 
     public var currentBitmap: Bitmap {

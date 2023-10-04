@@ -40,7 +40,8 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         return [state]
     }
 
-    /// Steps the primitive optimization/fitting algorithm.
+    /// Concurrently runs several optimization sessions tying improving image geometrization by adding a shape to it
+    /// and returns result of the best optimization or nil if improvement of image wasn't found.
     /// - Parameters:
     ///   - shapeCreator: A function that will produce the shapes.
     ///   - alpha: The alpha of the shape.
@@ -49,8 +50,7 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
     ///   - maxThreads: The maximum number of threads to use during this step.
     ///   - energyFunction: A function to calculate the energy.
     ///   - addShapePrecondition: A function to determine whether to accept a shape.
-    /// - Returns: A vector containing data about the shapes added to the model in this step.
-    ///     This may be empty if no shape that improved the image could be found.
+    /// - Returns: Returns `ShapeResult` representing a shape added to improve image or nil if improvement wasn't found.
     func step( // swiftlint:disable:this function_parameter_count
         shapeCreator: () -> any Shape,
         alpha: UInt8,
@@ -59,7 +59,7 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         maxThreads: Int,
         energyFunction: @escaping EnergyFunction,
         addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction = defaultAddShapePrecondition
-    ) -> [ShapeResult] {
+    ) -> ShapeResult? {
 
         let states: [State] = getHillClimbState(
             shapeCreator: shapeCreator,
@@ -90,14 +90,13 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         let newScore: Double = differencePartial(target: targetBitmap, before: before, after: currentBitmap, score: lastScore, lines: lines)
         guard addShapePrecondition(lastScore, newScore, shape, lines, color, before, currentBitmap, targetBitmap) else {
             currentBitmap = before
-            return []
+            return nil
         }
 
         // Improvement - set new baseline and return the new shape
         lastScore = newScore
 
-        let result: ShapeResult = ShapeResult(score: lastScore, color: color, shape: shape)
-        return [result]
+        return ShapeResult(score: lastScore, color: color, shape: shape)
     }
 
     /// Sets the seed that the random number generators of this model use.
