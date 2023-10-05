@@ -94,7 +94,6 @@ final class CoreTests: XCTestCase {
         XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit)
     }
 
-    // swiftlint:disable:next function_body_length
     func testHillClimbComparingResultWithCPlusPlus() throws {
         let randomNumbersString = try String(contentsOf: Bundle.module.url(forResource: "hillClimb randomRange", withExtension: "txt")!)
         let lines = randomNumbersString.components(separatedBy: .newlines)
@@ -114,7 +113,6 @@ final class CoreTests: XCTestCase {
             else {
                 fatalError()
             }
-            //print("randomRange(\(min),\(max)) returns \(random)")
             return random
         }
         randomRangeImplementationReference = randomRangeFromFile
