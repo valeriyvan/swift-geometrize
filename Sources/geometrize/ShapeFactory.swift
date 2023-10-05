@@ -1,6 +1,6 @@
 import Foundation
 
-/// Creates an instance of the default shape creator object.
+/// Creates an instance of Shape subclass.
 /// The setup, mutate and rasterize methods are bound with default methods.
 /// - Parameters:
 ///   - types: The types of shapes to create.
@@ -9,7 +9,7 @@ import Foundation
 ///   - xMax: The maximum x coordinate of the shapes created.
 ///   - yMax: The maximum y coordinate of the shapes created.
 /// - Returns: The default shape creator.
-public func createDefaultShapeCreator(types: Set<ShapeType>, canvasBounds: Bounds) -> () -> any Shape {
+public func defaultShapeCreator(types: Set<ShapeType>, canvasBounds: Bounds) -> () -> any Shape {
     return {
         switch types[types.index(types.startIndex, offsetBy: randomRange(min: 0, max: types.count - 1))] {
         case .rectangle: return Rectangle(canvasBoundsProvider: { canvasBounds })
