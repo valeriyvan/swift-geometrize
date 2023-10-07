@@ -1,20 +1,16 @@
 import Foundation
 
 public final class Line: Shape {
-    public var canvasBoundsProvider: CanvasBoundsProvider
-
     public var x1, y1, x2, y2: Double
 
-    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
-        self.canvasBoundsProvider = canvasBoundsProvider
+    public init() {
         x1 = 0.0
         y1 = 0.0
         x2 = 0.0
         y2 = 0.0
     }
 
-    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, x1: Double, y1: Double, x2: Double, y2: Double) {
-        self.canvasBoundsProvider = canvasBoundsProvider
+    public init(x1: Double, y1: Double, x2: Double, y2: Double) {
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -22,32 +18,34 @@ public final class Line: Shape {
     }
 
     public func copy() -> Line {
-        Line(canvasBoundsProvider: canvasBoundsProvider, x1: x1, y1: y1, x2: x2, y2: y2)
+        Line(x1: x1, y1: y1, x2: x2, y2: y2)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
+    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+        let rangeX = xMin...xMax
+        let rangeY = yMin...yMax
+        let range32 = -32...32
         let startingPoint = Point(
-            x: randomRange(min: xMin, max: xMax),
-            y: randomRange(min: yMin, max: yMax)
+            x: Int._random(in: rangeX, using: &generator),
+            y: Int._random(in: rangeY, using: &generator)
         )
-        let rangeX = xMin...xMax
-        let rangeY = yMin...yMax
-        x1 = Double(startingPoint.x + randomRange(min: -32, max: 32).clamped(to: rangeX))
-        y1 = Double(startingPoint.y + randomRange(min: -32, max: 32).clamped(to: rangeY))
-        x2 = Double(startingPoint.x + randomRange(min: -32, max: 32).clamped(to: rangeX))
-        y2 = Double(startingPoint.y + randomRange(min: -32, max: 32).clamped(to: rangeY))
+        x1 = Double(startingPoint.x + Int._random(in: range32, using: &generator).clamped(to: rangeX))
+        y1 = Double(startingPoint.y + Int._random(in: range32, using: &generator).clamped(to: rangeY))
+        x2 = Double(startingPoint.x + Int._random(in: range32, using: &generator).clamped(to: rangeX))
+        y2 = Double(startingPoint.y + Int._random(in: range32, using: &generator).clamped(to: rangeY))
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
+    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
         let rangeX = xMin...xMax
         let rangeY = yMin...yMax
-        switch randomRange(min: 0, max: 1) {
+        let range16 = -16...16
+        switch Int._random(in: 0...1, using: &generator) {
         case 0:
-            x1 = Double((Int(x1) + randomRange(min: -16, max: 16)).clamped(to: rangeX))
-            y1 = Double((Int(y1) + randomRange(min: -16, max: 16)).clamped(to: rangeY))
+            x1 = Double((Int(x1) + Int._random(in: range16, using: &generator)).clamped(to: rangeX))
+            y1 = Double((Int(y1) + Int._random(in: range16, using: &generator)).clamped(to: rangeY))
         case 1:
-            x2 = Double((Int(x2) + randomRange(min: -16, max: 16)).clamped(to: rangeX))
-            y2 = Double((Int(y2) + randomRange(min: -16, max: 16)).clamped(to: rangeY))
+            x2 = Double((Int(x2) + Int._random(in: range16, using: &generator)).clamped(to: rangeX))
+            y2 = Double((Int(y2) + Int._random(in: range16, using: &generator)).clamped(to: rangeY))
         default:
             fatalError()
         }

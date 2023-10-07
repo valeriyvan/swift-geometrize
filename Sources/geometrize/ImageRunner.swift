@@ -92,14 +92,13 @@ public struct ImageRunner {
     /// geometrization wasn't found.
     public mutating func step(
         options: ImageRunnerOptions,
-        shapeCreator: (() -> any Shape)? = nil,
+        shapeCreator: ShapeCreator? = nil,
         energyFunction: @escaping EnergyFunction,
         addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
     ) -> ShapeResult? {
-        let (xMin, yMin, xMax, yMax) = mapShapeBoundsToImage(options: options.shapeBounds, image: model.getTarget())
         let types = options.shapeTypes
 
-        let shapeCreator: () -> any Shape = shapeCreator ?? defaultShapeCreator(types: types, canvasBounds: Bounds(xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax))
+        let shapeCreator: ShapeCreator = shapeCreator ?? makeDefaultShapeCreator(types: types)
 
         model.setSeed(options.seed)
 

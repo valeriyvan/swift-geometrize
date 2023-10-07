@@ -94,11 +94,12 @@ final class CoreTests: XCTestCase {
         XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit)
     }
 
-    func testHillClimbComparingResultWithCPlusPlus() throws {
+    // fails
+    func testHillClimbComparingResultWithCPlusPlus() throws { // swiftlint:disable:this function_body_length
         let randomNumbersString = try String(contentsOf: Bundle.module.url(forResource: "hillClimb randomRange", withExtension: "txt")!)
         let lines = randomNumbersString.components(separatedBy: .newlines)
         var counter = 0
-        func randomRangeFromFile(min: Int, max: Int) -> Int {
+        func randomRangeFromFile(in range: ClosedRange<Int>, using generator: inout SplitMix64) -> Int {
             defer { counter += 1 }
             let line = lines[counter]
             let scanner = Scanner(string: line)
@@ -109,22 +110,20 @@ final class CoreTests: XCTestCase {
                 let theMin = scanner.scanInt(),
                 scanner.scanString(",max:") != nil,
                 let theMax = scanner.scanInt(),
-                min == theMin, max == theMax
+                theMin == range.lowerBound, theMax == range.upperBound
             else {
                 fatalError()
             }
             return random
         }
-        randomRangeImplementationReference = randomRangeFromFile
+        _randomImplementationReference = randomRangeFromFile
 
         let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb target bitmap", withExtension: "txt")!))
         let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb current bitmap", withExtension: "txt")!))
         var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap", withExtension: "txt")!))
         let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap on exit", withExtension: "txt")!))
 
-        let canvasBoundsProvider = { Bounds(xMin: 0, xMax: bitmapTarget.width, yMin: 0, yMax: bitmapTarget.height) }
-
-        let rectangle = Rectangle(canvasBoundsProvider: canvasBoundsProvider, x1: 281, y1: 193, x2: 309, y2: 225)
+        let rectangle = Rectangle(x1: 281, y1: 193, x2: 309, y2: 225)
         // rectangle.setupImplementation = { r in
         //     r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
         // }
@@ -138,7 +137,7 @@ final class CoreTests: XCTestCase {
 
         // hillClimb return state State(score: 0.162824, alpha: 128, shape: Rectangle(x1=272,y1=113,x2=355,y2=237))
 
-        let rectangleOnExit = Rectangle(canvasBoundsProvider: canvasBoundsProvider, x1: 272, y1: 113, x2: 355, y2: 237)
+        let rectangleOnExit = Rectangle(x1: 272, y1: 113, x2: 355, y2: 237)
         // rectangleOnExit.setupImplementation = { r in
         //     r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
         // }
@@ -150,6 +149,8 @@ final class CoreTests: XCTestCase {
         // }
         let stateOnExitSample = State(score: 0.162824, alpha: 128, shape: rectangleOnExit)
 
+        var generator = SplitMix64(seed: 9999)
+
         let stateOnExit = hillClimb(
             state: state,
             maxAge: 100,
@@ -157,14 +158,15 @@ final class CoreTests: XCTestCase {
             current: bitmapCurrent,
             buffer: &bitmapBuffer,
             lastScore: 0.170819,
-            energyFunction: defaultEnergyFunction
+            energyFunction: defaultEnergyFunction,
+            using: &generator
         )
 
-        XCTAssertEqual(stateOnExit.score, stateOnExitSample.score, accuracy: 0.000001)
+        XCTAssertEqual(stateOnExit.score, stateOnExitSample.score, accuracy: 0.000001) // ("0.15865964089795329") is not equal to ("0.162824") +/- ("1e-06")
         XCTAssertEqual(stateOnExit.alpha, stateOnExitSample.alpha)
-        XCTAssertTrue(stateOnExit.shape == stateOnExitSample.shape)
+        XCTAssertTrue(stateOnExit.shape == stateOnExitSample.shape) // XCTAssertTrue failed
 
-        XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit)
+        XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit) // XCTAssertEqual
     }
 
 }

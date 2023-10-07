@@ -2,17 +2,14 @@ import Foundation
 import Algorithms
 
 public final class QuadraticBezier: Shape {
-    public var canvasBoundsProvider: CanvasBoundsProvider
-
-    public var cx: Double // Control point x-coordinate.
-    public var cy: Double // Control point y-coordinate.
     public var x1: Double // First x-coordinate.
     public var y1: Double // First y-coordinate.
     public var x2: Double // Second x-coordinate.
     public var y2: Double // Second y-coordinate.
+    public var cx: Double // Control point x-coordinate.
+    public var cy: Double // Control point y-coordinate.
 
-    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
-        self.canvasBoundsProvider = canvasBoundsProvider
+    public init() {
         cx = 0.0
         cy = 0.0
         x1 = 0.0
@@ -21,8 +18,7 @@ public final class QuadraticBezier: Shape {
         y2 = 0.0
     }
 
-    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, cx: Double, cy: Double, x1: Double, y1: Double, x2: Double, y2: Double) {
-        self.canvasBoundsProvider = canvasBoundsProvider
+    public init(cx: Double, cy: Double, x1: Double, y1: Double, x2: Double, y2: Double) {
         self.cx = cx
         self.cy = cy
         self.x1 = x1
@@ -32,29 +28,32 @@ public final class QuadraticBezier: Shape {
     }
 
     public func copy() -> QuadraticBezier {
-        QuadraticBezier(canvasBoundsProvider: canvasBoundsProvider, cx: cx, cy: cy, x1: x1, y1: y1, x2: x2, y2: y2)
+        QuadraticBezier(cx: cx, cy: cy, x1: x1, y1: y1, x2: x2, y2: y2)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        cx = Double(randomRange(min: xMin, max: xMax))
-        cy = Double(randomRange(min: yMin, max: yMax))
-        x1 = Double(randomRange(min: xMin, max: xMax))
-        y1 = Double(randomRange(min: yMin, max: yMax))
-        x2 = Double(randomRange(min: xMin, max: xMax))
-        y2 = Double(randomRange(min: yMin, max: yMax))
+    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+        let rangeX = xMin...xMax
+        let rangeY = yMin...yMax
+        cx = Double(Int._random(in: rangeX, using: &generator))
+        cy = Double(Int._random(in: rangeY, using: &generator))
+        x1 = Double(Int._random(in: rangeX, using: &generator))
+        y1 = Double(Int._random(in: rangeY, using: &generator))
+        x2 = Double(Int._random(in: rangeX, using: &generator))
+        y2 = Double(Int._random(in: rangeY, using: &generator))
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        switch randomRange(min: 0, max: 2) {
+    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+        let range8 = -8...8
+        switch Int._random(in: 0...2, using: &generator) {
         case 0:
-            cx = Double((Int(cx) + randomRange(min: -8, max: 8)).clamped(to: xMin...xMax))
-            cy = Double((Int(cy) + randomRange(min: -8, max: 8)).clamped(to: yMin...yMax))
+            cx = Double((Int(cx) + Int._random(in: range8, using: &generator)).clamped(to: xMin...xMax))
+            cy = Double((Int(cy) + Int._random(in: range8, using: &generator)).clamped(to: yMin...yMax))
         case 1:
-            x1 = Double((Int(x1) + randomRange(min: -8, max: 8)).clamped(to: xMin + 1...xMax))
-            y1 = Double((Int(y1) + randomRange(min: -8, max: 8)).clamped(to: yMin + 1...yMax))
+            x1 = Double((Int(x1) + Int._random(in: range8, using: &generator)).clamped(to: xMin + 1...xMax))
+            y1 = Double((Int(y1) + Int._random(in: range8, using: &generator)).clamped(to: yMin + 1...yMax))
         case 2:
-            x2 = Double((Int(x2) + randomRange(min: -8, max: 8)).clamped(to: xMin + 1...xMax))
-            y2 = Double((Int(y2) + randomRange(min: -8, max: 8)).clamped(to: yMin + 1...yMax))
+            x2 = Double((Int(x2) + Int._random(in: range8, using: &generator)).clamped(to: xMin + 1...xMax))
+            y2 = Double((Int(y2) + Int._random(in: range8, using: &generator)).clamped(to: yMin + 1...yMax))
         default:
             fatalError()
         }

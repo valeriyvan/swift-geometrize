@@ -1,23 +1,19 @@
 import Foundation
 
 public final class Ellipse: Shape {
-    public var canvasBoundsProvider: CanvasBoundsProvider
-
     public var x: Double // x-coordinate.
     public var y: Double // y-coordinate.
     public var rx: Double // x-radius.
     public var ry: Double // y-radius.
 
-    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
-        self.canvasBoundsProvider = canvasBoundsProvider
+    public init() {
         x = 0.0
         y = 0.0
         rx = 0.0
         ry = 0.0
     }
 
-    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, x: Double, y: Double, rx: Double, ry: Double) {
-        self.canvasBoundsProvider = canvasBoundsProvider
+    public init(x: Double, y: Double, rx: Double, ry: Double) {
         self.x = x
         self.y = y
         self.rx = rx
@@ -25,25 +21,26 @@ public final class Ellipse: Shape {
     }
 
     public func copy() -> Ellipse {
-        Ellipse(canvasBoundsProvider: canvasBoundsProvider, x: x, y: y, rx: rx, ry: ry)
+        Ellipse(x: x, y: y, rx: rx, ry: ry)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        x = Double(randomRange(min: xMin, max: xMax))
-        y = Double(randomRange(min: yMin, max: yMax))
-        rx = Double(randomRange(min: 1, max: 32))
-        ry = Double(randomRange(min: 1, max: 32))
+    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+        x = Double(Int._random(in: xMin...xMax, using: &generator))
+        y = Double(Int._random(in: yMin...yMax, using: &generator))
+        rx = Double(Int._random(in: 1...32, using: &generator))
+        ry = Double(Int._random(in: 1...32, using: &generator))
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        switch randomRange(min: 0, max: 2) {
+    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+        let range16 = -16...16
+        switch Int._random(in: 0...2, using: &generator) {
         case 0:
-            x = Double((Int(x) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax))
-            y = Double((Int(y) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax))
+            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xMin...xMax))
+            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yMin...yMax))
         case 1:
-            rx = Double((Int(rx) + randomRange(min: -16, max: 16)).clamped(to: 1...xMax))
+            rx = Double((Int(rx) + Int._random(in: range16, using: &generator)).clamped(to: 1...xMax))
         case 2:
-            ry = Double((Int(ry) + randomRange(min: -16, max: 16)).clamped(to: 1...yMax))
+            ry = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yMax))
         default:
             fatalError()
         }
