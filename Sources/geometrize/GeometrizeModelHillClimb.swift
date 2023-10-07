@@ -8,7 +8,7 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
     // Therefore it does make sense decrease shapeCount proportionally when increasing maxThreads
     // to achieve same effectiveness.
     private func getHillClimbState( // swiftlint:disable:this function_parameter_count
-        shapeCreator: () -> any Shape,
+        shapeCreator: @escaping ShapeCreator,
         alpha: UInt8,
         shapeCount: Int,
         maxShapeMutations: Int,
@@ -20,7 +20,9 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         // Note this implementation requires maxThreads to be the same between tasks for each task to produce the same results.
         let seed = baseRandomSeed + randomSeedOffset
         randomSeedOffset += 1
-        seedRandomGenerator(UInt64(seed))
+        //seedRandomGenerator(UInt64(seed))
+
+        var generator = SplitMix64(seed: UInt64(seed))
 
         let lastScore = lastScore
 
@@ -34,7 +36,8 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
             current: currentBitmap,
             buffer: &buffer,
             lastScore: lastScore,
-            energyFunction: energyFunction
+            energyFunction: energyFunction, 
+            using: &generator
         )
 
         return [state]
@@ -52,7 +55,7 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
     ///   - addShapePrecondition: A function to determine whether to accept a shape.
     /// - Returns: Returns `ShapeResult` representing a shape added to improve image or nil if improvement wasn't found.
     func step( // swiftlint:disable:this function_parameter_count
-        shapeCreator: () -> any Shape,
+        shapeCreator: @escaping ShapeCreator,
         alpha: UInt8,
         shapeCount: Int,
         maxShapeMutations: Int,
@@ -81,7 +84,7 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
 
         // Draw the shape onto the image
         let shape = it.shape.copy()
-        let lines: [Scanline] = shape.rasterize()
+        let lines: [Scanline] = shape.rasterize(xMin: 0, yMin: 0, xMax: width, yMax: height)
         let color: Rgba = computeColor(target: targetBitmap, current: currentBitmap, lines: lines, alpha: alpha)
         let before: Bitmap = currentBitmap
         currentBitmap.draw(lines: lines, color: color)
@@ -106,13 +109,13 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         baseRandomSeed = seed
     }
 
-    private static let defaultMaxThreads: Int = 4
+    private static let defaultMaxThreads: Int = 8
 
     /// The base value used for seeding the random number generator (the one the user has control over)
-    var baseRandomSeed: Int = 0 // TODO: atomic
+    var baseRandomSeed: Int = 0
 
     /// Seed used for random number generation.
     /// Note: incremented by each std::async call used for model stepping.
-    var randomSeedOffset: Int = 0 // TODO: atomic
+    var randomSeedOffset: Int = 0
 
 }

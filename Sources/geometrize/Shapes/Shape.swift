@@ -1,7 +1,5 @@
 import Foundation
 
-//public var canvasBounds: (xMin: Int, yMin: Int, xMax: Int, yMax: Int) = (0, 0, .max, .max)
-
 // Specifies the types of shapes that can be used.
 // These can be combined to produce images composed of multiple primitive types.
 // TODO: put it inside Shape. Or remove completely.
@@ -46,22 +44,15 @@ public struct Bounds {
     }
 }
 
-public typealias CanvasBoundsProvider = () -> Bounds
-
 public protocol Shape: AnyObject, CustomStringConvertible {
-    var canvasBoundsProvider: CanvasBoundsProvider { get }
-
-    init(canvasBoundsProvider: @escaping CanvasBoundsProvider)
+    init()
 
     func copy() -> Self
 
-    func setup()
-    func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int)
+    func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using: inout SplitMix64)
 
-    func mutate()
-    func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int)
+    func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using: inout SplitMix64)
 
-    func rasterize() -> [Scanline]
     func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline]
 
     func type() -> ShapeType
@@ -70,21 +61,6 @@ public protocol Shape: AnyObject, CustomStringConvertible {
 }
 
 extension Shape {
-
-    public func setup() {
-        let canvasBounds = canvasBoundsProvider()
-        setup(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
-    }
-
-    public func mutate() {
-        let canvasBounds = canvasBoundsProvider()
-        mutate(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
-    }
-
-    public func rasterize() -> [Scanline] {
-        let canvasBounds = canvasBoundsProvider()
-        return rasterize(xMin: canvasBounds.xMin, yMin: canvasBounds.yMin, xMax: canvasBounds.xMax, yMax: canvasBounds.yMax)
-    }
 
     public var isDegenerate: Bool {
         false

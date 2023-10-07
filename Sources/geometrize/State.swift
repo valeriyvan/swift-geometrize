@@ -10,7 +10,6 @@ struct State {
         self.score = -1
         self.alpha = alpha
         self.shape = shape
-        self.shape.setup()
     }
 
     init(score: Double, alpha: UInt8, shape: some Shape) {
@@ -34,9 +33,9 @@ struct State {
 
     ///  Modifies the current state in a random fashion.
     /// - Returns: The old state, useful for undoing the mutation or keeping track of previous states.
-    mutating func mutate() -> State {
+    mutating func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) -> State {
         let oldState = copy()
-        shape.mutate()
+        shape.mutate(xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax, using: &generator)
         score = -1
         return oldState
     }

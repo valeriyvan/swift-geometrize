@@ -1,46 +1,46 @@
 import Foundation
 
 public final class Polyline: Shape {
-    public var canvasBoundsProvider: CanvasBoundsProvider
-
     public var points: [Point<Double>]
 
-    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
-        self.canvasBoundsProvider = canvasBoundsProvider
+    public init() {
         points = []
     }
 
-    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, points: [Point<Double>]) {
-        self.canvasBoundsProvider = canvasBoundsProvider
+    public init(points: [Point<Double>]) {
         self.points = points
     }
 
     public func copy() -> Polyline {
-        Polyline(canvasBoundsProvider: canvasBoundsProvider, points: points)
+        Polyline(points: points)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
+    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+        let rangeX = xMin...xMax
+        let rangeY = yMin...yMax
+        let range32 = -32...32
         let startingPoint = Point(
-            x: randomRange(min: xMin, max: xMax),
-            y: randomRange(min: yMin, max: yMax)
+            x: Int._random(in: rangeX, using: &generator),
+            y: Int._random(in: rangeY, using: &generator)
         )
         var points: [Point<Double>] = []
         for _ in 0..<4 {
             points.append(
                 Point(
-                    x: Double((startingPoint.x + randomRange(min: -32, max: 32)).clamped(to: xMin...xMax)),
-                    y: Double((startingPoint.y + randomRange(min: -32, max: 32)).clamped(to: yMin...yMax))
+                    x: Double((startingPoint.x + Int._random(in: range32, using: &generator)).clamped(to: xMin...xMax)),
+                    y: Double((startingPoint.y + Int._random(in: range32, using: &generator)).clamped(to: yMin...yMax))
                 )
             )
         }
         self.points = points
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        let i = randomRange(min: 0, max: points.count - 1)
+    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+        let i = Int._random(in: 0...points.count-1, using: &generator)
         var point = points[i]
-        point.x = Double((Int(point.x) + randomRange(min: -64, max: 64)).clamped(to: xMin...xMax))
-        point.y = Double((Int(point.y) + randomRange(min: -64, max: 64)).clamped(to: yMin...yMax))
+        let range64 = -64...64
+        point.x = Double((Int(point.x) + Int._random(in: range64, using: &generator)).clamped(to: xMin...xMax))
+        point.y = Double((Int(point.y) + Int._random(in: range64, using: &generator)).clamped(to: yMin...yMax))
         points[i] = point
     }
 

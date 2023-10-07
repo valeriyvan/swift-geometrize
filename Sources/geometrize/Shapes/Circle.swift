@@ -1,43 +1,40 @@
 import Foundation
 
 public final class Circle: Shape {
-    public var canvasBoundsProvider: CanvasBoundsProvider
-
     public var x: Double // x-coordinate.
     public var y: Double // y-coordinate.
     public var r: Double // Radius.
 
-    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider) {
-        self.canvasBoundsProvider = canvasBoundsProvider
+    public init() {
         x = 0.0
         y = 0.0
         r = 0.0
     }
 
-    public init(canvasBoundsProvider: @escaping CanvasBoundsProvider, x: Double, y: Double, r: Double) {
-        self.canvasBoundsProvider = canvasBoundsProvider
+    public init(x: Double, y: Double, r: Double) {
         self.x = x
         self.y = y
         self.r = r
     }
 
     public func copy() -> Circle {
-        Circle(canvasBoundsProvider: canvasBoundsProvider, x: x, y: y, r: r)
+        Circle(x: x, y: y, r: r)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        x = Double(randomRange(min: xMin, max: xMax))
-        y = Double(randomRange(min: yMin, max: yMax))
-        r = Double(randomRange(min: 1, max: 32))
+    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+        x = Double(Int._random(in: xMin...xMax, using: &generator))
+        y = Double(Int._random(in: yMin...yMax, using: &generator))
+        r = Double(Int._random(in: 1...32, using: &generator))
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
-        switch randomRange(min: 0, max: 1) {
+    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+        let range16 = -16...16
+        switch Int._random(in: 0...1, using: &generator) {
         case 0:
-            x = Double((Int(x) + randomRange(min: -16, max: 16)).clamped(to: xMin...xMax))
-            y = Double((Int(y) + randomRange(min: -16, max: 16)).clamped(to: yMin...yMax))
+            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xMin...xMax))
+            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yMin...yMax))
         case 1:
-            r = Double((Int(r) + randomRange(min: -16, max: 16)).clamped(to: 1...xMax))
+            r = Double((Int(r) + Int._random(in: range16, using: &generator)).clamped(to: 1...xMax))
         default:
             fatalError()
         }
