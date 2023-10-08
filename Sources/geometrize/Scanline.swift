@@ -162,4 +162,3 @@ extension Array where Element == Scanline {
     }
 
 }
-
