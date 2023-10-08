@@ -3,7 +3,7 @@ import Foundation
 // Normally Int._random(in:using) just calls Int._random(in:using).
 // Tests could change default implementation e.g. to read pre-generated random numbers from file.
 
-// swiftlint:disable:this identifier_name
+// swiftlint:disable:next identifier_name
 var _randomImplementationReference = _randomImplementation
 
 private func _randomImplementation(in range: ClosedRange<Int>, using generator: inout SplitMix64) -> Int {
