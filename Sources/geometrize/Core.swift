@@ -46,7 +46,7 @@ public func defaultEnergyFunction( // swiftlint:disable:this function_parameter_
     // Blend scanlines into the buffer using the color calculated earlier
     buffer.draw(lines: lines, color: color)
     // Get error measure between areas of current and modified buffers covered by scanlines
-    return differencePartial(target: target, before: current, after: buffer, score: score, lines: lines)
+    return current.differencePartial(with: buffer, target: target, score: score, mask: lines)
 }
 
 /// Calculates the color of the scanlines.
@@ -110,50 +110,6 @@ func computeColor(
     let b: UInt8 = UInt8(bb.clamped(to: 0...255))
 
     return Rgba(r: r, g: g, b: b, a: alpha)
-}
-
-/// Calculates the root-mean-square error between the parts of the two bitmaps within the scanline mask.
-/// This is for optimization purposes, it lets us calculate new error values only for parts of the image
-/// we know have changed.
-/// - Parameters:
-///   - target: The target bitmap.
-///   - before: The bitmap before the change.
-///   - after: The bitmap after the change.
-///   - score: The score.
-///   - lines: The scanlines.
-/// - Returns: The difference/error between the two bitmaps, masked by the scanlines.
-func differencePartial(
-    target: Bitmap,
-    before: Bitmap,
-    after: Bitmap,
-    score: Double,
-    lines: [Scanline]
-) -> Double {
-    let rgbaCount: UInt64 = UInt64(target.width * target.height * 4)
-    var total: UInt64 = UInt64((score * 255.0) * (score * 255.0) * Double(rgbaCount))
-    for line in lines {
-        let y = line.y
-        for x in line.x1...line.x2 {
-            let t: Rgba = target[x, y]
-            let b: Rgba = before[x, y]
-            let a: Rgba = after[x, y]
-
-            let dtbr: Int32 = Int32(t.r) - Int32(b.r)
-            let dtbg: Int32 = Int32(t.g) - Int32(b.g)
-            let dtbb: Int32 = Int32(t.b) - Int32(b.b)
-            let dtba: Int32 = Int32(t.a) - Int32(b.a)
-
-            let dtar: Int32 = Int32(t.r) - Int32(a.r)
-            let dtag: Int32 = Int32(t.g) - Int32(a.g)
-            let dtab: Int32 = Int32(t.b) - Int32(a.b)
-            let dtaa: Int32 = Int32(t.a) - Int32(a.a)
-
-            total -= UInt64(dtbr * dtbr + dtbg * dtbg + dtbb * dtbb + dtba * dtba)
-            total += UInt64(dtar * dtar + dtag * dtag + dtab * dtab + dtaa * dtaa)
-        }
-    }
-
-    return sqrt(Double(total) / Double(rgbaCount)) / 255.0
 }
 
 /// Gets the best state using a hill climbing algorithm.

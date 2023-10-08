@@ -53,12 +53,11 @@ final class CoreTests: XCTestCase {
         let scanlines = components.map(Scanline.init)
 
         XCTAssertEqual(
-            differencePartial(
+            bitmapBefore.differencePartial(
+                with: bitmapAfter,
                 target: bitmapTarget,
-                before: bitmapBefore,
-                after: bitmapAfter,
                 score: 0.170819,
-                lines: scanlines
+                mask: scanlines
             ),
             0.170800,
             accuracy: 0.000001

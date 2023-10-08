@@ -44,7 +44,7 @@ class GeometrizeModelBase {
         let lines: [Scanline] = shape.rasterize(xMin: 0, yMin: 0, xMax: width, yMax: height)
         let before: Bitmap = currentBitmap
         currentBitmap.draw(lines: lines, color: color)
-        lastScore = differencePartial(target: targetBitmap, before: before, after: currentBitmap, score: lastScore, lines: lines)
+        lastScore = before.differencePartial(with: currentBitmap, target: targetBitmap, score: lastScore, mask: lines)
         return ShapeResult(score: lastScore, color: color, shape: shape)
     }
 
