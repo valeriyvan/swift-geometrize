@@ -38,7 +38,7 @@ public func defaultEnergyFunction( // swiftlint:disable:this function_parameter_
     _ score: Double
 ) -> Double {
     // Calculate best color for areas covered by the scanlines
-    let color: Rgba = computeColor(target: target, current: current, lines: lines, alpha: UInt8(alpha))
+    let color: Rgba = lines.computeColor(target: target, current: current, alpha: UInt8(alpha))
     // Copy area covered by scanlines to buffer bitmap
     buffer.copy(lines: lines, source: current)
     // Blend scanlines into the buffer using the color calculated earlier

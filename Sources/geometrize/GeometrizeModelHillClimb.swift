@@ -99,7 +99,7 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         // Draw the shape onto the image
         let shape = it.shape.copy()
         let lines: [Scanline] = shape.rasterize(xMin: 0, yMin: 0, xMax: width, yMax: height)
-        let color: Rgba = computeColor(target: targetBitmap, current: currentBitmap, lines: lines, alpha: alpha)
+        let color: Rgba = lines.computeColor(target: targetBitmap, current: currentBitmap, alpha: alpha)
         let before: Bitmap = currentBitmap
         currentBitmap.draw(lines: lines, color: color)
 
