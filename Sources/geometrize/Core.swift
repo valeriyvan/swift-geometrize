@@ -112,35 +112,6 @@ func computeColor(
     return Rgba(r: r, g: g, b: b, a: alpha)
 }
 
-/// Calculates the root-mean-square error between two bitmaps.
-/// - Parameters:
-///   - first: The first bitmap.
-///   - second: The second bitmap.
-/// - Returns: The difference/error measure between the two bitmaps.
-func differenceFull(first: Bitmap, second: Bitmap) -> Double {
-    assert(first.width == second.width)
-    assert(first.height == second.height)
-
-    let width = first.width
-    let height = first.height
-    var total: Int64 = 0
-
-    for y in 0..<height {
-        for x in 0..<width {
-            let f: Rgba = first[x, y]
-            let s: Rgba = second[x, y]
-
-            let dr: Int32 = Int32(f.r) - Int32(s.r)
-            let dg: Int32 = Int32(f.g) - Int32(s.g)
-            let db: Int32 = Int32(f.b) - Int32(s.b)
-            let da: Int32 = Int32(f.a) - Int32(s.a)
-            total += Int64(dr * dr + dg * dg + db * db + da * da)
-        }
-    }
-
-    return sqrt(Double(total) / (Double(width) * Double(height) * 4.0)) / 255.0
-}
-
 /// Calculates the root-mean-square error between the parts of the two bitmaps within the scanline mask.
 /// This is for optimization purposes, it lets us calculate new error values only for parts of the image
 /// we know have changed.

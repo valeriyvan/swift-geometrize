@@ -8,7 +8,7 @@ class GeometrizeModelBase {
     init(targetBitmap: Bitmap) {
         self.targetBitmap = targetBitmap
         currentBitmap = Bitmap(width: targetBitmap.width, height: targetBitmap.height, color: targetBitmap.averageColor())
-        lastScore = differenceFull(first: targetBitmap, second: currentBitmap)
+        lastScore = targetBitmap.differenceFull(with: currentBitmap)
     }
 
     /// Creates a model that will optimize for the given target bitmap, starting from the given initial bitmap.
@@ -19,7 +19,7 @@ class GeometrizeModelBase {
     init(target: Bitmap, initial: Bitmap) {
         targetBitmap = target
         currentBitmap = initial
-        lastScore = differenceFull(first: target, second: currentBitmap)
+        lastScore = target.differenceFull(with: currentBitmap)
         assert(target.width == currentBitmap.width)
         assert(target.height == currentBitmap.height)
     }
@@ -28,7 +28,7 @@ class GeometrizeModelBase {
     /// - Parameter backgroundColor: The starting background color to use.
     func reset(backgroundColor: Rgba) {
        currentBitmap.fill(color: backgroundColor)
-       lastScore = differenceFull(first: targetBitmap, second: currentBitmap)
+        lastScore = targetBitmap.differenceFull(with: currentBitmap)
    }
 
     var width: Int { targetBitmap.width }

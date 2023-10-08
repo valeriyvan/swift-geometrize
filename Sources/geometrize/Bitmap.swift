@@ -371,3 +371,30 @@ extension Bitmap {
     }
 
 }
+
+extension Bitmap {
+
+    /// Calculates the root-mean-square error between two bitmaps.
+    func differenceFull(with second: Bitmap) -> Double {
+        assert(width == second.width)
+        assert(height == second.height)
+
+        var total: Int64 = 0
+
+        for y in 0..<height {
+            for x in 0..<width {
+                let f: Rgba = self[x, y]
+                let s: Rgba = second[x, y]
+
+                let dr: Int32 = Int32(f.r) - Int32(s.r)
+                let dg: Int32 = Int32(f.g) - Int32(s.g)
+                let db: Int32 = Int32(f.b) - Int32(s.b)
+                let da: Int32 = Int32(f.a) - Int32(s.a)
+                total += Int64(dr * dr + dg * dg + db * db + da * da)
+            }
+        }
+
+        return sqrt(Double(total) / (Double(width) * Double(height) * 4.0)) / 255.0
+    }
+
+}
