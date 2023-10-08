@@ -196,6 +196,9 @@ func differencePartial(
 ///   - buffer: The buffer bitmap.
 ///   - lastScore: The last score.
 ///   - energyFunction: A function to calculate the energy.
+///   - using: The Random number generator to use.
+///   - callback: The closure to call with resulting state.
+///   - queue: The queue to call callback
 /// - Returns: The best state acquired from hill climbing i.e. the one with the lowest energy.
 func bestHillClimbState( // swiftlint:disable:this function_parameter_count
     shapeCreator: ShapeCreator,
@@ -207,8 +210,10 @@ func bestHillClimbState( // swiftlint:disable:this function_parameter_count
     buffer: inout Bitmap,
     lastScore: Double,
     energyFunction: EnergyFunction = defaultEnergyFunction,
-    using generator: inout SplitMix64
-) -> State {
+    using generator: inout SplitMix64,
+    callback: @escaping (State) -> Void,
+    queue: DispatchQueue
+) {
     let state: State = bestRandomState(
         shapeCreator: shapeCreator,
         alpha: alpha,
@@ -220,7 +225,7 @@ func bestHillClimbState( // swiftlint:disable:this function_parameter_count
         energyFunction: energyFunction,
         using: &generator
     )
-    return hillClimb(
+    let resState = hillClimb(
         state: state,
         maxAge: age,
         target: target,
@@ -230,6 +235,9 @@ func bestHillClimbState( // swiftlint:disable:this function_parameter_count
         energyFunction: energyFunction,
         using: &generator
     )
+    queue.async {
+        callback(resState)
+    }
 }
 
 /// Hill climbing optimization algorithm, attempts to minimize energy (the error/difference).
@@ -242,6 +250,7 @@ func bestHillClimbState( // swiftlint:disable:this function_parameter_count
 ///   - buffer: The buffer bitmap.
 ///   - lastScore: The last score.
 ///   - energyFunction: An energy function to be used.
+///   - using: The Random number generator to use.
 /// - Returns: The best state found from hillclimbing.
 func hillClimb( // swiftlint:disable:this function_parameter_count
     state: State,
@@ -294,6 +303,7 @@ func hillClimb( // swiftlint:disable:this function_parameter_count
 ///   - buffer: The buffer bitmap.
 ///   - lastScore: The last score.
 ///   - energyFunction: An energy function to be used.
+///   - using: The Random number generator to use.
 /// - Returns: The best random state i.e. the one with the lowest energy.
 private func bestRandomState( // swiftlint:disable:this function_parameter_count
     shapeCreator: ShapeCreator,
