@@ -5,10 +5,6 @@ public typealias ShapeCreator = (inout SplitMix64) -> any Shape
 /// Creates a function for creating instances of  Shape. Returned instances should be set up!
 /// - Parameters:
 ///   - types: The types of shapes to create.
-///   - xMin: The minimum x coordinate of the shapes created.
-///   - yMin: The minimum y coordinate of the shapes created.
-///   - xMax: The maximum x coordinate of the shapes created.
-///   - yMax: The maximum y coordinate of the shapes created.
 /// - Returns: The default shape creator.
 public func makeDefaultShapeCreator(types: Set<ShapeType>) -> ShapeCreator {
     return { generator in

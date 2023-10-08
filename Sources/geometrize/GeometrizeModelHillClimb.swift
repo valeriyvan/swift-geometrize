@@ -18,29 +18,43 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         // Ensure that the results of the random generation are the same between tasks with identical settings
         // The RNG is thread-local and std::async may use a thread pool (which is why this is necessary)
         // Note this implementation requires maxThreads to be the same between tasks for each task to produce the same results.
-        let seed = baseRandomSeed + randomSeedOffset
-        randomSeedOffset += 1
-        //seedRandomGenerator(UInt64(seed))
-
-        var generator = SplitMix64(seed: UInt64(seed))
 
         let lastScore = lastScore
 
-        var buffer: Bitmap = currentBitmap
-        let state = bestHillClimbState(
-            shapeCreator: shapeCreator,
-            alpha: alpha,
-            n: shapeCount,
-            age: maxShapeMutations,
-            target: targetBitmap,
-            current: currentBitmap,
-            buffer: &buffer,
-            lastScore: lastScore,
-            energyFunction: energyFunction, 
-            using: &generator
-        )
+        let concurrentQueue = DispatchQueue(label: "geometrize.concurrent.queue", attributes: .concurrent)
+        let group = DispatchGroup()
+        let serialQueue = DispatchQueue(label: "geometrize.serial.queue")
+        var states: [State] = []
 
-        return [state]
+        for _ in 0..<maxThreads {
+            let seed = baseRandomSeed + randomSeedOffset
+            randomSeedOffset += 1
+            var generator = SplitMix64(seed: UInt64(seed))
+            group.enter()
+            concurrentQueue.async { [targetBitmap, currentBitmap] in
+                var buffer: Bitmap = currentBitmap
+                bestHillClimbState(
+                    shapeCreator: shapeCreator,
+                    alpha: alpha,
+                    n: shapeCount,
+                    age: maxShapeMutations,
+                    target: targetBitmap,
+                    current: currentBitmap,
+                    buffer: &buffer,
+                    lastScore: lastScore,
+                    energyFunction: energyFunction,
+                    using: &generator,
+                    callback: { state in
+                        states.append(state)
+                        group.leave()
+                    },
+                    queue: serialQueue
+                )
+            }
+        }
+        group.wait()
+
+        return states
     }
 
     /// Concurrently runs several optimization sessions tying improving image geometrization by adding a shape to it
