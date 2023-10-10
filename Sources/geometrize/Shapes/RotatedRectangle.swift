@@ -103,10 +103,6 @@ public final class RotatedRectangle: Shape {
         return (ul, ur, br, bl)
     }
 
-    public func type() -> ShapeType {
-        .rotatedRectangle
-    }
-
     public var isDegenerate: Bool {
         x1 == x2 || y1 == y2
     }

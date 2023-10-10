@@ -19,7 +19,7 @@ final class ImageRunnerTests: XCTestCase {
         let targetBitmap = Bitmap(width: width, height: height, data: data)
 
         let options = ImageRunnerOptions(
-            shapeTypes: Set([.rotatedEllipse]),
+            shapeTypes: [RotatedEllipse.self],
             alpha: 128,
             shapeCount: 500,
             maxShapeMutations: 100,

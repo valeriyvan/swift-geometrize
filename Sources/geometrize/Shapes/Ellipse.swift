@@ -81,10 +81,6 @@ public final class Ellipse: Shape {
         return lines
     }
 
-    public func type() -> ShapeType {
-        .ellipse
-    }
-
     public var isDegenerate: Bool {
         rx == 0.0 || ry == 0.0
     }
