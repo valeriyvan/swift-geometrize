@@ -32,10 +32,11 @@ You could try swift-geometrize in action in Telegram bot [Geometrizebot](https:/
 
 ## TODO:
 * add stroke width for line, polyline and bezier curve;
-✅ multithreading;
+* ✅ multithreading;
 * solve dealing with randomness in tests;
 * geometrize with predefined or user supplied brush strokes;
-* geometrize with characters (on output will be something which could be called ascii art or art produced by [James Cook Type Writer Artist](https://jamescookartwork.com)). 
+* geometrize with characters (on output will be something which could be called ascii art or art produced by [James Cook Type Writer Artist](https://jamescookartwork.com));
+* photo mosaic. 
 
 ## License
 
