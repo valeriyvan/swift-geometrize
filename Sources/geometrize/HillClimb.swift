@@ -132,10 +132,10 @@ private func bestRandomState( // swiftlint:disable:this function_parameter_count
     using generator: inout SplitMix64
 ) -> State {
     let shape = shapeCreator(&generator)
-    shape.setup(xMin: 0, yMin: 0, xMax: target.width, yMax: target.height, using: &generator)
+    shape.setup(xMin: 0, yMin: 0, xMax: target.width - 1, yMax: target.height - 1, using: &generator)
     var bestState: State = State(shape: shape, alpha: alpha)
     bestState.score = energyFunction(
-        bestState.shape.rasterize(xMin: 0, yMin: 0, xMax: target.width, yMax: target.height),
+        bestState.shape.rasterize(xMin: 0, yMin: 0, xMax: target.width - 1, yMax: target.height - 1),
         bestState.alpha,
         target,
         current,
@@ -145,10 +145,10 @@ private func bestRandomState( // swiftlint:disable:this function_parameter_count
     var bestEnergy: Double = bestState.score
     for i in 0...n {
         let shape = shapeCreator(&generator)
-        shape.setup(xMin: 0, yMin: 0, xMax: target.width, yMax: target.height, using: &generator)
+        shape.setup(xMin: 0, yMin: 0, xMax: target.width - 1, yMax: target.height - 1, using: &generator)
         var state: State = State(shape: shape, alpha: alpha)
         state.score = energyFunction(
-            state.shape.rasterize(xMin: 0, yMin: 0, xMax: target.width, yMax: target.height),
+            state.shape.rasterize(xMin: 0, yMin: 0, xMax: target.width - 1, yMax: target.height - 1),
             state.alpha,
             target,
             current,
