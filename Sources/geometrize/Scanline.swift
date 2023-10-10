@@ -20,7 +20,7 @@ public struct Scanline {
         self.x1 = x1
         self.x2 = x2
         if x1 > x2 {
-            print("Warning: Scanline has x1(\(x1)) > x2(\(x2). This makes scanline invisible..")
+            print("Warning: Scanline has x1(\(x1)) > x2(\(x2). This makes scanline invisible.")
         }
     }
 

@@ -12,8 +12,6 @@ struct GeometrizeOptions: ParsableArguments {
     @Flag(name: .shortAndLong, help: "Verbose output.") var verbose: Bool = false
 }
 
-//print("Available shaped: \(ShapeType.allCases.map(\.rawValueCapitalized).joined(by: ", ")).")
-
 let options = GeometrizeOptions.parseOrExit()
 
 let inputUrl = URL(fileURLWithPath: options.inputPath)
@@ -65,25 +63,35 @@ guard outputUrl.pathExtension.caseInsensitiveCompare("svg") == .orderedSame else
 }
 
 // TODO: use ExpressibleByArgument?
-let shapeTypes = options.shapeTypes.components(separatedBy: .whitespacesAndNewlines)
-let shapesOrNil = shapeTypes.map(ShapeType.init)
-let indexOfNil = shapesOrNil.firstIndex(of: nil)
-if let indexOfNil = indexOfNil {
-    print("Not recognised shape type \(shapeTypes[indexOfNil]). Allowed shape types:")
-    ShapeType.allCases.forEach {
-        print($0.rawValueCapitalized)
+let shapes = options.shapeTypes.components(separatedBy: .whitespacesAndNewlines).shapeTypes()
+
+// Shape.Type is not hashable as all Metatypes. Why, by the way?
+// That why we check for nil in this strange way.
+var indexOfNil: Int?
+for (i, shape) in shapes.enumerated() {
+    if shape == nil {
+        indexOfNil = i
+        break
+    }
+}
+
+if let indexOfNil {
+    print("Not recognised shape type \(shapes[indexOfNil]!). Allowed shape types:")
+    allShapeTypes.forEach {
+        print("\($0)")
     }
     print("Case insensitive, underscores are ignored, white spaces are delimiters.")
     exit(1)
 }
 
-let shapes = Set(shapesOrNil.compactMap { $0 })
-print("Using shapes: \(shapes.map(\.rawValueCapitalized).joined(separator: ", ")).")
+let shapeTypes: [Shape.Type] = shapes.compactMap { $0 }
+
+print("Using shapes: \(shapeTypes.map { "\(type(of: $0))".dropLast(5) /* drop .Type */ }.joined(separator: ", ")).")
 
 let shapeCount: Int = Int(options.shapeCount ?? 100)
 
 let runnerOptions = ImageRunnerOptions(
-    shapeTypes: shapes,
+    shapeTypes: shapeTypes,
     alpha: 128,
     shapeCount: 100,
     maxShapeMutations: 100,

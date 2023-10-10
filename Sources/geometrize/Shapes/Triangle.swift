@@ -80,10 +80,6 @@ public final class Triangle: Shape {
         return lines
     }
 
-    public func type() -> ShapeType {
-        .triangle
-    }
-
     public var isDegenerate: Bool {
         x1 == x2 && y1 == y2 ||
         x1 == x3 && y1 == y3 ||

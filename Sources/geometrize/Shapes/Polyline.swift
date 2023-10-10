@@ -67,10 +67,6 @@ public final class Polyline: Shape {
         return lines
     }
 
-    public func type() -> ShapeType {
-        .polyline
-    }
-
     public var description: String {
         "Polyline(" + points.map(\.description).joined(separator: ", ") + ")"
     }

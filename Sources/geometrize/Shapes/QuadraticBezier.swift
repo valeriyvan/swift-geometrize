@@ -88,10 +88,6 @@ public final class QuadraticBezier: Shape {
         return lines
     }
 
-    public func type() -> ShapeType {
-        .quadraticBezier
-    }
-
     public var description: String {
         "QuadraticBezier(cx=\(cx), cy=\(cy), x1=\(x1), y1=\(y1), x2=\(x2), y2=\(y2))"
     }

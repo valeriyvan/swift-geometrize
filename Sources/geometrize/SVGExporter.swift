@@ -35,11 +35,10 @@ public struct SVGExporter {
     /// - Returns: The SVG shape data for the given shape
     func singleShapeData(color: Rgba, shape: any Shape, options: ExportOptions = ExportOptions()) -> String {
         var shapeData: String = shapeData(shape: shape, options: options)
-        let shapeType = shape.type()
 
         var styles: String = "id=\"\(options.itemId)\" "
 
-        if [ShapeType.line, ShapeType.polyline, ShapeType.quadraticBezier].contains(shapeType) {
+        if shape.self is Line || shape.self is Polyline || shape.self is QuadraticBezier {
             styles += strokeAttrib(color: color)
             styles += " stroke-width=\"1\" fill=\"none\" "
             styles += strokeOpacityAttrib(color: color)

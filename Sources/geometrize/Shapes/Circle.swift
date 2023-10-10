@@ -67,10 +67,6 @@ public final class Circle: Shape {
         return lines
     }
 
-    public func type() -> ShapeType {
-        .circle
-    }
-
     public var isDegenerate: Bool {
         r == 0.0
     }

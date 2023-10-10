@@ -32,7 +32,7 @@ public struct ImageRunnerShapeBoundsOptions {
 public struct ImageRunnerOptions {
 
     /// The shape types that the image runner shall use.
-    var shapeTypes: Set<ShapeType>
+    var shapeTypes: [Shape.Type]
 
     /// The alpha/opacity of the shapes (0-255).
     var alpha: UInt8
@@ -53,7 +53,7 @@ public struct ImageRunnerOptions {
     /// If zero or do not form a rectangle, the entire target image is used i.e. (0, 0, imageWidth, imageHeight).
     var shapeBounds: ImageRunnerShapeBoundsOptions
 
-    public init(shapeTypes: Set<ShapeType>, alpha: UInt8, shapeCount: Int, maxShapeMutations: Int, seed: Int, maxThreads: Int, shapeBounds: ImageRunnerShapeBoundsOptions) {
+    public init(shapeTypes: [Shape.Type], alpha: UInt8, shapeCount: Int, maxShapeMutations: Int, seed: Int, maxThreads: Int, shapeBounds: ImageRunnerShapeBoundsOptions) {
         self.shapeTypes = shapeTypes
         self.alpha = alpha
         self.shapeCount = shapeCount

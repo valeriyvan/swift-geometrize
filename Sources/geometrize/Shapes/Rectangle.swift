@@ -80,10 +80,6 @@ public final class Rectangle: Shape {
          Point<Double>(x: x1, y: y2))
     }
 
-    public func type() -> ShapeType {
-        .rectangle
-    }
-
     public var isDegenerate: Bool {
         x1 == x2 || y1 == y2
     }

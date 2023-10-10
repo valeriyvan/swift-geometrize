@@ -64,10 +64,6 @@ public final class Line: Shape {
         return lines
     }
 
-    public func type() -> ShapeType {
-        .line
-    }
-
     public var isDegenerate: Bool {
         x1 == x2 && y1 == y2
     }

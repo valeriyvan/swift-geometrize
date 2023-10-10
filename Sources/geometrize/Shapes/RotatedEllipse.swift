@@ -83,10 +83,6 @@ public final class RotatedEllipse: Shape {
         return points
     }
 
-    public func type() -> ShapeType {
-        .rotatedEllipse
-    }
-
     public var isDegenerate: Bool {
         rx == 0.0 || ry == 0.0
     }
