@@ -29,10 +29,10 @@ public final class Line: Shape {
             x: Int._random(in: rangeX, using: &generator),
             y: Int._random(in: rangeY, using: &generator)
         )
-        x1 = Double(startingPoint.x + Int._random(in: range32, using: &generator).clamped(to: rangeX))
-        y1 = Double(startingPoint.y + Int._random(in: range32, using: &generator).clamped(to: rangeY))
-        x2 = Double(startingPoint.x + Int._random(in: range32, using: &generator).clamped(to: rangeX))
-        y2 = Double(startingPoint.y + Int._random(in: range32, using: &generator).clamped(to: rangeY))
+        x1 = Double((startingPoint.x + Int._random(in: range32, using: &generator)).clamped(to: rangeX))
+        y1 = Double((startingPoint.y + Int._random(in: range32, using: &generator)).clamped(to: rangeY))
+        x2 = Double((startingPoint.x + Int._random(in: range32, using: &generator)).clamped(to: rangeX))
+        y2 = Double((startingPoint.y + Int._random(in: range32, using: &generator)).clamped(to: rangeY))
     }
 
     public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
