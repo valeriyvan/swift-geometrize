@@ -56,14 +56,8 @@ public final class Ellipse: Shape {
                 continue
             }
             let v: Int = Int(sqrt(ry * ry - Double(dy * dy)) * aspect)
-            var x1: Int = Int(x) - v
-            if x1 < xMin {
-                x1 = xMin
-            }
-            var x2: Int = Int(x) + v
-            if x2 >= xMax {
-                x2 = xMax - 1
-            }
+            let x1: Int = (Int(x) - v).clamped(to: xMin...xMax)
+            let x2: Int = (Int(x) + v).clamped(to: xMin...xMax)
             if y1 >= yMin && y1 < yMax {
                 if let line = Scanline(y: y1, x1: x1, x2: x2).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
                     lines.append(line)
