@@ -64,7 +64,7 @@ public final class Ellipse: Shape {
             if x2 >= xMax {
                 x2 = xMax - 1
             }
-            if y1 >= xMin && y1 < yMax {
+            if y1 >= yMin && y1 < yMax {
                 if let line = Scanline(y: y1, x1: x1, x2: x2).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
                     lines.append(line)
                 }
