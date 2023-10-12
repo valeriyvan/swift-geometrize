@@ -5,10 +5,10 @@ import Foundation
 ///   - options: The options to map to the image.
 ///   - image: The image to map the options around.
 /// - Returns: The mapped shape bounds (xMin, yMin, xMax, yMax)
-func mapShapeBoundsToImage(options: ImageRunnerShapeBoundsOptions, image: Bitmap) -> (xMin: Int, yMin: Int, xMax: Int, yMax: Int) {
+func mapShapeBoundsToImage(options: ImageRunnerShapeBoundsOptions, image: Bitmap) -> Bounds {
 
     guard options.enabled else {
-        return (0, 0, image.width - 1, image.height - 1)
+        return Bounds(xMin: 0, xMax: image.width - 1, yMin: 0, yMax: image.height - 1)
     }
 
     let xMinPx: Double = options.xMinPercent / 100.0 * Double(image.width - 1)
@@ -31,5 +31,5 @@ func mapShapeBoundsToImage(options: ImageRunnerShapeBoundsOptions, image: Bitmap
         yMax = image.height - 1
     }
 
-    return (xMin, yMin, xMax, yMax)
+    return Bounds(xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax)
 }
