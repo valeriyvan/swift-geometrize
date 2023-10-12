@@ -31,35 +31,33 @@ public final class QuadraticBezier: Shape {
         QuadraticBezier(cx: cx, cy: cy, x1: x1, y1: y1, x2: x2, y2: y2)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
-        let rangeX = xMin...xMax
-        let rangeY = yMin...yMax
-        cx = Double(Int._random(in: rangeX, using: &generator))
-        cy = Double(Int._random(in: rangeY, using: &generator))
-        x1 = Double(Int._random(in: rangeX, using: &generator))
-        y1 = Double(Int._random(in: rangeY, using: &generator))
-        x2 = Double(Int._random(in: rangeX, using: &generator))
-        y2 = Double(Int._random(in: rangeY, using: &generator))
+    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+        cx = Double(Int._random(in: xRange, using: &generator))
+        cy = Double(Int._random(in: yRange, using: &generator))
+        x1 = Double(Int._random(in: xRange, using: &generator))
+        y1 = Double(Int._random(in: yRange, using: &generator))
+        x2 = Double(Int._random(in: xRange, using: &generator))
+        y2 = Double(Int._random(in: yRange, using: &generator))
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
         let range8 = -8...8
         switch Int._random(in: 0...2, using: &generator) {
         case 0:
-            cx = Double((Int(cx) + Int._random(in: range8, using: &generator)).clamped(to: xMin...xMax))
-            cy = Double((Int(cy) + Int._random(in: range8, using: &generator)).clamped(to: yMin...yMax))
+            cx = Double((Int(cx) + Int._random(in: range8, using: &generator)).clamped(to: xRange))
+            cy = Double((Int(cy) + Int._random(in: range8, using: &generator)).clamped(to: yRange))
         case 1:
-            x1 = Double((Int(x1) + Int._random(in: range8, using: &generator)).clamped(to: xMin + 1...xMax))
-            y1 = Double((Int(y1) + Int._random(in: range8, using: &generator)).clamped(to: yMin + 1...yMax))
+            x1 = Double((Int(x1) + Int._random(in: range8, using: &generator)).clamped(to: xRange.lowerBound + 1...xRange.upperBound))
+            y1 = Double((Int(y1) + Int._random(in: range8, using: &generator)).clamped(to: yRange.lowerBound + 1...yRange.upperBound))
         case 2:
-            x2 = Double((Int(x2) + Int._random(in: range8, using: &generator)).clamped(to: xMin + 1...xMax))
-            y2 = Double((Int(y2) + Int._random(in: range8, using: &generator)).clamped(to: yMin + 1...yMax))
+            x2 = Double((Int(x2) + Int._random(in: range8, using: &generator)).clamped(to: xRange.lowerBound + 1...xRange.upperBound))
+            y2 = Double((Int(y2) + Int._random(in: range8, using: &generator)).clamped(to: yRange.lowerBound + 1...yRange.upperBound))
         default:
             fatalError()
         }
     }
 
-    public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+    public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {
         var lines: [Scanline] = []
         let pointCount = 20
         var points: [Point<Int>] = []
@@ -76,7 +74,7 @@ public final class QuadraticBezier: Shape {
             for point in bresenham(from: from, to: to) {
                 if !duplicates.contains(point) {
                     duplicates.insert(point)
-                    if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
+                    if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(x: xRange, y: yRange) {
                         lines.append(trimmed)
                     }
                 }

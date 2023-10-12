@@ -6,12 +6,12 @@ final class QuadraticBezierTests: XCTestCase {
 
     func testRasterize() throws {
         let width = 471, height = 590
-        let xMax = width - 1, yMax = height - 1
+        let xRange = 0...width - 1, yRange = 0...height - 1
         var bitmap = Bitmap(width: width, height: height, color: .red)
         bitmap.draw(
             lines:
                 QuadraticBezier(cx: 327.0, cy: 295.0, x1: 57.0, y1: 542.0, x2: 190.0, y2: 216.0)
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax),
+                .rasterize(x: xRange, y: yRange),
             color:
                 .white
         )

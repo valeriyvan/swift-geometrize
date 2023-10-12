@@ -6,15 +6,15 @@ final class LineTests: XCTestCase {
 
     func testRasterize() throws {
         let width = 500, height = 500
-        let xMax = width - 1, yMax = height - 1
+        let xRange = 0...width - 1, yRange = 0...height - 1
         var bitmap = Bitmap(width: width, height: height, color: .white)
         var lines: [Scanline] = []
         let shift: Double = 10.0
         for x in stride(from: shift, through: Double(width) - shift, by: shift) {
             lines += Line(x1: x, y1: shift, x2: Double(width) - shift, y2: Double(width) - shift)
-                        .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax)
+                .rasterize(x: xRange, y: yRange)
             lines += Line(x1: x, y1: shift, x2: shift, y2: Double(height) - shift)
-                        .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax)
+                .rasterize(x: xRange, y: yRange)
         }
         bitmap.draw(lines: lines, color: .blue)
         bitmap.draw(
@@ -32,8 +32,8 @@ final class LineTests: XCTestCase {
 }
 
 func scaleScanlinesTrimmed(width: Int, height: Int, step: Int, tickHeight: Int = 5) -> [Scanline] {
-    let xMax = width - 1, yMax = height - 1
-    let xMaxDouble = Double(xMax), yMaxDouble = Double(yMax)
+    let xRange = 0...width - 1, yRange = 0...height - 1
+    let xMaxDouble = Double(width - 1), yMaxDouble = Double(height - 1)
     let tickHeightDouble = Double(tickHeight)
     var lines: [Scanline] = []
     // Horizontal dashed line
@@ -41,10 +41,10 @@ func scaleScanlinesTrimmed(width: Int, height: Int, step: Int, tickHeight: Int =
         .map { i -> [Scanline] in
             let lines: [Scanline] =
             Line(x1: Double(i - step / 5), y1: 0.0, x2: Double(i + step / 5), y2: 0.0)
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax)
+                .rasterize(x: xRange, y: yRange)
                 +
             Line(x1: Double(i - step / 5), y1: yMaxDouble, x2: Double(i + step / 5), y2: yMaxDouble)
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax)
+                .rasterize(x: xRange, y: yRange)
             return lines
         }
         .flatMap { $0 }
@@ -52,10 +52,10 @@ func scaleScanlinesTrimmed(width: Int, height: Int, step: Int, tickHeight: Int =
     lines += stride(from: step, to: width, by: step)
         .map { i -> [Scanline] in
             Line(x1: Double(i), y1: 0.0, x2: Double(i), y2: tickHeightDouble)
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax)
+                .rasterize(x: xRange, y: yRange)
             +
             Line(x1: Double(i), y1: Double(height - tickHeight - 1), x2: Double(i), y2: yMaxDouble)
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax)
+                .rasterize(x: xRange, y: yRange)
         }
         .flatMap { $0 }
     // Vertical dashed line
@@ -63,10 +63,10 @@ func scaleScanlinesTrimmed(width: Int, height: Int, step: Int, tickHeight: Int =
         .map { i -> [Scanline] in
             let lines: [Scanline] =
             Line(x1: 0.0, y1: Double(i - step / 5), x2: 0.0, y2: Double(i + step / 5))
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax)
+                .rasterize(x: xRange, y: yRange)
             +
             Line(x1: xMaxDouble, y1: Double(i - step / 5), x2: xMaxDouble, y2: Double(i + step / 5))
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax)
+                .rasterize(x: xRange, y: yRange)
             return lines
         }
         .flatMap { $0 }
@@ -74,12 +74,12 @@ func scaleScanlinesTrimmed(width: Int, height: Int, step: Int, tickHeight: Int =
     lines += stride(from: step, to: height, by: step)
         .map { i -> [Scanline] in
             Line(x1: 0.0, y1: Double(i), x2: tickHeightDouble, y2: Double(i))
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax)
+                .rasterize(x: xRange, y: yRange)
             +
             Line(x1: Double(width - tickHeight - 1), y1: Double(i), x2: xMaxDouble, y2: Double(i))
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax)
+                .rasterize(x: xRange, y: yRange)
         }
         .flatMap { $0 }
-    return lines.trimmed(minX: 0, minY: 0, maxX: xMax, maxY: yMax)
+    return lines.trimmed(x: xRange, y: yRange)
 
 }

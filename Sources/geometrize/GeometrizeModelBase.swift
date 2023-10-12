@@ -41,7 +41,7 @@ class GeometrizeModelBase {
     ///   - color: The color (including alpha) of the shape.
     /// - Returns: Data about the shape drawn on the model.
     func draw(shape: any Shape, color: Rgba) -> ShapeResult {
-        let lines: [Scanline] = shape.rasterize(xMin: 0, yMin: 0, xMax: width - 1, yMax: height - 1)
+        let lines: [Scanline] = shape.rasterize(x: 0...width - 1, y: 0...height - 1)
         let before: Bitmap = currentBitmap
         currentBitmap.draw(lines: lines, color: color)
         lastScore = before.differencePartial(with: currentBitmap, target: targetBitmap, score: lastScore, mask: lines)

@@ -30,38 +30,34 @@ public final class Triangle: Shape {
         Triangle(x1: x1, y1: y1, x2: x2, y2: y2, x3: x3, y3: y3)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
-        let rangeX = xMin...xMax
-        let rangeY = yMin...yMax
-        x1 = Double(Int._random(in: xMin...xMax, using: &generator))
-        y1 = Double(Int._random(in: yMin...yMax, using: &generator))
+    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+        x1 = Double(Int._random(in: xRange, using: &generator))
+        y1 = Double(Int._random(in: yRange, using: &generator))
         let range32 = 1...32
-        x2 = Double((Int(x1) + Int._random(in: range32, using: &generator)).clamped(to: rangeX))
-        y2 = Double((Int(y1) + Int._random(in: range32, using: &generator)).clamped(to: rangeY))
-        x3 = Double((Int(x1) + Int._random(in: range32, using: &generator)).clamped(to: rangeX))
-        y3 = Double((Int(y1) + Int._random(in: range32, using: &generator)).clamped(to: rangeY))
+        x2 = Double((Int(x1) + Int._random(in: range32, using: &generator)).clamped(to: xRange))
+        y2 = Double((Int(y1) + Int._random(in: range32, using: &generator)).clamped(to: yRange))
+        x3 = Double((Int(x1) + Int._random(in: range32, using: &generator)).clamped(to: xRange))
+        y3 = Double((Int(y1) + Int._random(in: range32, using: &generator)).clamped(to: yRange))
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
-        let rangeX = xMin...xMax
-        let rangeY = yMin...yMax
+    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
         let range32 = -32...32
         switch Int._random(in: 0...2, using: &generator) {
         case 0:
-            x1 = Double((Int(x1) + Int._random(in: range32, using: &generator)).clamped(to: rangeX))
-            y1 = Double((Int(y1) + Int._random(in: range32, using: &generator)).clamped(to: rangeY))
+            x1 = Double((Int(x1) + Int._random(in: range32, using: &generator)).clamped(to: xRange))
+            y1 = Double((Int(y1) + Int._random(in: range32, using: &generator)).clamped(to: yRange))
         case 1:
-            x2 = Double((Int(x2) + Int._random(in: range32, using: &generator)).clamped(to: rangeX))
-            y2 = Double((Int(y2) + Int._random(in: range32, using: &generator)).clamped(to: rangeY))
+            x2 = Double((Int(x2) + Int._random(in: range32, using: &generator)).clamped(to: xRange))
+            y2 = Double((Int(y2) + Int._random(in: range32, using: &generator)).clamped(to: yRange))
         case 2:
-            x3 = Double((Int(x2) + Int._random(in: range32, using: &generator)).clamped(to: rangeX))
-            y3 = Double((Int(y2) + Int._random(in: range32, using: &generator)).clamped(to: rangeY))
+            x3 = Double((Int(x2) + Int._random(in: range32, using: &generator)).clamped(to: xRange))
+            y3 = Double((Int(y2) + Int._random(in: range32, using: &generator)).clamped(to: yRange))
         default:
             fatalError()
         }
     }
 
-    public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+    public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {
         let vertices = [
             Point<Int>(x: Int(x1), y: Int(y1)),
             Point<Int>(x: Int(x2), y: Int(y2)),
@@ -73,7 +69,7 @@ public final class Triangle: Shape {
         }
         let lines = polygon
             .scanlines()
-            .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+            .trimmed(x: xRange, y: yRange)
         if lines.isEmpty {
             print("Warning: \(#function) produced no scanlines.")
         }
