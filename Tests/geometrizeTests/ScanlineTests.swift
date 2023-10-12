@@ -25,7 +25,7 @@ final class ScanlineTests: XCTestCase {
             Scanline(y: 5, x1: 7, x2: 9),  // 4
             Scanline(y: 6, x1: 3, x2: 13)  // 5
         ]
-        let trimmed = scanlines.trimmed(minX: 5, minY: 4, maxX: 10, maxY: 5)
+        let trimmed = scanlines.trimmed(x: 5...10, y: 4...5)
         let trimmedSample = [
             Scanline(y: 4, x1: 5, x2: 10), // 2
             Scanline(y: 5, x1: 5, x2: 10), // 3
