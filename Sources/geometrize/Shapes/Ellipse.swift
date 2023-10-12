@@ -24,47 +24,47 @@ public final class Ellipse: Shape {
         Ellipse(x: x, y: y, rx: rx, ry: ry)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
-        x = Double(Int._random(in: xMin...xMax, using: &generator))
-        y = Double(Int._random(in: yMin...yMax, using: &generator))
+    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+        x = Double(Int._random(in: xRange, using: &generator))
+        y = Double(Int._random(in: yRange, using: &generator))
         rx = Double(Int._random(in: 1...32, using: &generator))
         ry = Double(Int._random(in: 1...32, using: &generator))
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
         let range16 = -16...16
         switch Int._random(in: 0...2, using: &generator) {
         case 0:
-            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xMin...xMax))
-            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yMin...yMax))
+            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
+            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
         case 1:
-            rx = Double((Int(rx) + Int._random(in: range16, using: &generator)).clamped(to: 1...xMax))
+            rx = Double((Int(rx) + Int._random(in: range16, using: &generator)).clamped(to: 1...xRange.upperBound))
         case 2:
-            ry = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yMax))
+            ry = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yRange.upperBound))
         default:
             fatalError()
         }
     }
 
-    public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+    public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {
         var lines: [Scanline] = []
         let aspect = rx / ry
         for dy in 0..<Int(ry) {
             let y1 = Int(y) - dy
             let y2 = Int(y) + dy
-            if (y1 < yMin || y1 >= yMax) && (y2 < yMin || y2 >= yMax) {
+            if !(yRange ~= y1) && !(yRange ~= y2) {
                 continue
             }
             let v: Int = Int(sqrt(ry * ry - Double(dy * dy)) * aspect)
-            let x1: Int = (Int(x) - v).clamped(to: xMin...xMax)
-            let x2: Int = (Int(x) + v).clamped(to: xMin...xMax)
-            if y1 >= yMin && y1 < yMax {
-                if let line = Scanline(y: y1, x1: x1, x2: x2).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
+            let x1: Int = (Int(x) - v).clamped(to: xRange)
+            let x2: Int = (Int(x) + v).clamped(to: xRange)
+            if yRange ~= y1 {
+                if let line = Scanline(y: y1, x1: x1, x2: x2).trimmed(x: xRange, y: yRange) {
                     lines.append(line)
                 }
             }
-            if y2 >= yMin && y2 < yMax && dy > 0 {
-                if let line = Scanline(y: y2, x1: x1, x2: x2).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
+            if yRange ~= y2 && dy > 0 {
+                if let line = Scanline(y: y2, x1: x1, x2: x2).trimmed(x: xRange, y: yRange) {
                     lines.append(line)
                 }
             }

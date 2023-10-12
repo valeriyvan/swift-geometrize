@@ -15,36 +15,34 @@ public final class Polyline: Shape {
         Polyline(points: points)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
-        let rangeX = xMin...xMax
-        let rangeY = yMin...yMax
+    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
         let range32 = -32...32
         let startingPoint = Point(
-            x: Int._random(in: rangeX, using: &generator),
-            y: Int._random(in: rangeY, using: &generator)
+            x: Int._random(in: xRange, using: &generator),
+            y: Int._random(in: yRange, using: &generator)
         )
         var points: [Point<Double>] = []
         for _ in 0..<4 {
             points.append(
                 Point(
-                    x: Double((startingPoint.x + Int._random(in: range32, using: &generator)).clamped(to: xMin...xMax)),
-                    y: Double((startingPoint.y + Int._random(in: range32, using: &generator)).clamped(to: yMin...yMax))
+                    x: Double((startingPoint.x + Int._random(in: range32, using: &generator)).clamped(to: xRange)),
+                    y: Double((startingPoint.y + Int._random(in: range32, using: &generator)).clamped(to: yRange))
                 )
             )
         }
         self.points = points
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
         let i = Int._random(in: 0...points.count-1, using: &generator)
         var point = points[i]
         let range64 = -64...64
-        point.x = Double((Int(point.x) + Int._random(in: range64, using: &generator)).clamped(to: xMin...xMax))
-        point.y = Double((Int(point.y) + Int._random(in: range64, using: &generator)).clamped(to: yMin...yMax))
+        point.x = Double((Int(point.x) + Int._random(in: range64, using: &generator)).clamped(to: xRange))
+        point.y = Double((Int(point.y) + Int._random(in: range64, using: &generator)).clamped(to: yRange))
         points[i] = point
     }
 
-    public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+    public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {
         var lines: [Scanline] = []
         // Prevent scanline overlap, it messes up the energy functions that rely on the scanlines not intersecting themselves
         var duplicates: Set<Point<Int>> = Set()
@@ -55,7 +53,7 @@ public final class Polyline: Shape {
             for point in points {
                 if !duplicates.contains(point) {
                     duplicates.insert(point)
-                    if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
+                    if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(x: xRange, y: yRange) {
                         lines.append(trimmed)
                     }
                 }

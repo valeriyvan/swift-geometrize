@@ -21,26 +21,26 @@ public final class Circle: Shape {
         Circle(x: x, y: y, r: r)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
-        x = Double(Int._random(in: xMin...xMax, using: &generator))
-        y = Double(Int._random(in: yMin...yMax, using: &generator))
+    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+        x = Double(Int._random(in: xRange, using: &generator))
+        y = Double(Int._random(in: yRange, using: &generator))
         r = Double(Int._random(in: 1...32, using: &generator))
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
         let range16 = -16...16
         switch Int._random(in: 0...1, using: &generator) {
         case 0:
-            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xMin...xMax))
-            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yMin...yMax))
+            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
+            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
         case 1:
-            r = Double((Int(r) + Int._random(in: range16, using: &generator)).clamped(to: 1...xMax))
+            r = Double((Int(r) + Int._random(in: range16, using: &generator)).clamped(to: 1...xRange.upperBound))
         default:
             fatalError()
         }
     }
 
-    public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+    public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {
         var lines: [Scanline] = []
         let r = Int(r)
         let r² = r * r
@@ -53,11 +53,10 @@ public final class Circle: Shape {
             }
             guard let xScanFirst = xScan.first, let xScanLast = xScan.last else { continue }
             let fy = Int(self.y) + y
-            let xRange = xMin...xMax
             let intX = Int(x)
             let x1 = (intX + xScanFirst).clamped(to: xRange)
             let x2 = (intX + xScanLast).clamped(to: xRange)
-            if let line = Scanline(y: fy, x1: x1, x2: x2).trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax) {
+            if let line = Scanline(y: fy, x1: x1, x2: x2).trimmed(x: xRange, y: yRange) {
                 lines.append(line)
             }
         }

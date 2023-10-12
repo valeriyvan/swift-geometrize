@@ -28,25 +28,25 @@ public final class RotatedEllipse: Shape {
         RotatedEllipse(x: x, y: y, rx: rx, ry: ry, angleDegrees: angleDegrees)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
-        x = Double(Int._random(in: xMin...xMax, using: &generator))
-        y = Double(Int._random(in: yMin...yMax, using: &generator))
+    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+        x = Double(Int._random(in: xRange, using: &generator))
+        y = Double(Int._random(in: yRange, using: &generator))
         let range32 = 1...32
         rx = Double(Int._random(in: range32, using: &generator))
         ry = Double(Int._random(in: range32, using: &generator))
         angleDegrees = Double(Int._random(in: 0...360, using: &generator))
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
+    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
         let range16 = -16...16
         switch Int._random(in: 0...3, using: &generator) {
         case 0:
-            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xMin...xMax))
-            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yMin...yMax))
+            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
+            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
         case 1:
-            rx = Double((Int(rx) + Int._random(in: range16, using: &generator)).clamped(to: 1...xMax))
+            rx = Double((Int(rx) + Int._random(in: range16, using: &generator)).clamped(to: 1...xRange.upperBound))
         case 2:
-            ry = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yMax))
+            ry = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yRange.upperBound))
         case 3:
             angleDegrees = Double((Int(angleDegrees) + Int._random(in: range16, using: &generator)).clamped(to: 0...360))
         default:
@@ -54,14 +54,14 @@ public final class RotatedEllipse: Shape {
         }
     }
 
-    public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+    public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {
         guard let polygon = try? Polygon(vertices: points(20).map(Point<Int>.init)) else {
             print("Warning: \(#function) produced no scanlines.")
             return []
         }
         let lines = polygon
             .scanlines()
-            .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+            .trimmed(x: xRange, y: yRange)
         if lines.isEmpty {
             print("Warning: \(#function) produced no scanlines.")
         }

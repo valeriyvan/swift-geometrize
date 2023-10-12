@@ -5,11 +5,11 @@ public protocol Shape: AnyObject, CustomStringConvertible {
 
     func copy() -> Self
 
-    func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using: inout SplitMix64)
+    func setup(x: ClosedRange<Int>, y: ClosedRange<Int>, using: inout SplitMix64)
 
-    func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using: inout SplitMix64)
+    func mutate(x: ClosedRange<Int>, y: ClosedRange<Int>, using: inout SplitMix64)
 
-    func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline]
+    func rasterize(x: ClosedRange<Int>, y: ClosedRange<Int>) -> [Scanline]
 
     var isDegenerate: Bool { get }
 }

@@ -6,40 +6,40 @@ final class CircleTests: XCTestCase {
 
     func testRasterize() throws {
         let width = 500, height = 500
-        let xMax = width - 1, yMax = height - 1
+        let xRange = 0...width - 1, yRange = 0...height - 1
         var bitmap = Bitmap(width: width, height: height, color: .white)
         bitmap.draw(
             lines:
                 Circle(x: 250.0, y: 250.0, r: 275.0)
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax),
+                .rasterize(x: xRange, y: yRange),
             color:
                 .red
         )
         bitmap.draw(
             lines:
                 Circle(x: 330.0, y: 330.0, r: 250)
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax),
+                .rasterize(x: xRange, y: yRange),
             color:
                 .green.withAlphaComponent(200)
         )
         bitmap.draw(
             lines:
                 Circle(x: 0.0, y: 0.0, r: 133.5)
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax),
+                .rasterize(x: xRange, y: yRange),
             color:
                 .blue.withAlphaComponent(128)
         )
         bitmap.draw(
             lines:
                 Circle(x: 499.0, y: 0.0, r: 77.0)
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax),
+                .rasterize(x: xRange, y: yRange),
             color:
                 .magenta
         )
         bitmap.draw(
             lines:
                 Circle(x: 250.0, y: 250.0, r: 100.0)
-                .rasterize(xMin: 0, yMin: 0, xMax: xMax, yMax: yMax),
+                .rasterize(x: xRange, y: yRange),
             color:
                 .cyan
         )

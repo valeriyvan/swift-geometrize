@@ -77,14 +77,15 @@ func hillClimb( // swiftlint:disable:this function_parameter_count
     energyFunction: EnergyFunction,
     using generator: inout SplitMix64
 ) -> State {
+    let xRange = 0...target.width - 1, yRange = 0...target.height - 1
     var s: State = state.copy()
     var bestState: State = state.copy()
     var bestEnergy: Double = bestState.score
     var age: Int = 0
     while age < maxAge {
-        let undo: State = s.mutate(xMin: 0, yMin: 0, xMax: target.width - 1, yMax: target.height - 1, using: &generator)
+        let undo: State = s.mutate(x: xRange, y: yRange, using: &generator)
         s.score = energyFunction(
-            s.shape.rasterize(xMin: 0, yMin: 0, xMax: target.width - 1, yMax: target.height - 1),
+            s.shape.rasterize(x: xRange, y: yRange),
             s.alpha,
             target,
             current,
@@ -131,11 +132,12 @@ private func bestRandomState( // swiftlint:disable:this function_parameter_count
     energyFunction: EnergyFunction,
     using generator: inout SplitMix64
 ) -> State {
+    let xRange = 0...target.width - 1, yRange = 0...target.height - 1
     let shape = shapeCreator(&generator)
-    shape.setup(xMin: 0, yMin: 0, xMax: target.width - 1, yMax: target.height - 1, using: &generator)
+    shape.setup(x: xRange, y: yRange, using: &generator)
     var bestState: State = State(shape: shape, alpha: alpha)
     bestState.score = energyFunction(
-        bestState.shape.rasterize(xMin: 0, yMin: 0, xMax: target.width - 1, yMax: target.height - 1),
+        bestState.shape.rasterize(x: xRange, y: yRange),
         bestState.alpha,
         target,
         current,
@@ -145,10 +147,10 @@ private func bestRandomState( // swiftlint:disable:this function_parameter_count
     var bestEnergy: Double = bestState.score
     for i in 0...n {
         let shape = shapeCreator(&generator)
-        shape.setup(xMin: 0, yMin: 0, xMax: target.width - 1, yMax: target.height - 1, using: &generator)
+        shape.setup(x: xRange, y: yRange, using: &generator)
         var state: State = State(shape: shape, alpha: alpha)
         state.score = energyFunction(
-            state.shape.rasterize(xMin: 0, yMin: 0, xMax: target.width - 1, yMax: target.height - 1),
+            state.shape.rasterize(x: xRange, y: yRange),
             state.alpha,
             target,
             current,

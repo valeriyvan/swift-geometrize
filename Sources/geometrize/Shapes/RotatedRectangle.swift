@@ -28,28 +28,24 @@ public final class RotatedRectangle: Shape {
         RotatedRectangle(x1: x1, y1: y1, x2: x2, y2: y2, angleDegrees: angleDegrees)
     }
 
-    public func setup(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
-        let rangeX = xMin...xMax
-        let rangeY = yMin...yMax
-        x1 = Double(Int._random(in: rangeX, using: &generator))
-        y1 = Double(Int._random(in: rangeY, using: &generator))
+    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+        x1 = Double(Int._random(in: xRange, using: &generator))
+        y1 = Double(Int._random(in: yRange, using: &generator))
         let range32 = 1...32
-        x2 = Double((Int(x1) + Int._random(in: range32, using: &generator)).clamped(to: rangeX))
-        y2 = Double((Int(y1) + Int._random(in: range32, using: &generator)).clamped(to: rangeY))
+        x2 = Double((Int(x1) + Int._random(in: range32, using: &generator)).clamped(to: xRange))
+        y2 = Double((Int(y1) + Int._random(in: range32, using: &generator)).clamped(to: yRange))
         angleDegrees = Double(Int._random(in: 0...360, using: &generator))
     }
 
-    public func mutate(xMin: Int, yMin: Int, xMax: Int, yMax: Int, using generator: inout SplitMix64) {
-        let rangeX = xMin...xMax
-        let rangeY = yMin...yMax
+    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
         let range16 = -16...16
         switch Int._random(in: 0...2, using: &generator) {
         case 0:
-            x1 = Double((Int(x1) + Int._random(in: range16, using: &generator)).clamped(to: rangeX))
-            y1 = Double((Int(y1) + Int._random(in: range16, using: &generator)).clamped(to: rangeY))
+            x1 = Double((Int(x1) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
+            y1 = Double((Int(y1) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
         case 1:
-            x2 = Double((Int(x2) + Int._random(in: range16, using: &generator)).clamped(to: rangeX))
-            y2 = Double((Int(y2) + Int._random(in: range16, using: &generator)).clamped(to: rangeY))
+            x2 = Double((Int(x2) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
+            y2 = Double((Int(y2) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
         case 2:
             angleDegrees = Double((Int(angleDegrees) + Int._random(in: -4...4, using: &generator)).clamped(to: 0...360))
         default:
@@ -57,7 +53,7 @@ public final class RotatedRectangle: Shape {
         }
     }
 
-    public func rasterize(xMin: Int, yMin: Int, xMax: Int, yMax: Int) -> [Scanline] {
+    public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {
         let cornerPoints = cornerPoints
         let vertices = [
             Point<Int>(cornerPoints.0),
@@ -70,7 +66,7 @@ public final class RotatedRectangle: Shape {
             return []
         }
         let lines = polygon.scanlines()
-            .trimmed(minX: xMin, minY: yMin, maxX: xMax, maxY: yMax)
+            .trimmed(x: xRange, y: yRange)
         if lines.isEmpty {
             print("Warning: \(#function) produced no scanlines.")
         }

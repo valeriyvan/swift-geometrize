@@ -34,6 +34,14 @@ public struct Scanline {
     internal let x2: Int
 
     /// Returned nil means trimming eliminates scanline completely.
+
+    func trimmed(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> Self? {
+        guard yRange ~= y && x2 >= x1 else { return nil }
+        let x1 = x1.clamped(to: xRange)
+        let x2 = x2.clamped(to: xRange)
+        return Scanline(y: y, x1: x1, x2: x2)
+    }
+
     func trimmed(minX: Int, minY: Int, maxX: Int, maxY: Int) -> Self? {
         guard minY...maxY ~= y && x2 >= x1 else { return nil }
         let xRange = minX...maxX
@@ -91,6 +99,17 @@ extension Array where Element == Scanline {
         var trimmedScanlines = Self()
         let xRange = minX...maxX
         let yRange = minY...maxY
+        for line in self {
+            guard yRange ~= line.y && line.x2 >= line.x1 else { continue }
+            let x1 = line.x1.clamped(to: xRange)
+            let x2 = line.x2.clamped(to: xRange)
+            trimmedScanlines.append(Scanline(y: line.y, x1: x1, x2: x2))
+        }
+        return trimmedScanlines
+    }
+
+    func trimmed(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> Self {
+        var trimmedScanlines = Self()
         for line in self {
             guard yRange ~= line.y && line.x2 >= line.x1 else { continue }
             let x1 = line.x1.clamped(to: xRange)
