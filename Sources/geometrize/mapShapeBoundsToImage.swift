@@ -1,5 +1,6 @@
 import Foundation
 
+// TODO: not used
 /// Maps the given shape bound percentages to the given image, returning a bounding rectangle, or the whole image if the bounds were invalid.
 /// - Parameters:
 ///   - options: The options to map to the image.
