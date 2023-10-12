@@ -13,4 +13,3 @@ public struct Bounds {
         self.yMax = yMax
     }
 }
-
