@@ -31,7 +31,7 @@ The matrix below shows typical results for a combination of circles, triangles, 
 You could try swift-geometrize in action in Telegram bot [Geometrizebot](https://t.me/geometrizebot) which is also written in Swift and [open-sourced](https://github.com/valeriyvan/geometrizebot).
 
 ## TODO:
-* add stroke width for line, polyline and bezier curve;
+* add stroke width for ✅ line, ✅ polyline and bezier curve;
 * ✅ multithreading;
 * solve dealing with randomness in tests;
 * geometrize with predefined or user supplied brush strokes;
