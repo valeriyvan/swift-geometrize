@@ -8,7 +8,7 @@
 
 ## swift-geometrize
 
-Swift package for recreating images as geometric primitives. It is Swift port of [C++ library](https://github.com/Tw1ddle/geometrize-lib).
+Swift package for recreating images as geometric primitives. It began as a Swift port of the [geometrize-lib C++ library](https://github.com/Tw1ddle/geometrize-lib), but it has since evolved in a distinct direction.
 
 ## Usage
 
