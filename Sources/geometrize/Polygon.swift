@@ -33,7 +33,7 @@ extension Polygon {
         for i in vertices.indices {
             let p1 = vertices[i]
             let p2 = i == vertices.count - 1 ? vertices[0] : vertices[i + 1]
-            let p1p2 = bresenham(from: p1, to: p2)
+            let p1p2 = drawThickLine(from: p1, to: p2)
             edges.append(contentsOf: p1p2)
         }
         // Convert outline to scanlines

@@ -49,7 +49,7 @@ public final class Polyline: Shape {
         for i in 0..<points.count {
             let p0 = points[i]
             let p1 = i < points.count - 1 ? points[i + 1] : p0
-            let points = bresenham(from: Point<Int>(p0), to: Point<Int>(p1))
+            let points = drawThickLine(from: Point<Int>(p0), to: Point<Int>(p1))
             for point in points {
                 if !duplicates.contains(point) {
                     duplicates.insert(point)
