@@ -2,26 +2,22 @@ import Foundation
 
 // https://github.com/ArminJo/Arduino-BlueDisplay/blob/master/src/LocalGUI/ThickLine.hpp
 
-/**
- * Modified Bresenham draw(line) with optional overlap. Required for drawThickLine().
- * Overlap draws additional pixel when changing minor direction. For standard bresenham overlap, choose LINE_OVERLAP_NONE (0).
- *
- *  Sample line:
- *
- *    00+
- *     -0000+
- *         -0000+
- *             -00
- *
- *  0 pixels are drawn for normal line without any overlap LINE_OVERLAP_NONE
- *  + pixels are drawn if LINE_OVERLAP_MAJOR
- *  - pixels are drawn if LINE_OVERLAP_MINOR
- */
+// Modified Bresenham draw(line) with optional overlap. Required for drawThickLine().
+// Overlap draws additional pixel when changing minor direction.
+// For standard bresenham overlap, choose LineOverlap.none.
+//
+// Sample line:
+//
+//   00+
+//    -0000+
+//        -0000+
+//            -00
+//
+// 0 pixels are drawn for normal line without any overlap LineOverlap.none
+// + pixels are drawn if .major
+// - pixels are drawn if .minor
 
-/**
- * Draws a line from aXStart/aYStart to aXEnd/aYEnd including both ends
- * @param aOverlap One of LINE_OVERLAP_NONE, LINE_OVERLAP_MAJOR, LINE_OVERLAP_MINOR, LINE_OVERLAP_BOTH
- */
+// Draws a line including both ends.
 
 enum LineOverlap {
     case none
@@ -31,91 +27,89 @@ enum LineOverlap {
 }
 
 // swiftlint:disable:next cyclomatic_complexity function_body_length
-func drawLineOverlap<N: SignedInteger>(from: Point<N>, to: Point<N>, aOverlap: LineOverlap) -> [Point<N>] {
-    var aXStart = from.x
-    var aYStart = from.y
-    let aXEnd = to.x
-    let aYEnd = to.y
+func drawLineOverlap<N: SignedInteger>(from: Point<N>, to: Point<N>, overlap: LineOverlap) -> [Point<N>] {
+    var startX = from.x
+    var startY = from.y
+    let endX = to.x
+    let endY = to.y
 
+    //guard startX != endX && startY != endY else {
+    //    // horizontal or vertical line -> fillRect() is faster than drawLine()
+    //    return fillRect(startX, startY, endX, endY)
+    //}
+    
     var tDeltaX: N, tDeltaY: N, tDeltaXTimes2: N, tDeltaYTimes2: N, tError: N, tStepX: N, tStepY: N
 
-    if false /* ((aXStart == aXEnd) || (aYStart == aYEnd)) */ {
-        // horizontal or vertical line -> fillRect() is faster than drawLine()
-        //fillRect(aXStart, aYStart, aXEnd, aYEnd, aColor); // you can remove the check and this line if you have no fillRect() or drawLine() available.
-    } else {
-        var points: [Point<N>] = []
+    var points: [Point<N>] = []
 
-        // calculate direction
-        tDeltaX = aXEnd - aXStart
-        tDeltaY = aYEnd - aYStart
-        if tDeltaX < 0 {
-            tDeltaX = -tDeltaX
-            tStepX = -1
-        } else {
-            tStepX = 1
-        }
-        if tDeltaY < 0 {
-            tDeltaY = -tDeltaY
-            tStepY = -1
-        } else {
-            tStepY = 1
-        }
-        tDeltaXTimes2 = tDeltaX << 1
-        tDeltaYTimes2 = tDeltaY << 1
-        // draw start pixel
-        points.append(Point(x: aXStart, y: aYStart))
-        if tDeltaX > tDeltaY {
-            // start value represents a half step in Y direction
-            tError = tDeltaYTimes2 - tDeltaX
-            while aXStart != aXEnd {
-                // step in main direction
-                aXStart += tStepX
-                if tError >= 0 {
-                    if aOverlap == .major {
-                        // draw pixel in main direction before changing
-                        points.append(Point(x: aXStart, y: aYStart))
-                    }
-                    // change Y
-                    aYStart += tStepY
-                    if aOverlap == .minor {
-                        // draw pixel in minor direction before changing
-                        points.append(Point(x: aXStart - tStepX, y: aYStart))
-                    }
-                    tError -= tDeltaXTimes2
-                }
-                tError += tDeltaYTimes2
-                points.append(Point(x: aXStart, y: aYStart))
-            }
-        } else {
-            tError = tDeltaXTimes2 - tDeltaY
-            while aYStart != aYEnd {
-                aYStart += tStepY
-                if tError >= 0 {
-                    if aOverlap == .major {
-                        // draw pixel in main direction before changing
-                        points.append(Point(x: aXStart, y: aYStart))
-                    }
-                    aXStart += tStepX
-                    if aOverlap == .minor {
-                        // draw pixel in minor direction before changing
-                        points.append(Point(x: aXStart, y: aYStart - tStepY))
-                    }
-                    tError -= tDeltaYTimes2
-                }
-                tError += tDeltaXTimes2
-                points.append(Point(x: aXStart, y: aYStart))
-            }
-        }
-        return points
+    // calculate direction
+    tDeltaX = endX - startX
+    tDeltaY = endY - startY
+    if tDeltaX < 0 {
+        tDeltaX = -tDeltaX
+        tStepX = -1
+    } else {
+        tStepX = 1
     }
+    if tDeltaY < 0 {
+        tDeltaY = -tDeltaY
+        tStepY = -1
+    } else {
+        tStepY = 1
+    }
+    tDeltaXTimes2 = tDeltaX << 1
+    tDeltaYTimes2 = tDeltaY << 1
+    // draw start pixel
+    points.append(Point(x: startX, y: startY))
+    if tDeltaX > tDeltaY {
+        // start value represents a half step in Y direction
+        tError = tDeltaYTimes2 - tDeltaX
+        while startX != endX {
+            // step in main direction
+            startX += tStepX
+            if tError >= 0 {
+                if overlap == .major {
+                    // draw pixel in main direction before changing
+                    points.append(Point(x: startX, y: startY))
+                }
+                // change Y
+                startY += tStepY
+                if overlap == .minor {
+                    // draw pixel in minor direction before changing
+                    points.append(Point(x: startX - tStepX, y: startY))
+                }
+                tError -= tDeltaXTimes2
+            }
+            tError += tDeltaYTimes2
+            points.append(Point(x: startX, y: startY))
+        }
+    } else {
+        tError = tDeltaXTimes2 - tDeltaY
+        while startY != endY {
+            startY += tStepY
+            if tError >= 0 {
+                if overlap == .major {
+                    // draw pixel in main direction before changing
+                    points.append(Point(x: startX, y: startY))
+                }
+                startX += tStepX
+                if overlap == .minor {
+                    // draw pixel in minor direction before changing
+                    points.append(Point(x: startX, y: startY - tStepY))
+                }
+                tError -= tDeltaYTimes2
+            }
+            tError += tDeltaXTimes2
+            points.append(Point(x: startX, y: startY))
+        }
+    }
+    return points
 }
 
-/**
- * Bresenham with thickness
- * No pixel missed and every pixel only drawn once!
- * The code is bigger and more complicated than drawThickLineSimple() but it tends to be faster, since drawing a pixel is often a slow operation.
- * aThicknessMode can be one of LINE_THICKNESS_MIDDLE, LINE_THICKNESS_DRAW_CLOCKWISE, LINE_THICKNESS_DRAW_COUNTERCLOCKWISE
- */
+// Bresenham with thickness.
+// No pixel missed and every pixel only drawn once!
+// The code is bigger and more complicated than drawThickLineSimple() but it tends to be faster,
+// since drawing a pixel is often a slow operation.
 
 enum ThicknessMode {
     case middle
@@ -130,26 +124,24 @@ func drawThickLine<N: SignedInteger>(
     thickness: N = 1,
     thicknessMode: ThicknessMode = .middle
 ) -> [Point<N>] {
-    var aXStart = from.x
-    var aYStart = from.y
-    var aXEnd = to.x
-    var aYEnd = to.y
+    var startX = from.x
+    var startY = from.y
+    var endX = to.x
+    var endY = to.y
 
     var tDeltaX: N, tDeltaY: N, tDeltaXTimes2: N, tDeltaYTimes2: N, tError: N, tStepX: N, tStepY: N
 
-    if thickness <= 1 {
-        return drawLineOverlap(from: from, to: to, aOverlap: .none)
+    guard thickness > 1 else {
+        return drawLineOverlap(from: from, to: to, overlap: .none)
     }
 
-    /**
-     * For coordinate system with 0.0 top left
-     * Swap X and Y delta and calculate clockwise (new delta X inverted)
-     * or counterclockwise (new delta Y inverted) rectangular direction.
-     * The right rectangular direction for LINE_OVERLAP_MAJOR toggles with each octant
-     */
-    tDeltaY = aXEnd - aXStart
-    tDeltaX = aYEnd - aYStart
-    // mirror 4 quadrants to one and adjust deltas and stepping direction
+    // For coordinate system with 0.0 top left
+    // Swap X and Y delta and calculate clockwise (new delta X inverted)
+    // or counterclockwise (new delta Y inverted) rectangular direction.
+    // The right rectangular direction for LINE_OVERLAP_MAJOR toggles with each octant
+    tDeltaY = endX - startX
+    tDeltaX = endY - startY
+    // Mirror 4 quadrants to one and adjust deltas and stepping direction.
     var tSwap = true // count effective mirroring
     if tDeltaX < 0 {
         tDeltaX = -tDeltaX
@@ -168,7 +160,7 @@ func drawThickLine<N: SignedInteger>(
     tDeltaXTimes2 = tDeltaX << 1
     tDeltaYTimes2 = tDeltaY << 1
     var tOverlap: LineOverlap
-    // adjust for right direction of thickness from line origin
+    // Adjust for right direction of thickness from line origin.
     var tDrawStartAdjustCount = thickness / 2
     if thicknessMode == .counterclockwise {
         tDrawStartAdjustCount = thickness - 1
@@ -178,11 +170,10 @@ func drawThickLine<N: SignedInteger>(
 
     var points: [Point<N>] = []
 
-    /*
-     * Now tDelta* are positive and tStep* define the direction
-     * tSwap is false if we mirrored only once
-     */
-    // which octant are we now
+    // Now tDelta* are positive and tStep* define the direction
+    // tSwap is false if we mirrored only once
+
+    // Which octant are we now
     if tDeltaX >= tDeltaY {
         // Octant 1, 3, 5, 7 (between 0 and 45, 90 and 135, ... degree)
         if tSwap {
@@ -191,119 +182,119 @@ func drawThickLine<N: SignedInteger>(
         } else {
             tStepX = -tStepX
         }
-        /*
-         * Vector for draw direction of the starting points of lines is rectangular and counterclockwise to main line direction
-         * Therefore no pixel will be missed if LINE_OVERLAP_MAJOR is used on change in minor rectangular direction
-         */
-        // adjust draw start point
+
+        // Vector for draw direction of the starting points of lines is rectangular and 
+        // counterclockwise to main line direction.
+        // Therefore no pixel will be missed if LineOverlap.none is used on change in minor rectangular direction.
+
+        // Adjust draw start point
         tError = tDeltaYTimes2 - tDeltaX
         for _ in stride(from: tDrawStartAdjustCount, to: 0, by: -1) {
-            // change X (main direction here)
-            aXStart -= tStepX
-            aXEnd -= tStepX
+            // Change X (main direction here)
+            startX -= tStepX
+            endX -= tStepX
             if tError >= 0 {
                 // change Y
-                aYStart -= tStepY
-                aYEnd -= tStepY
+                startY -= tStepY
+                endY -= tStepY
                 tError -= tDeltaXTimes2
             }
             tError += tDeltaYTimes2
         }
-        // draw start line. We can alternatively use drawLineOverlap(aXStart, aYStart, aXEnd, aYEnd, LINE_OVERLAP_NONE, aColor) here.
-        points.append(contentsOf: 
+        // Draw start line. 
+        // We can alternatively use drawLineOverlap(startX, startY, endX, endY, LineOverlap.none, aColor) here.
+        points.append(contentsOf:
             drawLineOverlap(
-                from: Point(x: aXStart, y: aYStart),
-                to: Point(x: aXEnd, y: aYEnd),
-                aOverlap: .none
+                from: Point(x: startX, y: startY),
+                to: Point(x: endX, y: endY),
+                overlap: .none
             )
         )
-        // draw aThickness number of lines
+        // Draw thickness number of lines
         tError = tDeltaYTimes2 - tDeltaX
         for _ in stride(from: thickness, to: 1, by: -1) {
-            // change X (main direction here)
-            aXStart += tStepX
-            aXEnd += tStepX
+            // Change X (main direction here)
+            startX += tStepX
+            endX += tStepX
             tOverlap = .none
             if tError >= 0 {
-                // change Y
-                aYStart += tStepY
-                aYEnd += tStepY
+                // Change Y
+                startY += tStepY
+                endY += tStepY
                 tError -= tDeltaXTimes2
-                /*
-                 * Change minor direction reverse to line (main) direction
-                 * because of choosing the right (counter)clockwise draw vector
-                 * Use LINE_OVERLAP_MAJOR to fill all pixel
-                 *
-                 * EXAMPLE:
-                 * 1,2 = Pixel of first 2 lines
-                 * 3 = Pixel of third line in normal line mode
-                 * - = Pixel which will additionally be drawn in LINE_OVERLAP_MAJOR mode
-                 *           33
-                 *       3333-22
-                 *   3333-222211
-                 * 33-22221111
-                 *  221111                     /\
-                 *  11                          Main direction of start of lines draw vector
-                 *  -> Line main direction
-                 *  <- Minor direction of counterclockwise of start of lines draw vector
-                 */
+                //  Change minor direction reverse to line (main) direction
+                //  because of choosing the right (counter)clockwise draw vector
+                //  Use LINE_OVERLAP_MAJOR to fill all pixel
+                //
+                //  EXAMPLE:
+                //  1,2 = Pixel of first 2 lines
+                //  3 = Pixel of third line in normal line mode
+                //  - = Pixel which will additionally be drawn in LINE_OVERLAP_MAJOR mode
+                //            33
+                //        3333-22
+                //    3333-222211
+                //  33-22221111
+                //   221111                     /\
+                //   11                          Main direction of start of lines draw vector
+                //   -> Line main direction
+                //   <- Minor direction of counterclockwise of start of lines draw vector
                 tOverlap = .major
             }
             tError += tDeltaYTimes2
             points.append(contentsOf:
                 drawLineOverlap(
-                    from: Point(x: aXStart, y: aYStart),
-                    to: Point(x: aXEnd, y: aYEnd),
-                    aOverlap: tOverlap
+                    from: Point(x: startX, y: startY),
+                    to: Point(x: endX, y: endY),
+                    overlap: tOverlap
                 )
             )
         }
     } else {
-        // the other octant 2, 4, 6, 8 (between 45 and 90, 135 and 180, ... degree)
+        // The other octant 2, 4, 6, 8 (between 45 and 90, 135 and 180, ... degree).
         if tSwap {
             tStepX = -tStepX
         } else {
             tDrawStartAdjustCount = (thickness - 1) - tDrawStartAdjustCount
             tStepY = -tStepY
         }
-        // adjust draw start point
+        // Adjust draw start point.
         tError = tDeltaXTimes2 - tDeltaY
         for _ in stride(from: tDrawStartAdjustCount, to: 0, by: -1) {
-            aYStart -= tStepY
-            aYEnd -= tStepY
+            startY -= tStepY
+            endY -= tStepY
             if tError >= 0 {
-                aXStart -= tStepX
-                aXEnd -= tStepX
+                startX -= tStepX
+                endX -= tStepX
                 tError -= tDeltaYTimes2
             }
             tError += tDeltaXTimes2
         }
-        // draw start line
-        points.append(contentsOf: 
+        // Draw start line
+        points.append(contentsOf:
             drawLineOverlap(
-                from: Point(x: aXStart, y: aYStart),
-                to: Point(x: aXEnd, y: aYEnd),
-                aOverlap: .none
+                from: Point(x: startX, y: startY),
+                to: Point(x: endX, y: endY),
+                overlap: .none
             )
         )
-        // draw aThickness number of lines
+        // Draw thickness number of lines.
         tError = tDeltaXTimes2 - tDeltaY
         for _ in stride(from: thickness, to: 1, by: -1) {
-            aYStart += tStepY
-            aYEnd += tStepY
+            startY += tStepY
+            endY += tStepY
             tOverlap = .none
             if tError >= 0 {
-                aXStart += tStepX
-                aXEnd += tStepX
+                startX += tStepX
+                endX += tStepX
                 tError -= tDeltaYTimes2
                 tOverlap = .major
             }
             tError += tDeltaXTimes2
-            points.append(contentsOf: 
+            points.append(contentsOf:
                 drawLineOverlap(
-                    from: Point(x: aXStart, y: aYStart),
-                    to: Point(x: aXEnd, y: aYEnd),
-                    aOverlap: tOverlap
+                    from: Point(x: startX, y: startY),
+                    to: Point(x: endX, y: endY),
+                    overlap: tOverlap
                 )
             )
         }
