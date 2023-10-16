@@ -22,9 +22,9 @@ jobs:
 
         export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 
-        apt-get -qq update
+        sudo apt-get -qq update
 
-        apt-get -qq install \
+        sudo apt-get -qq install \
                   binutils \
                   git \
                   gnupg2 \
