@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v3
@@ -22,9 +22,9 @@ jobs:
 
         export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 
-        apt-get -qq update
+        sudo apt-get -qq update
 
-        apt-get -qq install \
+        sudo apt-get -qq install \
                   binutils \
                   git \
                   gnupg2 \
@@ -100,6 +100,6 @@ jobs:
         /opt/swift/bin/swift --version
 
     - name: Build
-      run: swift build -v
+      run: /opt/swift/bin/swift build -v
     - name: Run tests
-      run: swift test -v
+      run: /opt/swift/bin/swift test -v
