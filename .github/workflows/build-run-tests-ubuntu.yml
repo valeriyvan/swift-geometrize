@@ -1,0 +1,105 @@
+# This workflow will build a Swift project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
+
+name: Build&test ubuntu
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Swift 5.9-RELEASE
+    run:
+        echo ====== Installing dependencies...
+
+        export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+
+        apt-get -qq update
+
+        apt-get -qq install \
+                  binutils \
+                  git \
+                  gnupg2 \
+                  libc6-dev \
+                  libcurl4-openssl-dev \
+                  libedit2 \
+                  libgcc-9-dev \
+                  libpython3.8 \
+                  libsqlite3-0 \
+                  libstdc++-9-dev \
+                  libxml2-dev \
+                  libz3-dev \
+                  pkg-config \
+                  tzdata \
+                  unzip \
+                  zlib1g-dev
+
+        # pub   4096R/ED3D1561 2019-03-22 [expires: 2021-03-21]
+        #       Key fingerprint = A62A E125 BBBF BB96 A6E0  42EC 925C C1CC ED3D 1561
+        # uid                  Swift 5.x Release Signing Key <swift-infrastructure@swift.org
+        SWIFT_SIGNING_KEY=A62AE125BBBFBB96A6E042EC925CC1CCED3D1561
+        SWIFT_PLATFORM=ubuntu22.04
+        SWIFT_BRANCH=swift-5.9-release
+        SWIFT_VERSION=swift-5.9-RELEASE
+        SWIFT_WEBROOT=https://swift.org/builds/
+
+        set -e
+        SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)/"
+        SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM.tar.gz"
+        SWIFT_SIG_URL="$SWIFT_BIN_URL.sig"
+        export GNUPGHOME="$(mktemp -d)"
+
+        echo ====== Downloading toolchain...
+
+        curl -#fSL "$SWIFT_BIN_URL" -o swift.tar.gz "$SWIFT_SIG_URL" -o swift.tar.gz.sig
+
+        if [ -n "$SKIP_SIGNATURE_CHECK" ]
+        then
+            echo ====== Skipped signature check!
+        else
+            echo ====== Verifying signature...
+
+            gpg --keyserver hkp://keyserver.ubuntu.com \
+              --recv-keys \
+              '7463 A81A 4B2E EA1B 551F  FBCF D441 C977 412B 37AD' \
+              '1BE1 E29A 084C B305 F397  D62A 9F59 7F4D 21A5 6D5F' \
+              'A3BA FD35 56A5 9079 C068  94BD 63BC 1CFE 91D3 06C6' \
+              '5E4D F843 FB06 5D7F 7E24  FBA2 EF54 30F0 71E1 B235' \
+              '8513 444E 2DA3 6B7C 1659  AF4D 7638 F1FB 2B2B 08C4' \
+              'A62A E125 BBBF BB96 A6E0  42EC 925C C1CC ED3D 1561' \
+              '8A74 9566 2C3C D4AE 18D9  5637 FAF6 989E 1BC1 6FEA' \
+              'E813 C892 820A 6FA1 3755  B268 F167 DF1A CF9C E069'
+
+            gpg --keyserver hkp://keyserver.ubuntu.com --refresh-keys Swift
+
+            gpg --batch --verify swift.tar.gz.sig swift.tar.gz
+        fi
+
+        echo ====== Unpacking toolchain to /opt/swift...
+
+        mkdir -p /opt/swift
+        tar -xzf swift.tar.gz --directory /opt/swift --strip-components=2
+        chmod -R o+r /opt/swift/lib/swift
+
+        echo ====== Cleaning up...
+
+        rm -rf "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz
+
+        echo ====== Done.
+
+        export PATH="/opt/swift/bin:$PATH"
+        
+        /opt/swift/bin/swift --version
+
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v
