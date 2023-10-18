@@ -61,6 +61,7 @@ public final class QuadraticBezier: Shape {
         var lines: [Scanline] = []
         let pointCount = 20
         var points: [Point<Int>] = []
+        points.reserveCapacity(pointCount)
         for i in 0...pointCount {
             let t = Double(i) / Double(pointCount)
             let tp = 1.0 - t
