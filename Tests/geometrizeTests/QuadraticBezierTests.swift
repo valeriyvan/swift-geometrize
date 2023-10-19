@@ -10,7 +10,7 @@ final class QuadraticBezierTests: XCTestCase {
         var bitmap = Bitmap(width: width, height: height, color: .red)
         bitmap.draw(
             lines:
-                QuadraticBezier(cx: 327.0, cy: 295.0, x1: 57.0, y1: 542.0, x2: 190.0, y2: 216.0)
+                QuadraticBezier(strokeWidth: 1, cx: 327.0, cy: 295.0, x1: 57.0, y1: 542.0, x2: 190.0, y2: 216.0)
                 .rasterize(x: xRange, y: yRange),
             color:
                 .white

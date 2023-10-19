@@ -2,16 +2,19 @@ import Foundation
 
 // Represents a rectangle.
 public final class Rectangle: Shape {
+    public var strokeWidth: Double
     public var x1, y1, x2, y2: Double
 
-    required public init() {
+    required public init(strokeWidth: Double) {
+        self.strokeWidth = strokeWidth
         x1 = 0.0
         y1 = 0.0
         x2 = 0.0
         y2 = 0.0
     }
 
-    public init(x1: Double, y1: Double, x2: Double, y2: Double) {
+    public init(strokeWidth: Double, x1: Double, y1: Double, x2: Double, y2: Double) {
+        self.strokeWidth = strokeWidth
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -20,11 +23,11 @@ public final class Rectangle: Shape {
 
     // Rectangle taking whole size of canvas
     public convenience init(canvasWidth width: Int, height: Int) {
-        self.init(x1: 0.0, y1: 0.0, x2: Double(width), y2: Double(height))
+        self.init(strokeWidth: 1, x1: 0.0, y1: 0.0, x2: Double(width), y2: Double(height))
     }
 
     public func copy() -> Rectangle {
-        Rectangle(x1: x1, y1: y1, x2: x2, y2: y2)
+        Rectangle(strokeWidth: strokeWidth, x1: x1, y1: y1, x2: x2, y2: y2)
     }
 
     public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {

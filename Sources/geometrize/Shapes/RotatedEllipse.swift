@@ -2,13 +2,15 @@ import Foundation
 
 // Represents a rotated ellipse.
 public final class RotatedEllipse: Shape {
+    public var strokeWidth: Double
     public var x: Double // x-coordinate.
     public var y: Double // y-coordinate.
     public var rx: Double // x-radius.
     public var ry: Double // y-radius.
     public var angleDegrees: Double // Rotation angle in degrees.
 
-    public required init() {
+    public required init(strokeWidth: Double) {
+        self.strokeWidth = strokeWidth
         x = 0.0
         y = 0.0
         rx = 0.0
@@ -16,7 +18,8 @@ public final class RotatedEllipse: Shape {
         angleDegrees = 0.0
     }
 
-    public init(x: Double, y: Double, rx: Double, ry: Double, angleDegrees: Double) {
+    public init(strokeWidth: Double, x: Double, y: Double, rx: Double, ry: Double, angleDegrees: Double) {
+        self.strokeWidth = strokeWidth
         self.x = x
         self.y = y
         self.rx = rx
@@ -25,7 +28,7 @@ public final class RotatedEllipse: Shape {
     }
 
     public func copy() -> RotatedEllipse {
-        RotatedEllipse(x: x, y: y, rx: rx, ry: ry, angleDegrees: angleDegrees)
+        RotatedEllipse(strokeWidth: strokeWidth, x: x, y: y, rx: rx, ry: ry, angleDegrees: angleDegrees)
     }
 
     public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {

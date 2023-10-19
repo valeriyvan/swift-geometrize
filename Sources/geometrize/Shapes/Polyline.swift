@@ -1,18 +1,21 @@
 import Foundation
 
 public final class Polyline: Shape {
+    public var strokeWidth: Double
     public var points: [Point<Double>]
 
-    public init() {
+    public init(strokeWidth: Double) {
+        self.strokeWidth = strokeWidth
         points = []
     }
 
-    public init(points: [Point<Double>]) {
+    public init(strokeWidth: Double, points: [Point<Double>]) {
+        self.strokeWidth = strokeWidth
         self.points = points
     }
 
     public func copy() -> Polyline {
-        Polyline(points: points)
+        Polyline(strokeWidth: strokeWidth, points: points)
     }
 
     public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
@@ -49,7 +52,7 @@ public final class Polyline: Shape {
         for i in 0..<points.count {
             let p0 = points[i]
             let p1 = i < points.count - 1 ? points[i + 1] : p0
-            let points = drawThickLine(from: Point<Int>(p0), to: Point<Int>(p1))
+            let points = drawThickLine(from: Point<Int>(p0), to: Point<Int>(p1), thickness: Int(strokeWidth))
             for point in points {
                 if !duplicates.contains(point) {
                     duplicates.insert(point)

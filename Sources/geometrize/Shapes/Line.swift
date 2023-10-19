@@ -1,16 +1,19 @@
 import Foundation
 
 public final class Line: Shape {
+    public var strokeWidth: Double
     public var x1, y1, x2, y2: Double
 
-    public init() {
+    public init(strokeWidth: Double) {
+        self.strokeWidth = strokeWidth
         x1 = 0.0
         y1 = 0.0
         x2 = 0.0
         y2 = 0.0
     }
 
-    public init(x1: Double, y1: Double, x2: Double, y2: Double) {
+    public init(strokeWidth: Double, x1: Double, y1: Double, x2: Double, y2: Double) {
+        self.strokeWidth = strokeWidth
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -18,7 +21,7 @@ public final class Line: Shape {
     }
 
     public func copy() -> Line {
-        Line(x1: x1, y1: y1, x2: x2, y2: y2)
+        Line(strokeWidth: strokeWidth, x1: x1, y1: y1, x2: x2, y2: y2)
     }
 
     public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
@@ -49,7 +52,7 @@ public final class Line: Shape {
 
     public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {
         let lines =
-            drawThickLine(from: Point(x: Int(x1), y: Int(y1)), to: Point(x: Int(x2), y: Int(y2)))
+            drawThickLine(from: Point(x: Int(x1), y: Int(y1)), to: Point(x: Int(x2), y: Int(y2)), thickness: Int(strokeWidth))
             .compactMap {
                 Scanline(y: $0.y, x1: $0.x, x2: $0.x).trimmed(x: xRange, y: yRange)
             }

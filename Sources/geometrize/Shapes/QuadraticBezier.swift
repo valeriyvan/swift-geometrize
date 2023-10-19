@@ -2,6 +2,7 @@ import Foundation
 import Algorithms
 
 public final class QuadraticBezier: Shape {
+    public var strokeWidth: Double
     public var x1: Double // First x-coordinate.
     public var y1: Double // First y-coordinate.
     public var x2: Double // Second x-coordinate.
@@ -9,7 +10,8 @@ public final class QuadraticBezier: Shape {
     public var cx: Double // Control point x-coordinate.
     public var cy: Double // Control point y-coordinate.
 
-    public init() {
+    public init(strokeWidth: Double) {
+        self.strokeWidth = strokeWidth
         cx = 0.0
         cy = 0.0
         x1 = 0.0
@@ -18,7 +20,8 @@ public final class QuadraticBezier: Shape {
         y2 = 0.0
     }
 
-    public init(cx: Double, cy: Double, x1: Double, y1: Double, x2: Double, y2: Double) {
+    public init(strokeWidth: Double, cx: Double, cy: Double, x1: Double, y1: Double, x2: Double, y2: Double) {
+        self.strokeWidth = strokeWidth
         self.cx = cx
         self.cy = cy
         self.x1 = x1
@@ -28,7 +31,7 @@ public final class QuadraticBezier: Shape {
     }
 
     public func copy() -> QuadraticBezier {
-        QuadraticBezier(cx: cx, cy: cy, x1: x1, y1: y1, x2: x2, y2: y2)
+        QuadraticBezier(strokeWidth: strokeWidth, cx: cx, cy: cy, x1: x1, y1: y1, x2: x2, y2: y2)
     }
 
     public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
@@ -72,7 +75,7 @@ public final class QuadraticBezier: Shape {
         // Prevent scanline overlap, it messes up the energy functions that rely on the scanlines not intersecting themselves
         var duplicates: Set<Point<Int>> = Set()
         for (from, to) in points.adjacentPairs() {
-            for point in drawThickLine(from: from, to: to) {
+            for point in drawThickLine(from: from, to: to, thickness: Int(strokeWidth)) {
                 if !duplicates.contains(point) {
                     duplicates.insert(point)
                     if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(x: xRange, y: yRange) {
