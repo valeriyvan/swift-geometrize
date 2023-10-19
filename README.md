@@ -35,6 +35,7 @@ You could try swift-geometrize in action in Telegram bot [Geometrizebot](https:/
 ## TODO:
 * ✅ add stroke width for line, polyline and bezier curve;
 * ✅ multithreading;
+* add polygon as shape type;
 * filling shapes with gradient;
 * solve dealing with randomness in tests;
 * geometrize with predefined or user supplied brush strokes;
