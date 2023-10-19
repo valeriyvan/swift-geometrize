@@ -65,11 +65,9 @@ let shapes = shapesStrings.shapeTypes()
 // Shape.Type is not hashable as all Metatypes. Why, by the way?
 // That why we check for nil in this strange way.
 var indexOfNil: Int?
-for (i, shape) in shapes.enumerated() {
-    if shape == nil {
-        indexOfNil = i
-        break
-    }
+for (i, shape) in shapes.enumerated() where shape == nil {
+    indexOfNil = i
+    break
 }
 
 if let indexOfNil {
