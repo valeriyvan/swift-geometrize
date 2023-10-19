@@ -66,7 +66,7 @@ public struct ImageRunnerOptions {
         maxThreads: Int,
         shapeBounds: ImageRunnerShapeBoundsOptions
     ) {
-        precondition(strokeWidth > 0)
+        assert(strokeWidth > 0)
 
         self.shapeTypes = shapeTypes
         self.strokeWidth = strokeWidth
