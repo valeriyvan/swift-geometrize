@@ -122,7 +122,7 @@ final class CoreTests: XCTestCase {
         var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap", withExtension: "txt")!))
         let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap on exit", withExtension: "txt")!))
 
-        let rectangle = Rectangle(x1: 281, y1: 193, x2: 309, y2: 225)
+        let rectangle = Rectangle(strokeWidth: 1, x1: 281, y1: 193, x2: 309, y2: 225)
         // rectangle.setupImplementation = { r in
         //     r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
         // }
@@ -136,7 +136,7 @@ final class CoreTests: XCTestCase {
 
         // hillClimb return state State(score: 0.162824, alpha: 128, shape: Rectangle(x1=272,y1=113,x2=355,y2=237))
 
-        let rectangleOnExit = Rectangle(x1: 272, y1: 113, x2: 355, y2: 237)
+        let rectangleOnExit = Rectangle(strokeWidth: 1, x1: 272, y1: 113, x2: 355, y2: 237)
         // rectangleOnExit.setupImplementation = { r in
         //     r.setup(xMin: 0, yMin: 0, xMax: bitmapTarget.width, yMax: bitmapTarget.height)
         // }

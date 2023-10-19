@@ -11,9 +11,9 @@ final class LineTests: XCTestCase {
         var lines: [Scanline] = []
         let shift: Double = 10.0
         for x in stride(from: shift, through: Double(width) - shift, by: shift) {
-            lines += Line(x1: x, y1: shift, x2: Double(width) - shift, y2: Double(width) - shift)
+            lines += Line(strokeWidth: 1, x1: x, y1: shift, x2: Double(width) - shift, y2: Double(width) - shift)
                 .rasterize(x: xRange, y: yRange)
-            lines += Line(x1: x, y1: shift, x2: shift, y2: Double(height) - shift)
+            lines += Line(strokeWidth: 1, x1: x, y1: shift, x2: shift, y2: Double(height) - shift)
                 .rasterize(x: xRange, y: yRange)
         }
         bitmap.draw(lines: lines, color: .blue)
@@ -40,10 +40,10 @@ func scaleScanlinesTrimmed(width: Int, height: Int, step: Int, tickHeight: Int =
     lines += stride(from: 0, through: width, by: step)
         .map { i -> [Scanline] in
             let lines: [Scanline] =
-            Line(x1: Double(i - step / 5), y1: 0.0, x2: Double(i + step / 5), y2: 0.0)
+            Line(strokeWidth: 1, x1: Double(i - step / 5), y1: 0.0, x2: Double(i + step / 5), y2: 0.0)
                 .rasterize(x: xRange, y: yRange)
                 +
-            Line(x1: Double(i - step / 5), y1: yMaxDouble, x2: Double(i + step / 5), y2: yMaxDouble)
+            Line(strokeWidth: 1, x1: Double(i - step / 5), y1: yMaxDouble, x2: Double(i + step / 5), y2: yMaxDouble)
                 .rasterize(x: xRange, y: yRange)
             return lines
         }
@@ -51,10 +51,10 @@ func scaleScanlinesTrimmed(width: Int, height: Int, step: Int, tickHeight: Int =
     // Ticks on horizontal line
     lines += stride(from: step, to: width, by: step)
         .map { i -> [Scanline] in
-            Line(x1: Double(i), y1: 0.0, x2: Double(i), y2: tickHeightDouble)
+            Line(strokeWidth: 1, x1: Double(i), y1: 0.0, x2: Double(i), y2: tickHeightDouble)
                 .rasterize(x: xRange, y: yRange)
             +
-            Line(x1: Double(i), y1: Double(height - tickHeight - 1), x2: Double(i), y2: yMaxDouble)
+            Line(strokeWidth: 1, x1: Double(i), y1: Double(height - tickHeight - 1), x2: Double(i), y2: yMaxDouble)
                 .rasterize(x: xRange, y: yRange)
         }
         .flatMap { $0 }
@@ -62,10 +62,10 @@ func scaleScanlinesTrimmed(width: Int, height: Int, step: Int, tickHeight: Int =
     lines += stride(from: 0, through: height, by: step)
         .map { i -> [Scanline] in
             let lines: [Scanline] =
-            Line(x1: 0.0, y1: Double(i - step / 5), x2: 0.0, y2: Double(i + step / 5))
+            Line(strokeWidth: 1, x1: 0.0, y1: Double(i - step / 5), x2: 0.0, y2: Double(i + step / 5))
                 .rasterize(x: xRange, y: yRange)
             +
-            Line(x1: xMaxDouble, y1: Double(i - step / 5), x2: xMaxDouble, y2: Double(i + step / 5))
+            Line(strokeWidth: 1, x1: xMaxDouble, y1: Double(i - step / 5), x2: xMaxDouble, y2: Double(i + step / 5))
                 .rasterize(x: xRange, y: yRange)
             return lines
         }
@@ -73,10 +73,10 @@ func scaleScanlinesTrimmed(width: Int, height: Int, step: Int, tickHeight: Int =
     // Ticks on vertical line
     lines += stride(from: step, to: height, by: step)
         .map { i -> [Scanline] in
-            Line(x1: 0.0, y1: Double(i), x2: tickHeightDouble, y2: Double(i))
+            Line(strokeWidth: 1, x1: 0.0, y1: Double(i), x2: tickHeightDouble, y2: Double(i))
                 .rasterize(x: xRange, y: yRange)
             +
-            Line(x1: Double(width - tickHeight - 1), y1: Double(i), x2: xMaxDouble, y2: Double(i))
+            Line(strokeWidth: 1, x1: Double(width - tickHeight - 1), y1: Double(i), x2: xMaxDouble, y2: Double(i))
                 .rasterize(x: xRange, y: yRange)
         }
         .flatMap { $0 }

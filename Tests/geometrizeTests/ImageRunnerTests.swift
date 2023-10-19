@@ -20,6 +20,7 @@ final class ImageRunnerTests: XCTestCase {
 
         let options = ImageRunnerOptions(
             shapeTypes: [RotatedEllipse.self],
+            strokeWidth: 1,
             alpha: 128,
             shapeCount: 500,
             maxShapeMutations: 100,
@@ -36,7 +37,7 @@ final class ImageRunnerTests: XCTestCase {
         var shapeData: [ShapeResult] = []
 
         // Hack to add a single background rectangle as the initial shape
-        let rect = Rectangle(x1: 0, y1: 0, x2: Double(targetBitmap.width), y2: Double(targetBitmap.height))
+        let rect = Rectangle(strokeWidth: 1, x1: 0, y1: 0, x2: Double(targetBitmap.width), y2: Double(targetBitmap.height))
         shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape: rect))
 
         var counter = 0

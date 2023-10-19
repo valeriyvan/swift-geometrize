@@ -9,6 +9,7 @@ struct GeometrizeOptions: ParsableArguments {
     @Option(name: .shortAndLong, help: "Output file pathname.") var outputPath: String
     @Option(name: [.customShort("t"), .long], help: "White space separated list of shapes to use geometrizing image.") var shapeTypes: String = "rectangle"
     @Option(name: [.customShort("c"), .long], help: "The number of shapes to generate for the final output.") var shapeCount: UInt?
+    @Option(name: [.customShort("w"), .long], help: "Width of lines, polylines, bezier curves.") var lineWidth: UInt?
     @Flag(name: .shortAndLong, help: "Verbose output.") var verbose: Bool = false
 }
 
@@ -90,8 +91,11 @@ print("Using shapes: \(shapeTypes.map { "\(type(of: $0))".dropLast(5) /* drop .T
 
 let shapeCount: Int = Int(options.shapeCount ?? 100)
 
+let strokeWidth: Int = Int(options.lineWidth ?? 1)
+
 let runnerOptions = ImageRunnerOptions(
     shapeTypes: shapeTypes,
+    strokeWidth: strokeWidth,
     alpha: 128,
     shapeCount: 100,
     maxShapeMutations: 100,
@@ -108,7 +112,7 @@ var runner = ImageRunner(targetBitmap: targetBitmap)
 var shapeData: [ShapeResult] = []
 
 // Hack to add a single background rectangle as the initial shape
-let rect = Rectangle(x1: 0, y1: 0, x2: Double(targetBitmap.width), y2: Double(targetBitmap.height))
+let rect = Rectangle(strokeWidth: 1, x1: 0, y1: 0, x2: Double(targetBitmap.width), y2: Double(targetBitmap.height))
 shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape: rect))
 
 var counter = 0

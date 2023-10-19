@@ -1,24 +1,27 @@
 import Foundation
 
 public final class Circle: Shape {
+    public var strokeWidth: Double
     public var x: Double // x-coordinate.
     public var y: Double // y-coordinate.
     public var r: Double // Radius.
 
-    public init() {
+    public init(strokeWidth: Double) {
+        self.strokeWidth = strokeWidth
         x = 0.0
         y = 0.0
         r = 0.0
     }
 
-    public init(x: Double, y: Double, r: Double) {
+    public init(strokeWidth: Double, x: Double, y: Double, r: Double) {
+        self.strokeWidth = strokeWidth
         self.x = x
         self.y = y
         self.r = r
     }
 
     public func copy() -> Circle {
-        Circle(x: x, y: y, r: r)
+        Circle(strokeWidth: strokeWidth, x: x, y: y, r: r)
     }
 
     public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {

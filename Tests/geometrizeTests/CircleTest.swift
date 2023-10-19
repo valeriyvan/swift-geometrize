@@ -10,35 +10,35 @@ final class CircleTests: XCTestCase {
         var bitmap = Bitmap(width: width, height: height, color: .white)
         bitmap.draw(
             lines:
-                Circle(x: 250.0, y: 250.0, r: 275.0)
+                Circle(strokeWidth: 1, x: 250.0, y: 250.0, r: 275.0)
                 .rasterize(x: xRange, y: yRange),
             color:
                 .red
         )
         bitmap.draw(
             lines:
-                Circle(x: 330.0, y: 330.0, r: 250)
+                Circle(strokeWidth: 1, x: 330.0, y: 330.0, r: 250)
                 .rasterize(x: xRange, y: yRange),
             color:
                 .green.withAlphaComponent(200)
         )
         bitmap.draw(
             lines:
-                Circle(x: 0.0, y: 0.0, r: 133.5)
+                Circle(strokeWidth: 1, x: 0.0, y: 0.0, r: 133.5)
                 .rasterize(x: xRange, y: yRange),
             color:
                 .blue.withAlphaComponent(128)
         )
         bitmap.draw(
             lines:
-                Circle(x: 499.0, y: 0.0, r: 77.0)
+                Circle(strokeWidth: 1, x: 499.0, y: 0.0, r: 77.0)
                 .rasterize(x: xRange, y: yRange),
             color:
                 .magenta
         )
         bitmap.draw(
             lines:
-                Circle(x: 250.0, y: 250.0, r: 100.0)
+                Circle(strokeWidth: 1, x: 250.0, y: 250.0, r: 100.0)
                 .rasterize(x: xRange, y: yRange),
             color:
                 .cyan

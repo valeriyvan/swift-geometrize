@@ -40,7 +40,7 @@ public struct SVGExporter {
 
         if shape.self is Line || shape.self is Polyline || shape.self is QuadraticBezier {
             styles += strokeAttrib(color: color)
-            styles += " stroke-width=\"1\" fill=\"none\" "
+            styles += " stroke-width=\"\(Int(shape.strokeWidth))\" fill=\"none\" "
             styles += strokeOpacityAttrib(color: color)
         } else {
             styles += fillAttrib(color: color)

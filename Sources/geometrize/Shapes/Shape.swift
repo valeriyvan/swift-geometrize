@@ -1,7 +1,9 @@
 import Foundation
 
 public protocol Shape: AnyObject, CustomStringConvertible {
-    init()
+    var strokeWidth: Double { get }
+
+    init(strokeWidth: Double)
 
     func copy() -> Self
 

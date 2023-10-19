@@ -2,13 +2,15 @@ import Foundation
 
 /// Represents a rotated rectangle.
 public final class RotatedRectangle: Shape {
+    public var strokeWidth: Double
     public var x1: Double
     public var y1: Double
     public var x2: Double
     public var y2: Double
     public var angleDegrees: Double
 
-    public required init() {
+    public required init(strokeWidth: Double) {
+        self.strokeWidth = strokeWidth
         x1 = 0.0
         y1 = 0.0
         x2 = 0.0
@@ -16,7 +18,8 @@ public final class RotatedRectangle: Shape {
         angleDegrees = 0.0
     }
 
-    public init(x1: Double, y1: Double, x2: Double, y2: Double, angleDegrees: Double) {
+    public init(strokeWidth: Double, x1: Double, y1: Double, x2: Double, y2: Double, angleDegrees: Double) {
+        self.strokeWidth = strokeWidth
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -25,7 +28,7 @@ public final class RotatedRectangle: Shape {
     }
 
     public func copy() -> RotatedRectangle {
-        RotatedRectangle(x1: x1, y1: y1, x2: x2, y2: y2, angleDegrees: angleDegrees)
+        RotatedRectangle(strokeWidth: strokeWidth, x1: x1, y1: y1, x2: x2, y2: y2, angleDegrees: angleDegrees)
     }
 
     public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {

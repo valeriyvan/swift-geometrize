@@ -34,6 +34,9 @@ public struct ImageRunnerOptions {
     /// The shape types that the image runner shall use.
     var shapeTypes: [Shape.Type]
 
+    /// Width of Line, Polyline, QuadraticBezier
+    var strokeWidth: Int
+
     /// The alpha/opacity of the shapes (0-255).
     var alpha: UInt8
 
@@ -53,8 +56,20 @@ public struct ImageRunnerOptions {
     /// If zero or do not form a rectangle, the entire target image is used i.e. (0, 0, imageWidth, imageHeight).
     var shapeBounds: ImageRunnerShapeBoundsOptions
 
-    public init(shapeTypes: [Shape.Type], alpha: UInt8, shapeCount: Int, maxShapeMutations: Int, seed: Int, maxThreads: Int, shapeBounds: ImageRunnerShapeBoundsOptions) {
+    public init(
+        shapeTypes: [Shape.Type],
+        strokeWidth: Int,
+        alpha: UInt8,
+        shapeCount: Int,
+        maxShapeMutations: Int,
+        seed: Int,
+        maxThreads: Int,
+        shapeBounds: ImageRunnerShapeBoundsOptions
+    ) {
+        precondition(strokeWidth > 0)
+
         self.shapeTypes = shapeTypes
+        self.strokeWidth = strokeWidth
         self.alpha = alpha
         self.shapeCount = shapeCount
         self.maxShapeMutations = maxShapeMutations
@@ -98,7 +113,7 @@ public struct ImageRunner {
     ) -> ShapeResult? {
         let types = options.shapeTypes
 
-        let shapeCreator: ShapeCreator = shapeCreator ?? makeDefaultShapeCreator(types: types)
+        let shapeCreator: ShapeCreator = shapeCreator ?? makeDefaultShapeCreator(types: types, strokeWidth: Double(options.strokeWidth))
 
         model.setSeed(options.seed)
 
