@@ -59,7 +59,8 @@ guard outputUrl.pathExtension.caseInsensitiveCompare("svg") == .orderedSame else
 }
 
 // TODO: use ExpressibleByArgument?
-let shapes = options.shapeTypes.components(separatedBy: .whitespacesAndNewlines).shapeTypes()
+let shapesStrings = options.shapeTypes.components(separatedBy: .whitespacesAndNewlines)
+let shapes = shapesStrings.shapeTypes()
 
 // Shape.Type is not hashable as all Metatypes. Why, by the way?
 // That why we check for nil in this strange way.
@@ -72,7 +73,7 @@ for (i, shape) in shapes.enumerated() {
 }
 
 if let indexOfNil {
-    print("Not recognised shape type \(shapes[indexOfNil]!). Allowed shape types:")
+    print("Not recognised shape type \(shapesStrings[indexOfNil]). Allowed shape types:")
     allShapeTypes.forEach {
         print("\($0)")
     }
