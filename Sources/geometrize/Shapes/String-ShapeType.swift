@@ -11,3 +11,10 @@ public extension Array where Element == String {
     }
 
 }
+
+func shapeType(from string: String) -> Shape.Type? {
+    allShapeTypes
+        .map { String("\(type(of: $0))".dropLast(5) /* drop .Type */) }
+        .firstIndex(of: string)
+        .flatMap { allShapeTypes[$0] }
+}
