@@ -190,7 +190,7 @@ public struct Bitmap {
     }
 
     // Primitive downsample algorithm utilising Bitmap's averageColor function.
-    func downsample(factor: Int) -> Bitmap {
+    public func downsample(factor: Int) -> Bitmap {
         assert(factor > 0)
         guard factor > 1 else { return self }
         let downsampledWidth = width / factor
