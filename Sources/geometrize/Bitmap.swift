@@ -204,6 +204,13 @@ public struct Bitmap {
         }
     }
 
+    // Transposes Bitmap
+    mutating func transpose() {
+        self = Bitmap(width: height, height: width) {
+            self[$1, $0]
+        }
+    }
+
 }
 
 extension Bitmap: Equatable {
