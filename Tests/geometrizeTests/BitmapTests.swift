@@ -223,6 +223,33 @@ final class BitmapTests: XCTestCase {
         )
     }
 
+    func testReflectHorizontally() {
+        let width = 500, height = 500
+        let xRange = 0...width - 1, yRange = 0...height - 1
+        var bitmap = Bitmap(width: width, height: height, color: .white)
+        bitmap.draw(
+            lines:
+                Ellipse(strokeWidth: 1, x: 250.0, y: 250.0, rx: 245.0, ry: 100.0)
+                .rasterize(x: xRange, y: yRange),
+            color:
+                .red.withAlphaComponent(128)
+        )
+        bitmap.draw(
+            lines:
+                Circle(strokeWidth: 1, x: 350.0, y: 350.0, r: 200.0)
+                .rasterize(x: xRange, y: yRange),
+            color:
+                .yellow.withAlphaComponent(128)
+        )
+
+        bitmap.reflectHorizontally()
+
+        assertSnapshot(
+            matching: bitmap,
+            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
+        )
+    }
+
     func testDraw() {
         var bitmap = Bitmap(width: 4, height: 5, color: .black)
         bitmap.draw(

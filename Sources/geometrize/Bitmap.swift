@@ -229,6 +229,16 @@ public struct Bitmap {
         }
     }
 
+    // Reflects bitmap around horizontal axis
+    // TODO: optimize
+    mutating func reflectHorizontally() {
+        for x in 0 ..< width {
+            for y in 0 ..< height / 2 {
+                swap(x1: x, y1: y, x2: x, y2: height - y - 1)
+            }
+        }
+    }
+
 }
 
 extension Bitmap: Equatable {
