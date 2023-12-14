@@ -219,6 +219,16 @@ public struct Bitmap {
         self[x2, y2] = copy
     }
 
+    // Reflects bitmap around vertical axis
+    // TODO: optimize
+    mutating func reflectVertically() {
+        for x in 0 ..< width / 2 {
+            for y in 0 ..< height {
+                swap(x1: x, y1: y, x2: width - x - 1, y2: y)
+            }
+        }
+    }
+
 }
 
 extension Bitmap: Equatable {
