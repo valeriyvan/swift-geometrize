@@ -211,6 +211,14 @@ public struct Bitmap {
         }
     }
 
+    // Swaps points (x1, y1) and (x2, y2)
+    // TODO: optimize
+    mutating func swap(x1: Int, y1: Int, x2: Int, y2: Int) {
+        let copy = self[x1, y1]
+        self[x1, y1] = self[x2, y2]
+        self[x2, y2] = copy
+    }
+
 }
 
 extension Bitmap: Equatable {
