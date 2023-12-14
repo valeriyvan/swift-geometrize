@@ -250,6 +250,36 @@ final class BitmapTests: XCTestCase {
         )
     }
 
+    func fBitmap() -> Bitmap {
+        let width = 60, height = 80
+        let xRange = 0...width - 1, yRange = 0...height - 1
+        var bitmap = Bitmap(width: width, height: height, color: .white)
+        bitmap.draw(
+            lines: Rectangle(strokeWidth: 1, x1: 10, y1: 10, x2: 50, y2: 20).rasterize(x: xRange, y: yRange),
+            color: .black
+        )
+        bitmap.draw(
+            lines: Rectangle(strokeWidth: 1, x1: 10, y1: 30, x2: 40, y2: 40).rasterize(x: xRange, y: yRange),
+            color: .black
+        )
+        bitmap.draw(
+            lines: Rectangle(strokeWidth: 1, x1: 10, y1: 10, x2: 20, y2: 70).rasterize(x: xRange, y: yRange),
+            color: .black
+        )
+        return bitmap
+    }
+
+    func testRotateUp() {
+        var f = fBitmap()
+
+        f.rotateToUpOrientation(accordingTo: .up)
+
+        assertSnapshot(
+            matching: f,
+            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
+        )
+    }
+
     func testDraw() {
         var bitmap = Bitmap(width: 4, height: 5, color: .black)
         bitmap.draw(
