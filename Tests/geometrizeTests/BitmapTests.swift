@@ -250,107 +250,75 @@ final class BitmapTests: XCTestCase {
         )
     }
 
-    func fBitmap() -> Bitmap {
-        let width = 60, height = 80
-        let xRange = 0...width - 1, yRange = 0...height - 1
-        var bitmap = Bitmap(width: width, height: height, color: .white)
-        bitmap.draw(
-            lines: Rectangle(strokeWidth: 1, x1: 10, y1: 10, x2: 50, y2: 20).rasterize(x: xRange, y: yRange),
-            color: .black
-        )
-        bitmap.draw(
-            lines: Rectangle(strokeWidth: 1, x1: 10, y1: 30, x2: 40, y2: 40).rasterize(x: xRange, y: yRange),
-            color: .black
-        )
-        bitmap.draw(
-            lines: Rectangle(strokeWidth: 1, x1: 10, y1: 10, x2: 20, y2: 70).rasterize(x: xRange, y: yRange),
-            color: .black
-        )
-        return bitmap
+    func testRotateUp() throws {
+        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
+        let f = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        var fUp = f
+        fUp.rotateToUpOrientation(accordingTo: .up)
+        XCTAssertEqual(f, fUp)
     }
 
-    func testRotateUp() {
-        var f = fBitmap()
-        f.rotateToUpOrientation(accordingTo: .up)
-        assertSnapshot(
-            matching: f,
-            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
-        )
+    func testRotateUpMirrored() throws {
+        let url = Bundle.module.url(forResource: "F-UpMirrored", withExtension: "png")!
+        var fUpMirrored = try Bitmap(pngData: try Data(contentsOf: url))
+        fUpMirrored.rotateToUpOrientation(accordingTo: .upMirrored)
+        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
+        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        XCTAssertEqual(fUpMirrored, fUP)
     }
 
-    func testRotateUpMirrored() {
-        var f = fBitmap()
-        f.reflectVertically()
-        f.rotateToUpOrientation(accordingTo: .upMirrored)
-        assertSnapshot(
-            matching: f,
-            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
-        )
+    func testRotateDown() throws {
+        let url = Bundle.module.url(forResource: "F-Down", withExtension: "png")!
+        var fDown = try Bitmap(pngData: try Data(contentsOf: url))
+        fDown.rotateToUpOrientation(accordingTo: .down)
+        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
+        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        XCTAssertEqual(fDown, fUP)
     }
 
-    func testRotateDown() {
-        var f = fBitmap()
-        f.reflectVertically()
-        f.reflectHorizontally()
-        f.rotateToUpOrientation(accordingTo: .down)
-        assertSnapshot(
-            matching: f,
-            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
-        )
+    func testRotateDownMirrored() throws {
+        let url = Bundle.module.url(forResource: "F-DownMirrored", withExtension: "png")!
+        var fDownMirrored = try Bitmap(pngData: try Data(contentsOf: url))
+        fDownMirrored.rotateToUpOrientation(accordingTo: .downMirrored)
+        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
+        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        XCTAssertEqual(fDownMirrored, fUP)
     }
 
-    func testRotateDownMirrored() {
-        var f = fBitmap()
-        f.reflectHorizontally()
-        f.rotateToUpOrientation(accordingTo: .downMirrored)
-        assertSnapshot(
-            matching: f,
-            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
-        )
+    func testRotateLeftMirrored() throws {
+        let url = Bundle.module.url(forResource: "F-LeftMirrored", withExtension: "png")!
+        var fLeftMirrored = try Bitmap(pngData: try Data(contentsOf: url))
+        fLeftMirrored.rotateToUpOrientation(accordingTo: .leftMirrored)
+        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
+        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        XCTAssertEqual(fLeftMirrored, fUP)
     }
 
-    func testRotateLeftMirrored() {
-        var f = fBitmap()
-        f.transpose()
-        f.rotateToUpOrientation(accordingTo: .leftMirrored)
-        assertSnapshot(
-            matching: f,
-            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
-        )
+    func testRotateLeft() throws {
+        let url = Bundle.module.url(forResource: "F-Left", withExtension: "png")!
+        var fLeft = try Bitmap(pngData: try Data(contentsOf: url))
+        fLeft.rotateToUpOrientation(accordingTo: .left)
+        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
+        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        XCTAssertEqual(fLeft, fUP)
     }
 
-    func testRotateLeft() {
-        var f = fBitmap()
-        f.transpose()
-        f.reflectHorizontally()
-        f.rotateToUpOrientation(accordingTo: .left)
-        assertSnapshot(
-            matching: f,
-            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
-        )
+    func testRotateRightMirrored() throws {
+        let url = Bundle.module.url(forResource: "F-RightMirrored", withExtension: "png")!
+        var fRightMirrored = try Bitmap(pngData: try Data(contentsOf: url))
+        fRightMirrored.rotateToUpOrientation(accordingTo: .rightMirrored)
+        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
+        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        XCTAssertEqual(fRightMirrored, fUP)
     }
 
-    func testRotateRightMirrored() {
-        var f = fBitmap()
-        f.transpose()
-        f.reflectVertically()
-        f.reflectHorizontally()
-        f.rotateToUpOrientation(accordingTo: .rightMirrored)
-        assertSnapshot(
-            matching: f,
-            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
-        )
-    }
-
-    func testRotateRight() {
-        var f = fBitmap()
-        f.transpose()
-        f.reflectVertically()
-        f.rotateToUpOrientation(accordingTo: .right)
-        assertSnapshot(
-            matching: f,
-            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
-        )
+    func testRotateRight() throws {
+        let url = Bundle.module.url(forResource: "F-Right", withExtension: "png")!
+        var fRight = try Bitmap(pngData: try Data(contentsOf: url))
+        fRight.rotateToUpOrientation(accordingTo: .right)
+        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
+        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        XCTAssertEqual(fRight, fUP)
     }
 
     func testDraw() {
