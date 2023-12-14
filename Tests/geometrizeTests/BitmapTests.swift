@@ -299,6 +299,16 @@ final class BitmapTests: XCTestCase {
         )
     }
 
+    func testRotateDownMirrored() {
+        var f = fBitmap()
+        f.reflectHorizontally()
+        f.rotateToUpOrientation(accordingTo: .downMirrored)
+        assertSnapshot(
+            matching: f,
+            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
+        )
+    }
+
     func testDraw() {
         var bitmap = Bitmap(width: 4, height: 5, color: .black)
         bitmap.draw(
