@@ -23,10 +23,3 @@ extension Shape {
     }
 
 }
-
-func == (lhs: any Shape, rhs: any Shape) -> Bool {
-    switch (lhs, rhs) {
-    case (let lhs as Rectangle, let rhs as Rectangle): return lhs == rhs
-    default: return false
-    }
-}

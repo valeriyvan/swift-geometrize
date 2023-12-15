@@ -41,11 +41,3 @@ struct State {
     }
 
 }
-
-extension State: Equatable {
-
-    static func == (lhs: State, rhs: State) -> Bool {
-        lhs.score == rhs.score && lhs.alpha == rhs.alpha && lhs.shape == rhs.shape
-    }
-
-}
