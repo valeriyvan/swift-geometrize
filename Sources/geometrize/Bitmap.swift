@@ -271,7 +271,7 @@ public struct Bitmap {
     }
 
     // https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf, page 30
-    enum ExifOrientation: Int {
+    public enum ExifOrientation: Int {
         // 1 The Oth row is at the visual top of the image, and the 0th column is the visual left-hand side.
         case up = 1
         // 2 The Oth row is at the visual top of the image, and the Oth column is the visual right-hand side.
@@ -290,7 +290,7 @@ public struct Bitmap {
         case right = 8
     }
 
-    mutating func rotateToUpOrientation(accordingTo orientation: ExifOrientation) {
+    public mutating func rotateToUpOrientation(accordingTo orientation: ExifOrientation) {
         switch orientation {
         case .up:
             ()
