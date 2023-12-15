@@ -169,3 +169,16 @@ final class CoreTests: XCTestCase {
     }
 
 }
+
+func == (lhs: any Shape, rhs: any Shape) -> Bool {
+    switch (lhs, rhs) {
+    case (let lhs as Circle, let rhs as Circle): return lhs == rhs
+    case (let lhs as Ellipse, let rhs as Ellipse): return lhs == rhs
+    case (let lhs as Line, let rhs as Line): return lhs == rhs
+    case (let lhs as Polyline, let rhs as Polyline): return lhs == rhs
+    case (let lhs as QuadraticBezier, let rhs as QuadraticBezier): return lhs == rhs
+    case (let lhs as Rectangle, let rhs as Rectangle): return lhs == rhs
+    case (let lhs as RotatedRectangle, let rhs as RotatedRectangle): return lhs == rhs
+    default: return false
+    }
+}
