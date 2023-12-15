@@ -239,6 +239,77 @@ public struct Bitmap {
         }
     }
 
+    // TODO: is it possible to do in place?
+    private mutating func reflectDown() {
+        self = Bitmap(width: width, height: height) {
+            self[width - $0 - 1, height - $1 - 1]
+        }
+    }
+
+    private mutating func reflectLeftMirrored() {
+        self = Bitmap(width: height, height: width) {
+            self[$1, $0]
+        }
+    }
+
+    private mutating func reflectLeft() {
+        self = Bitmap(width: height, height: width) {
+            self[$1, height - $0 - 1]
+        }
+    }
+
+    private mutating func reflectRightMirrored() {
+        self = Bitmap(width: height, height: width) {
+            self[width - $1 - 1, height - $0 - 1]
+        }
+    }
+
+    private mutating func reflectRight() {
+        self = Bitmap(width: height, height: width) {
+            self[width - $1 - 1, $0]
+        }
+    }
+
+    // https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf, page 30
+    enum ExifOrientation: Int {
+        // 1 The Oth row is at the visual top of the image, and the 0th column is the visual left-hand side.
+        case up = 1
+        // 2 The Oth row is at the visual top of the image, and the Oth column is the visual right-hand side.
+        case upMirrored = 2
+        // 3 The Oth row is at the visual bottom of the image, and the Oth column is the visual right-hand side.
+        case down = 3
+        // 4 The Oth row is at the visual bottom of the image, and the 0th column is the visual left-hand side.
+        case downMirrored = 4
+        // 5 The Oth row is the visual left-hand side of the image, and the 0th column is the visual top.
+        case leftMirrored = 5
+        // 6 The Oth row is the visual right-hand side of the image, and the 0th column is the visual top.
+        case left = 6
+        // 7 The Oth row is the visual right-hand side of the image, and the 0th column is the visual bottom.
+        case rightMirrored = 7
+        // 8 The Oth row is the visual left-hand side of the image, and the 0th column is the visual bottom.
+        case right = 8
+    }
+
+    mutating func rotateToUpOrientation(accordingTo orientation: ExifOrientation) {
+        switch orientation {
+        case .up:
+            ()
+        case .upMirrored:
+            reflectVertically()
+        case .down:
+            reflectDown()
+        case .downMirrored:
+            reflectHorizontally()
+        case .leftMirrored:
+            reflectLeftMirrored()
+        case .left:
+            reflectLeft()
+        case .rightMirrored:
+            reflectRightMirrored()
+        case .right:
+            reflectRight()
+        }
+    }
 }
 
 extension Bitmap: Equatable {
@@ -405,4 +476,4 @@ extension Bitmap {
         return true
     }
 
-}
+} // swiftlint:disable:this file_length
