@@ -23,7 +23,7 @@ enum LineOverlap {
     case none
     case major
     case minor
-    case both
+    // case both
 }
 
 // swiftlint:disable:next cyclomatic_complexity function_body_length
