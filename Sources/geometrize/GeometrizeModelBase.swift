@@ -51,8 +51,6 @@ class GeometrizeModelBase {
     /// The target bitmap, the bitmap we aim to approximate.
     internal var targetBitmap: Bitmap
 
-    func getTarget() -> Bitmap { targetBitmap }
-
     /// The current bitmap.
     internal var currentBitmap: Bitmap
 
