@@ -7,6 +7,7 @@ public struct SVGExporter {
     /// A hook that an SVG exporter should use to augment shape styling produced by the getSvgShapeData method.
     private let svg_style_hook = "::svg_style_hook::" // swiftlint:disable:this identifier_name
 
+    // TODO: get rid of this
     public enum RotatedEllipseSVGExportMode {
         /// Export as a translated, rotated and scaled svg <ellipse>. OpenFL's SVG library can't handle this
         case ellipseItem
@@ -14,12 +15,13 @@ public struct SVGExporter {
         case polygon
     }
 
+    // TODO: get rid of this
     /// Represents the options that can be set for the SVG
     public struct ExportOptions {
         /// Technique to use when exporting rotated ellipses
         let rotatedEllipseExportMode: RotatedEllipseSVGExportMode
         /// Id to tag the exported SVG shapes with
-        var itemId: Int
+        var itemId: Int // TODO: it is not nice how it is used
         public init(rotatedEllipseExportMode: RotatedEllipseSVGExportMode = .ellipseItem, itemId: Int = 0) {
             self.rotatedEllipseExportMode = rotatedEllipseExportMode
             self.itemId = itemId
@@ -85,12 +87,14 @@ public struct SVGExporter {
     ///   - width The width of the SVG image.
     ///   - height The height of the SVG image.
     ///   - options additional options used by the exporter.
+    ///   - updateMarker place where new elements should be inserted. Better if this will be correct XML comment.
     /// - Returns: A string representing the SVG image.
     public func export(
         data: [ShapeResult],
         width: Int,
         height: Int,
-        options: ExportOptions = ExportOptions()
+        options: ExportOptions = ExportOptions(),
+        updateMarker: String? = nil
     ) -> String {
         var str = """
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -103,9 +107,20 @@ public struct SVGExporter {
             str += singleShapeData(color: shapeResult.color, shape: shapeResult.shape, options: options)
         }
 
+        if let updateMarker {
+            str += updateMarker
+        }
+
         str += "</svg>"
 
         return str
+    }
+
+    public func export(
+        shapeResult: ShapeResult,
+        options: ExportOptions = ExportOptions()
+    ) -> String {
+        singleShapeData(color: shapeResult.color, shape: shapeResult.shape, options: options)
     }
 
     private func shapeData(rectangle r: Rectangle) -> String {
