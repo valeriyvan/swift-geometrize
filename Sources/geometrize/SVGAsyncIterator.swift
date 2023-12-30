@@ -1,8 +1,8 @@
 import Foundation
 
 struct SVGAsyncIterator: AsyncIteratorProtocol {
-    private let originalPhotoWidth: Int
-    private let originalPhotoHeight: Int
+    private let originWidth: Int
+    private let originHeight: Int
     private let shapeTypes: [Shape.Type]
     private let iterations: Int
     private let shapesPerIteration: Int
@@ -21,7 +21,7 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
 
     init(
         bitmap: Bitmap,
-        downscaleImageToMaxSize downscaleSize: Int = 500,
+        downscaleToMaxSize downscaleSize: Int = 500,
         shapeTypes: [Shape.Type],
         strokeWidth: Int,
         iterations: Int,
@@ -32,9 +32,9 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
         self.shapesPerIteration = shapesPerIteration
 
         var targetBitmap = bitmap
-        originalPhotoWidth = bitmap.width
-        originalPhotoHeight = bitmap.height
-        let maxSize = max(originalPhotoWidth, originalPhotoHeight)
+        originWidth = bitmap.width
+        originHeight = bitmap.height
+        let maxSize = max(originWidth, originHeight)
         if maxSize > downscaleSize {
             targetBitmap = bitmap.downsample(factor: maxSize / downscaleSize)
         }
@@ -102,7 +102,7 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
 
         // Fix SVG to keep original image size
         let range = svg.range(of: "width=")!.lowerBound ..< svg.range(of: "viewBox=")!.lowerBound
-        svg.replaceSubrange(range.relative(to: svg), with: " width=\"\(originalPhotoWidth)\" height=\"\(originalPhotoHeight)\" ")
+        svg.replaceSubrange(range.relative(to: svg), with: " width=\"\(originWidth)\" height=\"\(originHeight)\" ")
 
         print("Iteration \(iterationCounter) complete, \(stepShapeData.count) shapes in iteration, \(shapeData.count) shapes in total.")
         return GeometrizingResult(svg: svg, thumbnail: runner.currentBitmap)
