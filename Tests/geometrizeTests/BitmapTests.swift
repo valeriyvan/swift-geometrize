@@ -2,7 +2,7 @@ import XCTest
 import SnapshotTesting
 @testable import Geometrize
 
-final class BitmapTests: XCTestCase {
+final class BitmapTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     func testInit() throws {
         let bitmap = Bitmap()
@@ -379,4 +379,62 @@ final class BitmapTests: XCTestCase {
         )
     }
 
-}
+    func testPpmString() {
+        XCTAssertEqual(
+            Bitmap(
+                width: 3, height: 2,
+                data: [
+                    1, 2, 3, 255,
+                    4, 5, 6, 255,
+                    7, 8, 9, 255,
+                    10, 11, 12, 255,
+                    13, 14, 15, 255,
+                    16, 17, 18, 255
+                ]
+            ).ppmString,
+            """
+            P3
+            3 2
+            255
+            1 2 3
+            4 5 6
+            7 8 9
+            10 11 12
+            13 14 15
+            16 17 18
+
+            """
+        )
+    }
+
+    func testInitFromPpmString() {
+        XCTAssertEqual(
+            Bitmap(ppmString:
+                """
+                P3
+                3 2
+                255
+                1 2 3
+                4 5 6
+                7 8 9
+                10 11 12
+                13 14 15
+                16 17 18
+
+                """
+            ),
+            Bitmap(
+                width: 3, height: 2,
+                data: [
+                    1, 2, 3, 255,
+                    4, 5, 6, 255,
+                    7, 8, 9, 255,
+                    10, 11, 12, 255,
+                    13, 14, 15, 255,
+                    16, 17, 18, 255
+                ]
+            )
+        )
+    }
+
+} // swiftlint:disable:this file_length

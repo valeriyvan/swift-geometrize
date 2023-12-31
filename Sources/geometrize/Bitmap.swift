@@ -1,4 +1,5 @@
 import Foundation
+import Algorithms
 
 /// Helper for working with bitmap data.
 /// Pixels are ordered line by line, like arrays in C.
@@ -447,6 +448,91 @@ extension Bitmap: CustomStringConvertible {
 
     public var description: String {
         "width: \(width), height: \(height)\n" + backing.map(String.init).joined(separator: ",")
+    }
+
+}
+
+extension Bitmap {
+
+    public init(ppmString string: String) {
+        let scanner = Scanner(string: string)
+        scanner.charactersToBeSkipped = .whitespacesAndNewlines
+        guard
+            scanner.scanString("P3") != nil,
+            let width = scanner.scanInt(), width > 0,
+            let height = scanner.scanInt(), height > 0,
+            let maxValue = scanner.scanInt(), maxValue == 255
+        else {
+            fatalError()
+        }
+        self.width = width
+        self.height = height
+        backing = ContiguousArray<UInt8>(repeating: 0, count: width * height * 4)
+
+        var counter: Int = 0
+
+        repeat {
+            guard 
+                let red = scanner.scanInt(), 0...255 ~= red,
+                let green = scanner.scanInt(), 0...255 ~= green,
+                let blue = scanner.scanInt(), 0...255 ~= blue
+            else {
+                fatalError()
+            }
+            backing[counter] = UInt8(red)
+            counter += 1
+            backing[counter] = UInt8(green)
+            counter += 1
+            backing[counter] = UInt8(blue)
+            counter += 1
+            backing[counter] = 255
+            counter += 1
+        } while counter < width * height * 4
+
+        guard counter == width * height * 4 else {
+            fatalError()
+        }
+    }
+
+    public var ppmString: String {
+        """
+        P3
+        \(width) \(height)
+        255
+
+        """
+        +
+        backing
+            .chunks(ofCount: 4)
+            .map(premultipliedAlpha(_:))
+            .compactMap { $0.map(String.init).joined(separator: " ") + "\n"   }
+            .joined()
+    }
+
+    private func premultipliedAlpha(_ slice: ArraySlice<UInt8>) -> [UInt8] {
+        assert(slice.count == 4)
+        let red = slice[slice.indices.first!]
+        let green = slice[slice.indices.first! + 1]
+        let blue = slice[slice.indices.first! + 2]
+        let alpha = slice[slice.indices.first! + 3]
+
+        // Normalize color channels to the range [0, 1]
+        let normalizedRed = Double(red) / 255.0
+        let normalizedGreen = Double(green) / 255.0
+        let normalizedBlue = Double(blue) / 255.0
+        let normalizedAlpha = Double(alpha) / 255.0
+
+        // Premultiply color channels by alpha
+        var premultipliedRed = normalizedRed * normalizedAlpha
+        var premultipliedGreen = normalizedGreen * normalizedAlpha
+        var premultipliedBlue = normalizedBlue * normalizedAlpha
+
+        // Denormalize the result back to the range [0, 255]
+        premultipliedRed *= 255.0
+        premultipliedGreen *= 255.0
+        premultipliedBlue *= 255.0
+
+        return [UInt8(premultipliedRed), UInt8(premultipliedGreen), UInt8(premultipliedBlue)]
     }
 
 }
