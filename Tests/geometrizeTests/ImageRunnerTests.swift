@@ -51,7 +51,12 @@ final class ImageRunnerTests: XCTestCase {
             counter += 1
         }
 
-        let svg = SVGExporter().export(data: shapeData, width: width, height: height)
+        let svg = SVGExporter()
+            .exportCompleteSVG(
+                data: shapeData,
+                width: width, height: height,
+                originWidth: targetBitmap.width, originHeight: targetBitmap.height
+            )
 
         print(svg)
     }

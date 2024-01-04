@@ -52,6 +52,10 @@ default:
     exit(1)
 }
 
+let ppmString = targetBitmap.ppmString
+let url = inputUrl.appendingPathExtension("ppm")
+try! ppmString.write(to: url, atomically: true, encoding: .utf8) // swiftlint:disable:this force_try
+
 let outputUrl = URL(fileURLWithPath: options.outputPath)
 guard outputUrl.pathExtension.caseInsensitiveCompare("svg") == .orderedSame else {
     print("Only SVG output file format is supported at the moment.")
@@ -138,7 +142,12 @@ while shapeData.count <= shapeCount {
     counter += 1
 }
 
-let svg = SVGExporter().export(data: shapeData, width: width, height: height)
+let svg = SVGExporter()
+    .exportCompleteSVG(
+        data: shapeData,
+        width: width, height: height,
+        originWidth: targetBitmap.width, originHeight: targetBitmap.height
+    )
 
 do {
     try svg.write(to: outputUrl, atomically: true, encoding: .utf8)

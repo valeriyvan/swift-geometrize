@@ -6,6 +6,7 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
     private let shapeTypes: [Shape.Type]
     private let iterations: Int
     private let shapesPerIteration: Int
+    private let iterationOptions: IterationOptions
 
     private let width, height: Int
 
@@ -16,6 +17,11 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
     private let runnerOptions: ImageRunnerOptions
     private var runner: ImageRunner
 
+    enum IterationOptions {
+        case completeSVGEachIteration
+        case completeSVGFirstIterationThenDeltas(updateMarker: String)
+    }
+
     // Counts attempts to add shapes. Not all attempts to add shape result in adding a shape.
     private var stepCounter: Int
 
@@ -25,11 +31,16 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
         shapeTypes: [Shape.Type],
         strokeWidth: Int,
         iterations: Int,
-        shapesPerIteration: Int
+        shapesPerIteration: Int,
+        iterationOptions: IterationOptions = .completeSVGEachIteration
     ) {
         self.shapeTypes = shapeTypes
         self.iterations = iterations
         self.shapesPerIteration = shapesPerIteration
+        if case .completeSVGFirstIterationThenDeltas(let updateMarker) = iterationOptions {
+            precondition(!updateMarker.isEmpty)
+        }
+        self.iterationOptions = iterationOptions
 
         var targetBitmap = bitmap
         originWidth = bitmap.width
@@ -96,13 +107,20 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
         }
 
         shapeData.append(contentsOf: stepShapeData)
+
+        var svg: String
+        switch iterationOptions {
+        case .completeSVGEachIteration:
+            svg = SVGExporter().exportCompleteSVG(data: shapeData, width: width, height: height, originWidth: originWidth, originHeight: originHeight)
+        case .completeSVGFirstIterationThenDeltas(let updateMarker) where iterationCounter == 0:
+            svg = SVGExporter().exportCompleteSVG(data: shapeData, width: width, height: height, originWidth: originWidth, originHeight: originHeight, updateMarker: updateMarker)
+        case .completeSVGFirstIterationThenDeltas where iterationCounter > 0:
+            svg = SVGExporter().exportShapesAsSVGFragment(data: shapeData)
+        case .completeSVGFirstIterationThenDeltas:
+            fatalError()
+        }
+
         iterationCounter += 1
-
-        var svg = SVGExporter().export(data: shapeData, width: width, height: height)
-
-        // Fix SVG to keep original image size
-        let range = svg.range(of: "width=")!.lowerBound ..< svg.range(of: "viewBox=")!.lowerBound
-        svg.replaceSubrange(range.relative(to: svg), with: " width=\"\(originWidth)\" height=\"\(originHeight)\" ")
 
         print("Iteration \(iterationCounter) complete, \(stepShapeData.count) shapes in iteration, \(shapeData.count) shapes in total.")
         return GeometrizingResult(svg: svg, thumbnail: runner.currentBitmap)

@@ -13,6 +13,7 @@ struct SVGAsyncSequence: AsyncSequence {
     let strokeWidth: Int
     let iterations: Int
     let shapesPerIteration: Int
+    let iterationOptions: SVGAsyncIterator.IterationOptions
 
     func makeAsyncIterator() -> SVGAsyncIterator {
         SVGAsyncIterator(
@@ -20,7 +21,8 @@ struct SVGAsyncSequence: AsyncSequence {
             shapeTypes: shapeTypes,
             strokeWidth: strokeWidth,
             iterations: iterations,
-            shapesPerIteration: shapesPerIteration
+            shapesPerIteration: shapesPerIteration,
+            iterationOptions: iterationOptions
         )
     }
 }

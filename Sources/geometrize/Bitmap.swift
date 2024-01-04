@@ -1,5 +1,5 @@
 import Foundation
-import Algorithms
+import Algorithms // chunks(ofCount:)
 
 /// Helper for working with bitmap data.
 /// Pixels are ordered line by line, like arrays in C.
