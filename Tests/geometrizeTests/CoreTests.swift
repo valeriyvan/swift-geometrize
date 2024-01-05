@@ -93,7 +93,6 @@ final class CoreTests: XCTestCase {
         XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit)
     }
 
-    // fails
     func testHillClimbComparingResultWithCPlusPlus() throws { // swiftlint:disable:this function_body_length
         let randomNumbersString = try String(contentsOf: Bundle.module.url(forResource: "hillClimb randomRange", withExtension: "txt")!)
         let lines = randomNumbersString.components(separatedBy: .newlines)
@@ -111,10 +110,11 @@ final class CoreTests: XCTestCase {
                 let theMax = scanner.scanInt(),
                 theMin == range.lowerBound, theMax == range.upperBound
             else {
-                fatalError()
+                fatalError("Line \(counter) cannot be parsed: \"\(line)\". Allowed range \(range).")
             }
             return random
         }
+        let __randomImplementationReference = _randomImplementationReference
         _randomImplementationReference = randomRangeFromFile
 
         let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb target bitmap", withExtension: "txt")!))
@@ -166,6 +166,8 @@ final class CoreTests: XCTestCase {
         XCTAssertTrue(stateOnExit.shape == stateOnExitSample.shape) // XCTAssertTrue failed
 
         XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit) // XCTAssertEqual
+
+        _randomImplementationReference = __randomImplementationReference
     }
 
 }
