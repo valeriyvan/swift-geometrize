@@ -25,6 +25,8 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
     // Counts attempts to add shapes. Not all attempts to add shape result in adding a shape.
     private var stepCounter: Int
 
+    private let debugPrint: Bool
+
     init(
         bitmap: Bitmap,
         downscaleToMaxSize downscaleSize: Int = 500,
@@ -32,7 +34,8 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
         strokeWidth: Int,
         iterations: Int,
         shapesPerIteration: Int,
-        iterationOptions: IterationOptions = .completeSVGEachIteration
+        iterationOptions: IterationOptions = .completeSVGEachIteration,
+        debugPrint: Bool = false
     ) {
         self.shapeTypes = shapeTypes
         self.iterations = iterations
@@ -41,6 +44,7 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
             precondition(!updateMarker.isEmpty)
         }
         self.iterationOptions = iterationOptions
+        self.debugPrint = debugPrint
 
         var targetBitmap = bitmap
         originWidth = bitmap.width
@@ -89,7 +93,9 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
         guard iterationCounter < iterations else { return nil }
         var stepShapeData: [ShapeResult] = []
         while stepShapeData.count < shapesPerIteration {
-            print("Step \(stepCounter)", terminator: "")
+            if debugPrint {
+                print("Step \(stepCounter)", terminator: "")
+            }
             let stepResult = runner.step(
                 options: runnerOptions,
                 shapeCreator: nil,
@@ -97,12 +103,18 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
                 addShapePrecondition: defaultAddShapePrecondition
             )
             if let stepResult {
-                print(", \(stepResult.shape.description) added.", terminator: "")
+                if debugPrint {
+                    print(", \(stepResult.shape.description) added.", terminator: "")
+                }
                 stepShapeData.append(stepResult)
             } else {
-                print(", no shapes added.", terminator: "")
+                if debugPrint {
+                    print(", no shapes added.", terminator: "")
+                }
             }
-            print(" Total count of shapes \(shapeData.count + stepShapeData.count).")
+            if debugPrint {
+                print(" Total count of shapes \(shapeData.count + stepShapeData.count).")
+            }
             stepCounter += 1
         }
 
@@ -122,7 +134,9 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
 
         iterationCounter += 1
 
-        print("Iteration \(iterationCounter) complete, \(stepShapeData.count) shapes in iteration, \(shapeData.count) shapes in total.")
+        if debugPrint {
+            print("Iteration \(iterationCounter) complete, \(stepShapeData.count) shapes in iteration, \(shapeData.count) shapes in total.")
+        }
         return GeometrizingResult(svg: svg, thumbnail: runner.currentBitmap)
     }
 
