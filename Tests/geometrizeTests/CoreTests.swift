@@ -33,7 +33,7 @@ final class CoreTests: XCTestCase {
     }
 
     func testDifferenceFullComparingResultWithCPlusPlus() throws {
-        let firstUrl = Bundle.module.url(forResource: "differenceFull bitmap first", withExtension: "ppm")!
+        let firstUrl = Bundle.module.url(forResource: "monarch_butterfly", withExtension: "ppm")!
         let bitmapFirst = Bitmap(ppmString: try String(contentsOf: firstUrl))
         let secondUrl = Bundle.module.url(forResource: "differenceFull bitmap second", withExtension: "ppm")!
         let bitmapSecond = Bitmap(ppmString: try String(contentsOf: secondUrl))
@@ -41,7 +41,7 @@ final class CoreTests: XCTestCase {
     }
 
     func testDifferencePartialComparingResultWithCPlusPlus() throws {
-        let bitmapTarget = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap target", withExtension: "ppm")!))
+        let bitmapTarget = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "monarch_butterfly", withExtension: "ppm")!))
         let bitmapBefore = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap before", withExtension: "ppm")!))
         let bitmapAfter = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap after", withExtension: "ppm")!))
 
@@ -72,7 +72,7 @@ final class CoreTests: XCTestCase {
         }
         let scanlines = components.map(Scanline.init)
 
-        let bitmapTarget = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction target bitmap", withExtension: "ppm")!))
+        let bitmapTarget = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "monarch_butterfly", withExtension: "ppm")!))
         let bitmapCurrent = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction current bitmap", withExtension: "ppm")!))
         var bitmapBuffer = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap", withExtension: "ppm")!))
         let bitmapBufferOnExit = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap on exit", withExtension: "ppm")!))
@@ -117,7 +117,7 @@ final class CoreTests: XCTestCase {
         let __randomImplementationReference = _randomImplementationReference
         _randomImplementationReference = randomRangeFromFile
 
-        let bitmapTarget = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "hillClimb target bitmap", withExtension: "ppm")!))
+        let bitmapTarget = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "monarch_butterfly", withExtension: "ppm")!))
         let bitmapCurrent = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "hillClimb current bitmap", withExtension: "ppm")!))
         var bitmapBuffer = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap", withExtension: "ppm")!))
         let bitmapBufferOnExit = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap on exit", withExtension: "ppm")!))
