@@ -43,7 +43,7 @@ public struct SVGExporter {
     ///   - originWidth: The width of the original image.
     ///   - originHeight: The height of the original image.
     /// - Returns: A string representing the SVG image.
-    func exportSingleShape(
+    func exportSingleShape( // swiftlint:disable:this function_parameter_count
         color: Rgba,
         shape: any Shape,
         width: Int,
