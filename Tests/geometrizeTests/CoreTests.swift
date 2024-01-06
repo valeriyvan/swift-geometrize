@@ -114,7 +114,7 @@ final class CoreTests: XCTestCase {
             }
             return random
         }
-        let __randomImplementationReference = _randomImplementationReference
+        let backupRandomImplementationReference = _randomImplementationReference
         _randomImplementationReference = randomRangeFromFile
 
         let bitmapTarget = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "monarch_butterfly", withExtension: "ppm")!))
@@ -167,7 +167,7 @@ final class CoreTests: XCTestCase {
 
         XCTAssertEqual(bitmapBuffer, bitmapBufferOnExit) // XCTAssertEqual
 
-        _randomImplementationReference = __randomImplementationReference
+        _randomImplementationReference = backupRandomImplementationReference
     }
 
 }
