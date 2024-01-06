@@ -1,6 +1,7 @@
 import Foundation
 
-    public struct SVGAsyncIterator: AsyncIteratorProtocol {
+public struct SVGAsyncIterator: AsyncIteratorProtocol {
+
     private let originWidth: Int
     private let originHeight: Int
     private let shapeTypes: [Shape.Type]
