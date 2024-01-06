@@ -1,12 +1,12 @@
 import Foundation
 
-struct GeometrizingResult {
+public struct GeometrizingResult {
     let svg: String
     let thumbnail: Bitmap
 }
 
-struct SVGAsyncSequence: AsyncSequence {
-    typealias Element = GeometrizingResult
+public struct SVGAsyncSequence: AsyncSequence {
+    public typealias Element = GeometrizingResult
 
     let bitmap: Bitmap
     let shapeTypes: [Shape.Type]
@@ -15,7 +15,7 @@ struct SVGAsyncSequence: AsyncSequence {
     let shapesPerIteration: Int
     let iterationOptions: SVGAsyncIterator.IterationOptions
 
-    func makeAsyncIterator() -> SVGAsyncIterator {
+    public func makeAsyncIterator() -> SVGAsyncIterator {
         SVGAsyncIterator(
             bitmap: bitmap,
             shapeTypes: shapeTypes,

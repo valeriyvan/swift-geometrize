@@ -1,6 +1,6 @@
 import Foundation
 
-struct SVGAsyncIterator: AsyncIteratorProtocol {
+    public struct SVGAsyncIterator: AsyncIteratorProtocol {
     private let originWidth: Int
     private let originHeight: Int
     private let shapeTypes: [Shape.Type]
@@ -17,7 +17,7 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
     private let runnerOptions: ImageRunnerOptions
     private var runner: ImageRunner
 
-    enum IterationOptions {
+    public enum IterationOptions {
         case completeSVGEachIteration
         case completeSVGFirstIterationThenDeltas(updateMarker: String)
     }
@@ -27,7 +27,7 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
 
     private let debugPrint: Bool
 
-    init(
+    public init(
         bitmap: Bitmap,
         downscaleToMaxSize downscaleSize: Int = 500,
         shapeTypes: [Shape.Type],
@@ -89,7 +89,7 @@ struct SVGAsyncIterator: AsyncIteratorProtocol {
         )
     }
 
-    mutating func next() async throws -> GeometrizingResult? {
+    public mutating func next() async throws -> GeometrizingResult? { // swiftlint:disable:this cyclomatic_complexity
         guard iterationCounter < iterations else { return nil }
         var stepShapeData: [ShapeResult] = []
         while stepShapeData.count < shapesPerIteration {
