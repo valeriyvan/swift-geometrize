@@ -117,10 +117,10 @@ final class CoreTests: XCTestCase {
         let __randomImplementationReference = _randomImplementationReference
         _randomImplementationReference = randomRangeFromFile
 
-        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb target bitmap", withExtension: "txt")!))
-        let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb current bitmap", withExtension: "txt")!))
-        var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap", withExtension: "txt")!))
-        let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap on exit", withExtension: "txt")!))
+        let bitmapTarget = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "hillClimb target bitmap", withExtension: "ppm")!))
+        let bitmapCurrent = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "hillClimb current bitmap", withExtension: "ppm")!))
+        var bitmapBuffer = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap", withExtension: "ppm")!))
+        let bitmapBufferOnExit = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap on exit", withExtension: "ppm")!))
 
         let rectangle = Rectangle(strokeWidth: 1, x1: 281, y1: 193, x2: 309, y2: 225)
         // rectangle.setupImplementation = { r in
