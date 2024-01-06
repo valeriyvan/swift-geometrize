@@ -33,17 +33,17 @@ final class CoreTests: XCTestCase {
     }
 
     func testDifferenceFullComparingResultWithCPlusPlus() throws {
-        let firstUrl = Bundle.module.url(forResource: "differenceFull bitmap first", withExtension: "txt")!
-        let bitmapFirst = Bitmap(stringLiteral: try String(contentsOf: firstUrl))
-        let secondUrl = Bundle.module.url(forResource: "differenceFull bitmap second", withExtension: "txt")!
-        let bitmapSecond = Bitmap(stringLiteral: try String(contentsOf: secondUrl))
+        let firstUrl = Bundle.module.url(forResource: "differenceFull bitmap first", withExtension: "ppm")!
+        let bitmapFirst = Bitmap(ppmString: try String(contentsOf: firstUrl))
+        let secondUrl = Bundle.module.url(forResource: "differenceFull bitmap second", withExtension: "ppm")!
+        let bitmapSecond = Bitmap(ppmString: try String(contentsOf: secondUrl))
         XCTAssertEqual(bitmapFirst.differenceFull(with: bitmapSecond), 0.170819, accuracy: 0.000001)
     }
 
     func testDifferencePartialComparingResultWithCPlusPlus() throws {
-        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap target", withExtension: "txt")!))
-        let bitmapBefore = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap before", withExtension: "txt")!))
-        let bitmapAfter = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap after", withExtension: "txt")!))
+        let bitmapTarget = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap target", withExtension: "ppm")!))
+        let bitmapBefore = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap before", withExtension: "ppm")!))
+        let bitmapAfter = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap after", withExtension: "ppm")!))
 
         let scanlinesString = try String(contentsOf: Bundle.module.url(forResource: "differencePartial scanlines", withExtension: "txt")!)
         var components = scanlinesString.components(separatedBy: "),")
@@ -72,10 +72,10 @@ final class CoreTests: XCTestCase {
         }
         let scanlines = components.map(Scanline.init)
 
-        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction target bitmap", withExtension: "txt")!))
-        let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction current bitmap", withExtension: "txt")!))
-        var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap", withExtension: "txt")!))
-        let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap on exit", withExtension: "txt")!))
+        let bitmapTarget = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction target bitmap", withExtension: "ppm")!))
+        let bitmapCurrent = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction current bitmap", withExtension: "ppm")!))
+        var bitmapBuffer = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap", withExtension: "ppm")!))
+        let bitmapBufferOnExit = Bitmap(ppmString: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap on exit", withExtension: "ppm")!))
 
         XCTAssertEqual(
             defaultEnergyFunction(
