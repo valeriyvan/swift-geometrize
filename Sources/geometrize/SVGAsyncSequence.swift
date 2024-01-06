@@ -1,8 +1,8 @@
 import Foundation
 
 public struct GeometrizingResult {
-    let svg: String
-    let thumbnail: Bitmap
+    public let svg: String
+    public let thumbnail: Bitmap
 }
 
 public struct SVGAsyncSequence: AsyncSequence {
