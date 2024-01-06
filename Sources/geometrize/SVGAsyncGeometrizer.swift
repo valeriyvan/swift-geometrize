@@ -1,6 +1,6 @@
 import Foundation
 
-enum SVGAsyncGeometrizer {
+public enum SVGAsyncGeometrizer {
 
     // Returns SVGAsyncSequence which produces intermediate geometrizing results
     // which are SVG strings + thumbnails. The last sequence element is final result.
