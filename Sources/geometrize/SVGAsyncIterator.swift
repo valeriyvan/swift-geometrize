@@ -62,13 +62,14 @@ public struct SVGAsyncIterator: AsyncIteratorProtocol {
 
         stepCounter = 0
 
+        // TODO: parameterize this
         runnerOptions = ImageRunnerOptions(
             shapeTypes: shapeTypes,
             strokeWidth: strokeWidth,
             alpha: 128,
-            shapeCount: 500, // ?
+            shapeCount: 500, // TODO: ???
             maxShapeMutations: 100,
-            seed: 9001, // !
+            seed: 9001, // TODO: !!!
             maxThreads: 1,
             shapeBounds: ImageRunnerShapeBoundsOptions(
                 enabled: false,
