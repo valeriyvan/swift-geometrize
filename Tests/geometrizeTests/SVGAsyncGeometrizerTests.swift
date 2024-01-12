@@ -4,7 +4,7 @@ import XCTest
 
 final class SVGAsyncGeometrizerTests: XCTestCase {
 
-    func testGeometrize() async throws {
+    func testAsyncGeometrizerCompleteSVGEachIteration() async throws {
         guard
             let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm"),
             let urlOutput = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "svg")
@@ -39,4 +39,52 @@ final class SVGAsyncGeometrizerTests: XCTestCase {
         XCTAssertEqual(results.last!, svg)
     }
 
+    func testAsyncGeometrizerCompleteSVGFirstIterationThenDeltas() async throws {
+        guard
+            let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm"),
+            let urlOutput = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "svg")
+        else {
+            fatalError()
+        }
+        let ppmString = try String(contentsOf: urlSource)
+        let bitmap = Bitmap(ppmString: ppmString)
+
+        let updateMarker = "<!-- insert here next shapes -->\n"
+
+        let svgSequence: SVGAsyncSequence = try await SVGAsyncGeometrizer.geometrize(
+            bitmap: bitmap,
+            shapeTypes: [RotatedEllipse.self],
+            strokeWidth: 1,
+            iterations: 500,
+            shapesPerIteration: 1,
+            iterationOptions: .completeSVGFirstIterationThenDeltas(updateMarker: updateMarker)
+        )
+
+
+        var firstSVG: String? = nil
+        var svgAdOns: String = ""
+        var counter = 0
+
+        for try await result in svgSequence {
+            if firstSVG != nil {
+                try? result.svg.write(to: URL(fileURLWithPath: "/tmp/full\(counter).svg"), atomically: true, encoding: .utf8)
+                svgAdOns += result.svg
+            } else {
+                let svgLines = result.svg.components(separatedBy: .newlines)
+                firstSVG = svgLines.dropFirst(2).joined(separator: "\n")
+                try? firstSVG?.write(to: URL(fileURLWithPath: "/tmp/full0.svg"), atomically: true, encoding: .utf8)
+            }
+            counter += 1
+        }
+
+        let fullSVG = firstSVG?.replacingOccurrences(of: updateMarker, with: svgAdOns)
+        try? fullSVG?.write(to: URL(fileURLWithPath: "/tmp/full.svg"), atomically: true, encoding: .utf8)
+
+        // Unfortunately this crashes
+        // assertSnapshot(of: fullSVG, as: .lines)
+
+        let sampleSVG = try String(contentsOf: urlOutput, encoding: .utf8)
+
+        XCTAssertEqual(fullSVG, sampleSVG)
+    }
 }
