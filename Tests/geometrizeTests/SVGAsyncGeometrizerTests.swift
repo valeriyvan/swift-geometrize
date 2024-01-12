@@ -63,22 +63,17 @@ final class SVGAsyncGeometrizerTests: XCTestCase {
 
         var firstSVG: String? = nil
         var svgAdOns: String = ""
-        var counter = 0
 
         for try await result in svgSequence {
             if firstSVG != nil {
-                try? result.svg.write(to: URL(fileURLWithPath: "/tmp/full\(counter).svg"), atomically: true, encoding: .utf8)
                 svgAdOns += result.svg
             } else {
                 let svgLines = result.svg.components(separatedBy: .newlines)
                 firstSVG = svgLines.dropFirst(2).joined(separator: "\n")
-                try? firstSVG?.write(to: URL(fileURLWithPath: "/tmp/full0.svg"), atomically: true, encoding: .utf8)
             }
-            counter += 1
         }
 
         let fullSVG = firstSVG?.replacingOccurrences(of: updateMarker, with: svgAdOns)
-        try? fullSVG?.write(to: URL(fileURLWithPath: "/tmp/full.svg"), atomically: true, encoding: .utf8)
 
         // Unfortunately this crashes
         // assertSnapshot(of: fullSVG, as: .lines)

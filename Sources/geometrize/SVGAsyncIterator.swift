@@ -129,7 +129,7 @@ public struct SVGAsyncIterator: AsyncIteratorProtocol {
         case .completeSVGFirstIterationThenDeltas(let updateMarker) where iterationCounter == 0:
             svg = SVGExporter().exportCompleteSVG(data: shapeData, width: width, height: height, originWidth: originWidth, originHeight: originHeight, updateMarker: updateMarker)
         case .completeSVGFirstIterationThenDeltas where iterationCounter > 0:
-            svg = SVGExporter().exportShapesAsSVGFragment(data: shapeData)
+            svg = SVGExporter().exportShapesAsSVGFragment(data: stepShapeData)
         case .completeSVGFirstIterationThenDeltas:
             fatalError()
         }
