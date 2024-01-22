@@ -26,14 +26,17 @@ extension Bitmap {
     }
 
     /// Calculates the root-mean-square error between the parts of the two bitmaps within the scanline mask.
-    /// This is for optimization purposes, it lets us calculate new error values only for parts of the image
-    /// we know have changed.
+    /// This is for optimization purposes, it lets calculate new error values only for parts of the image
+    /// known to be changed.
     /// - Parameters:
     ///   - second: The bitmap after the change.
     ///   - target: The target bitmap.
     ///   - score: The score.
     ///   - mask: The scanlines.
     /// - Returns: The difference/error between the two bitmaps, masked by the scanlines.
+    ///
+    /// Doesn't take into consideration human color perception.
+    /// Look https://en.wikipedia.org/wiki/Color_difference
     func differencePartial(
         with second: Bitmap,
         target: Bitmap,
