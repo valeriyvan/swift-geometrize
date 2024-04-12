@@ -3,8 +3,8 @@
 import PackageDescription
 
 var dependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/kelvin13/swift-png.git", from: "4.0.2"),
-    .package(url: "https://github.com/valeriyvan/jpeg.git", from: "1.0.2"),
+    .package(url: "https://github.com/tayloraswift/swift-png.git", from: "4.0.2"), // try upgrade to latest 4.4.1
+    .package(url: "https://github.com/tayloraswift/jpeg.git", revision: "fc21d193b85ad8593b0a894b1dec9bef56254058"),
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.13.0"),
     .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.0.0"),
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.4"),
@@ -53,7 +53,10 @@ let package = Package(
                 "Geometrize",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "PNG", package: "swift-png"),
-                .product(name: "JPEG", package: "jpeg")
+                .product(name: "JPEG", package: "jpeg", moduleAliases: ["JPEG": "SwiftJPEG"])
+                // alias solves build error
+                // error: multiple products named 'unit-test' in: 'jpeg' (at '****/jpeg'), 'swift-png' (from 'https://github.com/tayloraswift/swift-png.git')
+                // https://github.com/tayloraswift/jpeg/issues/4
             ],
             plugins: plugins
         ),
