@@ -12,8 +12,9 @@ on:
 jobs:
   build:
 
-    runs-on:  macOS-12 # used to be macos-latest
-                       # look https://github.com/actions/runner-images/issues/6384
+    runs-on:  macOS-13 # used to be macos-latest
+                       # look https://github.com/actions/runner-images/issues/6384 for info 
+                       # why it was changed from macos-latest to macOS-12
 
     steps:
     - uses: actions/checkout@v3
