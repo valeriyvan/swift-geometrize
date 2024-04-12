@@ -57,6 +57,8 @@ let package = Package(
                 // alias solves build error
                 // error: multiple products named 'unit-test' in: 'jpeg' (at '****/jpeg'), 'swift-png' (from 'https://github.com/tayloraswift/swift-png.git')
                 // https://github.com/tayloraswift/jpeg/issues/4
+                // https://forums.swift.org/t/product-names-from-different-packages-collide-if-packages-are-used-as-dependencies-in-same-package/60178
+                // Uses Swift 5.7 feature https://github.com/apple/swift-evolution/blob/main/proposals/0339-module-aliasing-for-disambiguation.md
             ],
             plugins: plugins
         ),
