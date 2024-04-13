@@ -14,7 +14,7 @@ extension Bitmap {
                 $0[$0.startIndex + 3]
             )
         }
-        let image: PNG.Data.Rectangular = PNG.Data.Rectangular(packing: rgba, size: (x: width, y: height), layout: PNG.Layout(format: .rgba8(palette: [], fill: nil)))
+        let image: PNG.Image = PNG.Image(packing: rgba, size: (x: width, y: height), layout: PNG.Layout(format: .rgba8(palette: [], fill: nil)))
         var destinationStream = DestinationStream()
         try image.compress(stream: &destinationStream)
         return Data(destinationStream.data)
@@ -28,7 +28,7 @@ extension Bitmap {
             }
         }
         var stream = SourceStream(bytes)
-        let image: PNG.Data.Rectangular  = try decodeOnline(stream: &stream, overdraw: false) { _ in }
+        let image: PNG.Image  = try decodeOnline(stream: &stream, overdraw: false) { _ in }
         let rgba: [PNG.RGBA<UInt8>] = image.unpack(as: PNG.RGBA<UInt8>.self)
         let bitmapData: [UInt8] = rgba.flatMap({ [$0.r, $0.g, $0.b, $0.a] })
         self.init(width: image.size.0, height: image.size.1, data: bitmapData)
@@ -105,8 +105,8 @@ func waitChunk(stream: inout SourceStream) throws -> (type: PNG.Chunk, data: [UI
 func decodeOnline(
     stream: inout SourceStream,
     overdraw: Bool,
-    capture: (PNG.Data.Rectangular) throws -> Void
-) throws -> PNG.Data.Rectangular {
+    capture: (PNG.Image) throws -> Void
+) throws -> PNG.Image {
     // lex PNG signature bytes
     try waitSignature(stream: &stream)
     // lex header chunk, and preceeding cgbi chunk, if present

@@ -26,7 +26,7 @@ let width, height: Int
 
 switch inputUrl.pathExtension.lowercased() {
 case "png":
-    guard let image: PNG.Data.Rectangular = try .decompress(path: inputUrl.path) else {
+    guard let image: PNG.Image = try .decompress(path: inputUrl.path) else {
         print("Cannot read or decode input file \(inputUrl.path).")
         exit(1)
     }

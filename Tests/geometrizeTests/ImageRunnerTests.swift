@@ -10,7 +10,7 @@ final class ImageRunnerTests: XCTestCase {
         // seedRandomGenerator(9001)
 
         let url = Bundle.module.url(forResource: "kris", withExtension: "png")!
-        let image: PNG.Data.Rectangular = try .decompress(path: url.path)!
+        let image: PNG.Image = try .decompress(path: url.path)!
         let rgba: [PNG.RGBA<UInt8>] = image.unpack(as: PNG.RGBA<UInt8>.self)
         let (width, height) = image.size
 
