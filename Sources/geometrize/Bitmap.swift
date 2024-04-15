@@ -39,12 +39,31 @@ public struct Bitmap {
     ///   - width: The width of the bitmap.
     ///   - height: The height of the bitmap.
     ///   - data: The byte data to fill the bitmap with, must be width * height * depth (4) long.
-    public init(width: Int, height: Int, data: [UInt8]) {
+    ///   - blending: Background color to be blended. If nil, data provided is used as is.
+    ///   If not nil,  background is blended into bitmap making it opaque (alpha 255), alpha of background itself is ignored.
+    public init(width: Int, height: Int, data: [UInt8], blending background: Rgba? = nil) {
         assert(width > 0 && height > 0)
         assert(width * height * 4 == data.count)
         self.width = width
         self.height = height
-        self.backing = ContiguousArray(data)
+        if let background {
+            self.backing = ContiguousArray(unsafeUninitializedCapacity: width * height * 4) {
+                buffer, initializedCapacity in // swiftlint:disable:this closure_parameter_position
+                for y in 0..<height {
+                    for x in 0..<width {
+                        let offset = (width * y + x) * 4
+                        let rgba = Rgba(r: data[offset + 0], g: data[offset + 1], b: data[offset + 2], a: data[offset + 3]).blending(background: background)
+                        buffer[offset + 0] = rgba.r
+                        buffer[offset + 1] = rgba.g
+                        buffer[offset + 2] = rgba.b
+                        buffer[offset + 3] = rgba.a
+                    }
+                }
+                initializedCapacity = width * height * 4
+            }
+        } else {
+            self.backing = ContiguousArray(data)
+        }
     }
 
     public init(width: Int, height: Int, initializer: (_: Int, _: Int) -> Rgba) {
