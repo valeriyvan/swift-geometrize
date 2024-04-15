@@ -28,6 +28,8 @@ public struct Rgba {
     public static var magenta: Rgba { Rgba(r: 255, g: 0, b: 255, a: 255) }
     public static var cyan: Rgba { Rgba(r: 0, g: 255, b: 255, a: 255) }
 
+    // Returns opaque (alpha 255) color with blended background.
+    // Alpha of background itself is ignored.
     public func blending(background: Rgba) -> Rgba {
         // https://stackoverflow.com/a/746937/942513
         let alpha: Double = Double(a) / 255.0
