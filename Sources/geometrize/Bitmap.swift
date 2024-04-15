@@ -347,6 +347,12 @@ extension Bitmap {
         )
     }
 
+    public func blending(background: Rgba) -> Bitmap {
+        Bitmap(width: width, height: height) { x, y in
+            self[x, y].blending(background: background)
+        }
+    }
+
 }
 
 extension Bitmap {
