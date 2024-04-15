@@ -347,6 +347,8 @@ extension Bitmap {
         )
     }
 
+    // Returns opaque (alpha 255) image with blended background.
+    // Alpha of background itself is ignored.
     public func blending(background: Rgba) -> Bitmap {
         Bitmap(width: width, height: height) { x, y in
             self[x, y].blending(background: background)
