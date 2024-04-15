@@ -35,7 +35,7 @@ case "png":
     (width, height) = image.size
 
     let data: [UInt8] = rgba.flatMap({ [$0.r, $0.g, $0.b, $0.a] })
-    targetBitmap = Bitmap(width: width, height: height, data: data)
+    targetBitmap = Bitmap(width: width, height: height, data: data, blending: .white)
 case "jpeg", "jpg":
     guard let image: JPEG.Data.Rectangular<JPEG.Common> = try .decompress(path: inputUrl.path) else {
         print("Cannot read or decode input file \(inputUrl.path).")
