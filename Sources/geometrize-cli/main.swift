@@ -53,7 +53,7 @@ default:
 }
 
 let outputUrl = URL(fileURLWithPath: options.outputPath)
-guard outputUrl.pathExtension.caseInsensitiveCompare("svg") == .orderedSame else {
+guard options.outputPath == "-" || outputUrl.pathExtension.caseInsensitiveCompare("svg") == .orderedSame else {
     print("Only SVG output file format is supported at the moment.")
     exit(1)
 }
@@ -141,7 +141,11 @@ while shapeData.count <= shapeCount {
 let svg = SVGExporter().export(data: shapeData, width: width, height: height)
 
 do {
-    try svg.write(to: outputUrl, atomically: true, encoding: .utf8)
+    if options.outputPath == "-" {
+        print(svg)
+    } else {
+        try svg.write(to: outputUrl, atomically: true, encoding: .utf8)
+    }
 } catch {
     print("Cannot write output file. \(error)")
 }
