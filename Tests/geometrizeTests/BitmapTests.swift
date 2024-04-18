@@ -29,7 +29,7 @@ final class BitmapTests: XCTestCase {
         XCTAssertFalse(whiteBitmap.isEmpty)
     }
 
-    func testInitSizeAndBitmap() throws {
+    func testInitSizeAndBitmapData() throws {
         let data: [UInt8] = [
             0,0,0,0,     1,1,1,1,     2,2,2,2,     3,3,3,3,     4,4,4,4,     // swiftlint:disable:this comma
             10,10,10,10, 11,11,11,11, 12,12,12,12, 13,13,13,13, 14,14,14,14, // swiftlint:disable:this comma
@@ -40,6 +40,16 @@ final class BitmapTests: XCTestCase {
         XCTAssertEqual(bitmap.height, 3)
         XCTAssertEqual(bitmap.backing.count, 5 * 3 * 4)
         XCTAssertEqual(bitmap.backing, ContiguousArray<UInt8>(data))
+    }
+
+    func testInitSizeAndBitmapDataWithBackgroundBlended() throws {
+        let url = Bundle.module.url(forResource: "63", withExtension: "png")!
+        let bitmap = try Bitmap(pngData: try Data(contentsOf: url))
+        let bitmapWithYellowBackgroundBlended = Bitmap(width: bitmap.width, height: bitmap.height, data: Array(bitmap.backing), blending: .yellow)
+        assertSnapshot(
+            matching: bitmapWithYellowBackgroundBlended,
+            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
+        )
     }
 
     func testInitInitializer() throws {
