@@ -3,9 +3,10 @@
     {
       "identity" : "jpeg",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tayloraswift/jpeg.git",
+      "location" : "https://github.com/valeriyvan/jpeg.git",
       "state" : {
-        "revision" : "fc21d193b85ad8593b0a894b1dec9bef56254058"
+        "revision" : "6ab5fffa49626116ff6b46510fe9828b71b708af",
+        "version" : "1.0.2"
       }
     },
     {
