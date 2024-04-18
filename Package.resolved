@@ -5,7 +5,6 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tayloraswift/jpeg.git",
       "state" : {
-        "branch" : "master",
         "revision" : "fc21d193b85ad8593b0a894b1dec9bef56254058"
       }
     },
