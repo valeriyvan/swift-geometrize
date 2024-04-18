@@ -1,5 +1,6 @@
 import XCTest
 import SnapshotTesting
+import Foundation
 @testable import Geometrize
 
 final class BitmapTests: XCTestCase {
@@ -319,6 +320,21 @@ final class BitmapTests: XCTestCase {
         let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
         let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
         XCTAssertEqual(fRight, fUP)
+    }
+
+    func testBlend() throws {
+        let url = Bundle.module.url(forResource: "63", withExtension: "png")!
+        let bitmap = try Bitmap(pngData: try Data(contentsOf: url))
+        let bitmapWithWhiteBackgroundBlended = bitmap.blending(background: .white)
+        assertSnapshot(
+            matching: bitmapWithWhiteBackgroundBlended,
+            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
+        )
+        let bitmapWithRedBackgroundBlended = bitmap.blending(background: .red)
+        assertSnapshot(
+            matching: bitmapWithRedBackgroundBlended,
+            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
+        )
     }
 
     func testDraw() {
