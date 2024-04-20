@@ -11,7 +11,7 @@ var dependencies: [Package.Dependency] = [
 ]
 
 #if !os(Linux) && !os(Windows)
-    dependencies.append(.package(url: "https://github.com/lukepistrol/SwiftLintPlugin.git", from: "0.0.4"))
+    dependencies.append(.package(url: "https://github.com/lukepistrol/SwiftLintPlugin.git", from: "0.54.0"))
     let plugins: [Target.PluginUsage]? = [.plugin(name: "SwiftLint", package: "SwiftLintPlugin")]
 #else
     let plugins: [Target.PluginUsage]? = nil
