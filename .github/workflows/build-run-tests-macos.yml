@@ -11,13 +11,14 @@ on:
 
 jobs:
   build:
-
-    runs-on:  macOS-13 # used to be macos-latest
+    runs-on:  macos-latest # used to be macos-latest
                        # look https://github.com/actions/runner-images/issues/6384 for info 
                        # why it was changed from macos-latest to macOS-12
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: swift-actions/setup-swift@v2
+    - name: Check out repository code
+      uses: actions/checkout@v4
     - name: Build
       run: swift build -v
     - name: Run tests

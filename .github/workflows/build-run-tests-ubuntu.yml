@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Install Swift 5.9-RELEASE
+    - uses: actions/checkout@v4
+    - name: Install Swift 5.10-RELEASE
       run: |
         echo ====== Installing dependencies...
 
@@ -47,8 +47,8 @@ jobs:
         # uid                  Swift 5.x Release Signing Key <swift-infrastructure@swift.org
         SWIFT_SIGNING_KEY=A62AE125BBBFBB96A6E042EC925CC1CCED3D1561
         SWIFT_PLATFORM=ubuntu22.04
-        SWIFT_BRANCH=swift-5.9-release
-        SWIFT_VERSION=swift-5.9-RELEASE
+        SWIFT_BRANCH=swift-5.10-release
+        SWIFT_VERSION=swift-5.10-RELEASE
         SWIFT_WEBROOT=https://swift.org/builds/
 
         set -e
