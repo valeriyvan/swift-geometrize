@@ -44,7 +44,7 @@ struct SourceStream {
     var available: Int
 }
 
-extension SourceStream: PNG.Bytestream.Source {
+extension SourceStream: PNG.BytestreamSource {
     init(_ data: [UInt8]) {
         self.data       = data
         self.position   = data.startIndex
@@ -67,7 +67,7 @@ extension SourceStream: PNG.Bytestream.Source {
     }
 }
 
-struct DestinationStream: PNG.Bytestream.Destination {
+struct DestinationStream: PNG.BytestreamDestination {
 
     private(set) var data: [UInt8] = []
 
