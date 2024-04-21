@@ -3,11 +3,13 @@ import SnapshotTesting
 import PNG
 @testable import Geometrize
 
-extension XCTAttachment {
-    convenience init(bitmap: Bitmap) {
-        self.init(data: try! bitmap.pngData(), uniformTypeIdentifier: "public.png") // swiftlint:disable:this force_try
-    }
-}
+// On Ubuntu this produces error
+// error: initializers in structs are not marked with 'convenience'
+//extension XCTAttachment {
+//    convenience init(bitmap: Bitmap) {
+//        self.init(data: try! bitmap.pngData(), uniformTypeIdentifier: "public.png") // swiftlint:disable:this force_try
+//    }
+//}
 
 extension Diffing where Value == Bitmap {
 
@@ -28,12 +30,14 @@ extension Diffing where Value == Bitmap {
             let message = new.width == old.width && new.height == old.height
             ? "Newly-taken snapshot does not match reference."
             : "Newly-taken snapshot@\(new.width),\(new.height) does not match reference@\(old.width),\(old.height)."
-            let oldAttachment = XCTAttachment(bitmap: old)
-            oldAttachment.name = "reference"
-            let newAttachment = XCTAttachment(bitmap: new)
-            newAttachment.name = "failure"
-            let differenceAttachment = XCTAttachment(bitmap: difference)
-            differenceAttachment.name = "difference"
+            let oldAttachment = XCTAttachment(data: try! old.pngData(), uniformTypeIdentifier: "public.png") // swiftlint:disable:this force_try)
+            //oldAttachment.name = "reference"
+            // on Ubuntu this produces error
+            // error: value of type 'XCTAttachment' has no member 'name'
+            let newAttachment = XCTAttachment(data: try! new.pngData(), uniformTypeIdentifier: "public.png") // swiftlint:disable:this force_try)
+            //newAttachment.name = "failure"
+            let differenceAttachment = XCTAttachment(data: try! difference.pngData(), uniformTypeIdentifier: "public.png") // swiftlint:disable:this force_try: difference)
+            //differenceAttachment.name = "difference"
             return (
                 message,
                 [oldAttachment, newAttachment, differenceAttachment]
