@@ -15,6 +15,38 @@ public struct Rgba {
         self.a = a
     }
 
+    public init(_ array: [UInt8]) {
+        assert(array.count == 4)
+        self.r = array[0]
+        self.g = array[1]
+        self.b = array[2]
+        self.a = array[3]
+    }
+
+    public init(_ slice: ArraySlice<UInt8>) {
+        assert(slice.count == 4)
+        self.r = slice[slice.startIndex]
+        self.g = slice[slice.startIndex + 1]
+        self.b = slice[slice.startIndex + 2]
+        self.a = slice[slice.startIndex + 3]
+    }
+
+    public init(_ buffer: UnsafeBufferPointer<UInt8>) {
+        assert(buffer.count == 4)
+        self.r = buffer[0]
+        self.g = buffer[1]
+        self.b = buffer[2]
+        self.a = buffer[3]
+    }
+
+    public init(_ slice: Slice<UnsafeBufferPointer<UInt8>>) {
+        assert(slice.count == 4)
+        self.r = slice[slice.startIndex]
+        self.g = slice[slice.startIndex + 1]
+        self.b = slice[slice.startIndex + 2]
+        self.a = slice[slice.startIndex + 3]
+    }
+
     public func withAlphaComponent(_ alpha: UInt8) -> Rgba {
         Rgba(r: r, g: g, b: b, a: alpha)
     }
