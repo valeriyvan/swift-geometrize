@@ -52,7 +52,7 @@ public struct Bitmap {
                 for y in 0..<height {
                     for x in 0..<width {
                         let offset = (width * y + x) * 4
-                        let rgba = Rgba(r: data[offset + 0], g: data[offset + 1], b: data[offset + 2], a: data[offset + 3]).blending(background: background)
+                        let rgba = Rgba(data[offset..<offset+4]).blending(background: background)
                         buffer[offset + 0] = rgba.r
                         buffer[offset + 1] = rgba.g
                         buffer[offset + 2] = rgba.b
@@ -132,7 +132,7 @@ public struct Bitmap {
         get {
             backing.withUnsafeBufferPointer {
                 let offset = offset(x: x, y: y)
-                return Rgba(r: $0[offset], g: $0[offset + 1], b: $0[offset + 2], a: $0[offset + 3])
+                return Rgba($0[offset..<offset + 4])
             }
         }
         set {
