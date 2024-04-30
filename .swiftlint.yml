@@ -2,6 +2,11 @@
 ### Rule modifications 
 ###
 
+included: # case-sensitive paths to include during linting. `--path` is ignored if present
+  - Sources
+  - Tests
+  - Package.swift
+
 identifier_name:
     min_length:
         error: 0
@@ -15,3 +20,4 @@ line_length:
     ignores_function_declarations: false
     ignores_comments: false
     ignores_urls: true
+
