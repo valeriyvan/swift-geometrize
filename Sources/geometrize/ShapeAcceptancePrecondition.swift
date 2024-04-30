@@ -32,5 +32,5 @@ public func defaultAddShapePrecondition( // swiftlint:disable:this function_para
     _: Bitmap,
     _: Bitmap
 ) -> Bool {
-    newScore < lastScore; // Adds the shape if the score improved (that is: the difference decreased)
+    newScore < lastScore // Adds the shape if the score improved (that is: the difference decreased)
 }

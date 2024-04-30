@@ -2,7 +2,7 @@ import Foundation
 
 /// Helper for working with bitmap data.
 /// Pixels are ordered line by line, like arrays in C.
-public struct Bitmap {
+public struct Bitmap { // swiftlint:disable:this type_body_length
 
     /// Creates useless empty bitmap.
     public init() {
@@ -341,9 +341,9 @@ extension Bitmap {
 
     /// Computes the average RGB color of the pixels in the bitmap.
     /// - Returns: The average RGB color of the image, RGBA8888 format. Alpha is set to opaque (255).
-    // TODO: carefully check implementation for overflows.
-    // TODO: make it internal
     public func averageColor() -> Rgba {
+        // TODO: carefully check implementation for overflows.
+        // TODO: make it internal
         guard !isEmpty else { return .black }
 
         var totalRed: Int = 0
@@ -503,4 +503,6 @@ extension Bitmap {
         return true
     }
 
-} // swiftlint:disable:this file_length
+}
+
+// swiftlint:disable:this file_length

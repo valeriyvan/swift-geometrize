@@ -75,12 +75,10 @@ public final class QuadraticBezier: Shape {
         // Prevent scanline overlap, it messes up the energy functions that rely on the scanlines not intersecting themselves
         var duplicates: Set<Point<Int>> = Set()
         for (from, to) in points.adjacentPairs() {
-            for point in drawThickLine(from: from, to: to, thickness: Int(strokeWidth)) {
-                if !duplicates.contains(point) {
-                    duplicates.insert(point)
-                    if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(x: xRange, y: yRange) {
-                        lines.append(trimmed)
-                    }
+            for point in drawThickLine(from: from, to: to, thickness: Int(strokeWidth)) where !duplicates.contains(point) {
+                duplicates.insert(point)
+                if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(x: xRange, y: yRange) {
+                    lines.append(trimmed)
                 }
             }
         }

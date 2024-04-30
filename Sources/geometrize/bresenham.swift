@@ -33,11 +33,11 @@ func drawLineOverlap<N: SignedInteger>(from: Point<N>, to: Point<N>, overlap: Li
     let endX = to.x
     let endY = to.y
 
-    //guard startX != endX && startY != endY else {
-    //    // horizontal or vertical line -> fillRect() is faster than drawLine()
-    //    return fillRect(startX, startY, endX, endY)
-    //}
-    
+    // guard startX != endX && startY != endY else {
+    //     // horizontal or vertical line -> fillRect() is faster than drawLine()
+    //     return fillRect(startX, startY, endX, endY)
+    // }
+
     var tDeltaX: N, tDeltaY: N, tDeltaXTimes2: N, tDeltaYTimes2: N, tError: N, tStepX: N, tStepY: N
 
     var points: [Point<N>] = []

@@ -3,6 +3,7 @@ import SnapshotTesting
 import Foundation
 @testable import Geometrize
 
+// swiftlint:disable:next type_body_length
 final class BitmapTests: XCTestCase {
 
     func testInit() throws {
@@ -406,3 +407,5 @@ final class BitmapTests: XCTestCase {
     }
 
 }
+
+// swiftlint:disable:this file_length
