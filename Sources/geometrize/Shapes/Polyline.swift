@@ -53,12 +53,10 @@ public final class Polyline: Shape {
             let p0 = points[i]
             let p1 = i < points.count - 1 ? points[i + 1] : p0
             let points = drawThickLine(from: Point<Int>(p0), to: Point<Int>(p1), thickness: Int(strokeWidth))
-            for point in points {
-                if !duplicates.contains(point) {
-                    duplicates.insert(point)
-                    if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(x: xRange, y: yRange) {
-                        lines.append(trimmed)
-                    }
+            for point in points where !duplicates.contains(point) {
+                duplicates.insert(point)
+                if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(x: xRange, y: yRange) {
+                    lines.append(trimmed)
                 }
             }
         }

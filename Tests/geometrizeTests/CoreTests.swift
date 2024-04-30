@@ -94,7 +94,7 @@ final class CoreTests: XCTestCase {
     }
 
     // fails
-    func testHillClimbComparingResultWithCPlusPlus() throws { // swiftlint:disable:this function_body_length
+    func testHillClimbComparingResultWithCPlusPlus() throws {
         let randomNumbersString = try String(contentsOf: Bundle.module.url(forResource: "hillClimb randomRange", withExtension: "txt")!)
         let lines = randomNumbersString.components(separatedBy: .newlines)
         var counter = 0
