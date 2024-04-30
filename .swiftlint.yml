@@ -21,3 +21,5 @@ line_length:
     ignores_comments: false
     ignores_urls: true
 
+disabled_rules: 
+  - todo
