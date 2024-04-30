@@ -1,4 +1,4 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.9
 
 import PackageDescription
 
@@ -8,21 +8,17 @@ var dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.13.0"),
     .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.0.0"),
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.4"),
+    .package(url: "https://github.com/realm/SwiftLint.git", branch: "main")
 ]
 
-#if !os(Linux) && !os(Windows)
-    dependencies.append(.package(url: "https://github.com/lukepistrol/SwiftLintPlugin.git", from: "0.54.0"))
-    let plugins: [Target.PluginUsage]? = [.plugin(name: "SwiftLint", package: "SwiftLintPlugin")]
-#else
-    let plugins: [Target.PluginUsage]? = nil
-#endif
+let plugins: [Target.PluginUsage]? = [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")]
 
 let package = Package(
 
     name: "swift-geometrize",
 
     platforms: [
-        .macOS(.v10_15), .iOS(.v14)
+        .macOS(.v12), .iOS(.v14)
     ],
 
     products: [
