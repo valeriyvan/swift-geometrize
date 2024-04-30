@@ -11,7 +11,12 @@ var dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/realm/SwiftLint.git", branch: "main")
 ]
 
-let plugins: [Target.PluginUsage]? = [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")]
+#if os(macOS)
+    // https://forums.swift.org/t/swiftlint-on-linux/64256
+    let plugins: [Target.PluginUsage]? = [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")]
+#else
+    let plugins: [Target.PluginUsage]? = nil
+#endif
 
 let package = Package(
 
