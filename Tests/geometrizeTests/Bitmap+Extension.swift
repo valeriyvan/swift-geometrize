@@ -1,7 +1,7 @@
 import XCTest
 import PNG
 import Algorithms
-@testable import Geometrize
+import Geometrize
 
 extension Bitmap {
 
