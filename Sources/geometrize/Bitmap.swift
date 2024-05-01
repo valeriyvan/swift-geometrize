@@ -434,7 +434,7 @@ extension Bitmap {
 }
 
 // TODO: what's right way to implement this init as failable or throwing?
-// One hints is here https://forums.swift.org/t/how-to-make-expressiblebystringliteral-init-either-failable-somehow-or-throws/47973/3:
+// One hint is here https://forums.swift.org/t/how-to-make-expressiblebystringliteral-init-either-failable-somehow-or-throws/47973/3:
 
 extension Bitmap: ExpressibleByStringLiteral {
 
