@@ -46,7 +46,12 @@ final class BitmapTests: XCTestCase {
     func testInitSizeAndBitmapDataWithBackgroundBlended() throws {
         let url = Bundle.module.url(forResource: "63", withExtension: "png")!
         let bitmap = try Bitmap(pngData: try Data(contentsOf: url))
-        let bitmapWithYellowBackgroundBlended = Bitmap(width: bitmap.width, height: bitmap.height, data: Array(bitmap.backing), blending: .yellow)
+        let bitmapWithYellowBackgroundBlended = Bitmap(
+            width: bitmap.width,
+            height: bitmap.height,
+            data: Array(bitmap.backing),
+            blending: .yellow
+        )
         assertSnapshot(
             matching: bitmapWithYellowBackgroundBlended,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
@@ -138,10 +143,10 @@ final class BitmapTests: XCTestCase {
             width: 5,
             height: 3,
             data:
-                [ 0,0,0,0,     1,1,1,1,         2,2,2,2,     3,3,3,3,         4,4,4,4,     // swiftlint:disable:this comma
-                  10,10,10,10, 111,111,111,111, 12,12,12,12, 13,13,13,13,     14,14,14,14, // swiftlint:disable:this comma
-                  20,20,20,20, 21,21,21,21,     22,22,22,22, 222,222,222,222, 24,24,24,24  // swiftlint:disable:this comma
-                ] as [UInt8]
+            [   0,0,0,0,     1,1,1,1,         2,2,2,2,     3,3,3,3,         4,4,4,4,     // swiftlint:disable:this comma
+                10,10,10,10, 111,111,111,111, 12,12,12,12, 13,13,13,13,     14,14,14,14, // swiftlint:disable:this comma
+                20,20,20,20, 21,21,21,21,     22,22,22,22, 222,222,222,222, 24,24,24,24  // swiftlint:disable:this comma
+            ] as [UInt8]
         )
         XCTAssertEqual(bitmap.averageColor(), Rgba(r: 31, g: 31, b: 31, a: 255))
     }
@@ -154,8 +159,10 @@ final class BitmapTests: XCTestCase {
         XCTAssertEqual(bitmap.height, 3 + inset * 2)
         for x in 0..<bitmap.width {
             for y in 0..<bitmap.height {
-                let color: Rgba = (inset..<bitmap.width - inset ~= x) && (inset..<bitmap.height - inset ~= y) ? .black : .white
-                XCTAssertEqual(bitmap[x, y], color)
+                XCTAssertEqual(
+                    bitmap[x, y],
+                    (inset..<bitmap.width - inset ~= x) && (inset..<bitmap.height - inset ~= y) ? .black : .white
+                )
             }
         }
     }

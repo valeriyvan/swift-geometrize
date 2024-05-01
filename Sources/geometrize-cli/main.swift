@@ -5,12 +5,30 @@ import PNG
 import JPEG
 
 struct GeometrizeOptions: ParsableArguments {
-    @Option(name: .shortAndLong, help: "Input file pathname.") var inputPath: String
-    @Option(name: .shortAndLong, help: "Output file pathname.") var outputPath: String
-    @Option(name: [.customShort("t"), .long], help: "White space separated list of shapes to use geometrizing image.") var shapeTypes: String = "rectangle"
-    @Option(name: [.customShort("c"), .long], help: "The number of shapes to generate for the final output.") var shapeCount: UInt?
-    @Option(name: [.customShort("w"), .long], help: "Width of lines, polylines, bezier curves.") var lineWidth: UInt?
-    @Flag(name: .shortAndLong, help: "Verbose output.") var verbose: Bool = false
+    @Option(
+        name: .shortAndLong,
+        help: "Input file pathname."
+    ) var inputPath: String
+    @Option(
+        name: .shortAndLong,
+        help: "Output file pathname."
+    ) var outputPath: String
+    @Option(
+        name: [.customShort("t"), .long],
+        help: "White space separated list of shapes to use geometrizing image."
+    ) var shapeTypes: String = "rectangle"
+    @Option(
+        name: [.customShort("c"), .long],
+        help: "The number of shapes to generate for the final output."
+    ) var shapeCount: UInt?
+    @Option(
+        name: [.customShort("w"), .long],
+        help: "Width of lines, polylines, bezier curves."
+    ) var lineWidth: UInt?
+    @Flag(
+        name: .shortAndLong,
+        help: "Verbose output."
+    ) var verbose: Bool = false
 }
 
 let options = GeometrizeOptions.parseOrExit()

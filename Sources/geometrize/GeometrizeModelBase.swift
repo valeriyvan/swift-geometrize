@@ -7,7 +7,11 @@ class GeometrizeModelBase {
     /// - Parameter targetBitmap: The target bitmap to replicate with shapes.
     init(targetBitmap: Bitmap) {
         self.targetBitmap = targetBitmap
-        currentBitmap = Bitmap(width: targetBitmap.width, height: targetBitmap.height, color: targetBitmap.averageColor())
+        currentBitmap = Bitmap(
+            width: targetBitmap.width,
+            height: targetBitmap.height,
+            color: targetBitmap.averageColor()
+        )
         lastScore = targetBitmap.differenceFull(with: currentBitmap)
     }
 

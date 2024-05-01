@@ -51,7 +51,9 @@ public final class RotatedEllipse: Shape {
         case 2:
             ry = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yRange.upperBound))
         case 3:
-            angleDegrees = Double((Int(angleDegrees) + Int._random(in: range16, using: &generator)).clamped(to: 0...360))
+            angleDegrees = Double(
+                (Int(angleDegrees) + Int._random(in: range16, using: &generator)).clamped(to: 0...360)
+            )
         default:
             fatalError()
         }

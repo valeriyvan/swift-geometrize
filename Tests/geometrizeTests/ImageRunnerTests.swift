@@ -37,13 +37,23 @@ final class ImageRunnerTests: XCTestCase {
         var shapeData: [ShapeResult] = []
 
         // Hack to add a single background rectangle as the initial shape
-        let rect = Rectangle(strokeWidth: 1, x1: 0, y1: 0, x2: Double(targetBitmap.width), y2: Double(targetBitmap.height))
+        let rect = Rectangle(
+            strokeWidth: 1,
+            x1: 0, y1: 0,
+            x2: Double(targetBitmap.width), y2: Double(targetBitmap.height)
+        )
         shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape: rect))
 
         var counter = 0
-        while shapeData.count <= 1000 /* Here set count of shapes final image should have. Remember background is the first shape. */ {
+        // Here set count of shapes final image should have. Remember background is the first shape.
+        while shapeData.count <= 1000 {
             print("Step \(counter)", terminator: "")
-            let shapeResult = runner.step(options: options, shapeCreator: nil, energyFunction: defaultEnergyFunction, addShapePrecondition: defaultAddShapePrecondition)
+            let shapeResult = runner.step(
+                options: options,
+                shapeCreator: nil,
+                energyFunction: defaultEnergyFunction,
+                addShapePrecondition: defaultAddShapePrecondition
+            )
             if let shapeResult {
                 shapeData.append(shapeResult)
             }

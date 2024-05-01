@@ -30,13 +30,22 @@ extension Diffing where Value == Bitmap {
             let message = new.width == old.width && new.height == old.height
             ? "Newly-taken snapshot does not match reference."
             : "Newly-taken snapshot@\(new.width),\(new.height) does not match reference@\(old.width),\(old.height)."
-            let oldAttachment = XCTAttachment(data: try! old.pngData(), uniformTypeIdentifier: "public.png") // swiftlint:disable:this force_try
+            let oldAttachment = XCTAttachment(
+                data: try! old.pngData(), // swiftlint:disable:this force_try
+                uniformTypeIdentifier: "public.png"
+            )
             // oldAttachment.name = "reference"
             // on Ubuntu this produces error
             // error: value of type 'XCTAttachment' has no member 'name'
-            let newAttachment = XCTAttachment(data: try! new.pngData(), uniformTypeIdentifier: "public.png") // swiftlint:disable:this force_try
+            let newAttachment = XCTAttachment(
+                data: try! new.pngData(), // swiftlint:disable:this force_try
+                uniformTypeIdentifier: "public.png"
+            )
             // newAttachment.name = "failure"
-            let differenceAttachment = XCTAttachment(data: try! difference.pngData(), uniformTypeIdentifier: "public.png") // swiftlint:disable:this force_try
+            let differenceAttachment = XCTAttachment(
+                data: try! difference.pngData(), // swiftlint:disable:this force_try
+                uniformTypeIdentifier: "public.png"
+            )
             // differenceAttachment.name = "difference"
             return (
                 message,

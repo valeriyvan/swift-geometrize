@@ -47,14 +47,20 @@ public final class QuadraticBezier: Shape {
         let range8 = -8...8
         switch Int._random(in: 0...2, using: &generator) {
         case 0:
-            cx = Double((Int(cx) + Int._random(in: range8, using: &generator)).clamped(to: xRange))
-            cy = Double((Int(cy) + Int._random(in: range8, using: &generator)).clamped(to: yRange))
+            cx = Double((Int(cx) + Int._random(in: range8, using: &generator))
+                    .clamped(to: xRange))
+            cy = Double((Int(cy) + Int._random(in: range8, using: &generator))
+                    .clamped(to: yRange))
         case 1:
-            x1 = Double((Int(x1) + Int._random(in: range8, using: &generator)).clamped(to: xRange.lowerBound + 1...xRange.upperBound))
-            y1 = Double((Int(y1) + Int._random(in: range8, using: &generator)).clamped(to: yRange.lowerBound + 1...yRange.upperBound))
+            x1 = Double((Int(x1) + Int._random(in: range8, using: &generator))
+                    .clamped(to: xRange.lowerBound + 1...xRange.upperBound))
+            y1 = Double((Int(y1) + Int._random(in: range8, using: &generator))
+                    .clamped(to: yRange.lowerBound + 1...yRange.upperBound))
         case 2:
-            x2 = Double((Int(x2) + Int._random(in: range8, using: &generator)).clamped(to: xRange.lowerBound + 1...xRange.upperBound))
-            y2 = Double((Int(y2) + Int._random(in: range8, using: &generator)).clamped(to: yRange.lowerBound + 1...yRange.upperBound))
+            x2 = Double((Int(x2) + Int._random(in: range8, using: &generator))
+                    .clamped(to: xRange.lowerBound + 1...xRange.upperBound))
+            y2 = Double((Int(y2) + Int._random(in: range8, using: &generator))
+                    .clamped(to: yRange.lowerBound + 1...yRange.upperBound))
         default:
             fatalError()
         }
@@ -72,12 +78,13 @@ public final class QuadraticBezier: Shape {
             let y: Int = Int(tp * (tp * y1 + t * cy) + t * (tp * cy + t * y2))
             points.append(Point<Int>(x: x, y: y))
         }
-        // Prevent scanline overlap, it messes up the energy functions that rely on the scanlines not intersecting themselves
+        // Prevent scanline overlap because it messes up the energy functions
+        // that rely on the scanlines not intersecting themselves
         var duplicates: Set<Point<Int>> = Set()
         for (from, to) in points.adjacentPairs() {
-            for point in drawThickLine(from: from, to: to, thickness: Int(strokeWidth)) where !duplicates.contains(point) {
-                duplicates.insert(point)
-                if let trimmed = Scanline(y: point.y, x1: point.x, x2: point.x).trimmed(x: xRange, y: yRange) {
+            for pnt in drawThickLine(from: from, to: to, thickness: Int(strokeWidth)) where !duplicates.contains(pnt) {
+                duplicates.insert(pnt)
+                if let trimmed = Scanline(y: pnt.y, x1: pnt.x, x2: pnt.x).trimmed(x: xRange, y: yRange) {
                     lines.append(trimmed)
                 }
             }

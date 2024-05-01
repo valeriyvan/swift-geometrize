@@ -113,7 +113,11 @@ public struct ImageRunner {
     ) -> ShapeResult? {
         let types = options.shapeTypes
 
-        let shapeCreator: ShapeCreator = shapeCreator ?? makeDefaultShapeCreator(types: types, strokeWidth: Double(options.strokeWidth))
+        let shapeCreator = shapeCreator ??
+            makeDefaultShapeCreator(
+                types: types,
+                strokeWidth: Double(options.strokeWidth)
+            )
 
         model.setSeed(options.seed)
 

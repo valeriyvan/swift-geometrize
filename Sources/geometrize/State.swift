@@ -33,7 +33,11 @@ struct State {
 
     ///  Modifies the current state in a random fashion.
     /// - Returns: The old state, useful for undoing the mutation or keeping track of previous states.
-    mutating func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) -> State {
+    mutating func mutate(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> State {
         let oldState = copy()
         shape.mutate(x: xRange, y: yRange, using: &generator)
         score = -1

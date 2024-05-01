@@ -52,10 +52,12 @@ public final class Line: Shape {
 
     public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {
         let lines =
-            drawThickLine(from: Point(x: Int(x1), y: Int(y1)), to: Point(x: Int(x2), y: Int(y2)), thickness: Int(strokeWidth))
-            .compactMap {
-                Scanline(y: $0.y, x1: $0.x, x2: $0.x).trimmed(x: xRange, y: yRange)
-            }
+            drawThickLine(
+                from: Point(x: Int(x1), y: Int(y1)),
+                to: Point(x: Int(x2), y: Int(y2)),
+                thickness: Int(strokeWidth)
+            )
+            .compactMap { Scanline(y: $0.y, x1: $0.x, x2: $0.x).trimmed(x: xRange, y: yRange) }
         if lines.isEmpty {
             print("Warning: \(#function) produced no scanlines")
         }
