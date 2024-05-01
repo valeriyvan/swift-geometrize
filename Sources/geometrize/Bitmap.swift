@@ -41,7 +41,7 @@ public struct Bitmap { // swiftlint:disable:this type_body_length
     ///   - data: The byte data to fill the bitmap with, must be width * height * depth (4) long.
     ///   - blending: Background color to be blended. If nil, data provided is used as is.
     ///   If not nil,  background is blended into bitmap making it opaque (alpha 255), alpha of background itself is ignored.
-    public init(width: Int, height: Int, data: [UInt8], blending background: Rgba? = nil) {
+    public init(width: Int, height: Int, data: ContiguousArray<UInt8>, blending background: Rgba? = nil) {
         assert(width > 0 && height > 0)
         assert(width * height * 4 == data.count)
         self.width = width
@@ -62,8 +62,12 @@ public struct Bitmap { // swiftlint:disable:this type_body_length
                 initializedCapacity = width * height * 4
             }
         } else {
-            self.backing = ContiguousArray(data)
+            self.backing = data
         }
+    }
+
+    public init(width: Int, height: Int, data: [UInt8], blending background: Rgba? = nil) {
+        self = Bitmap(width: width, height: height, data: ContiguousArray(data), blending: background)
     }
 
     public init(width: Int, height: Int, initializer: (_: Int, _: Int) -> Rgba) {

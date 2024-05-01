@@ -48,7 +48,7 @@ final class BitmapTests: XCTestCase {
         let bitmapWithYellowBackgroundBlended = Bitmap(
             width: bitmap.width,
             height: bitmap.height,
-            data: Array(bitmap.backing),
+            data: bitmap.backing,
             blending: .yellow
         )
         assertSnapshot(
