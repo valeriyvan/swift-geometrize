@@ -38,6 +38,14 @@ extension Bitmap {
         self.init(width: image.size.0, height: image.size.1, data: bitmapData)
     }
 
+    init(pngBundleResource resource: String, withExtension extension: String) throws {
+        guard let url = Bundle.module.url(forResource: resource, withExtension: `extension`) else {
+            fatalError("Resource \"\(resource).\(`extension`)\" not found in bundle")
+        }
+        let data = try Data(contentsOf: url)
+        self = try Bitmap(pngData: data)
+    }
+
 }
 
 // Borrowed https://github.com/kelvin13/swift-png/blob/0800c123d29d132cab70a1d492fb18a7e4007380/examples/decode-online/main.swift

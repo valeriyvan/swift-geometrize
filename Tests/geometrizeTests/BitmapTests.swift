@@ -44,8 +44,7 @@ final class BitmapTests: XCTestCase {
     }
 
     func testInitSizeAndBitmapDataWithBackgroundBlended() throws {
-        let url = Bundle.module.url(forResource: "63", withExtension: "png")!
-        let bitmap = try Bitmap(pngData: try Data(contentsOf: url))
+        let bitmap = try Bitmap(pngBundleResource: "63", withExtension: "png")
         let bitmapWithYellowBackgroundBlended = Bitmap(
             width: bitmap.width,
             height: bitmap.height,
@@ -270,79 +269,63 @@ final class BitmapTests: XCTestCase {
     }
 
     func testRotateUp() throws {
-        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
-        let f = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        let f = try Bitmap(pngBundleResource: "F-Up", withExtension: "png")
         var fUp = f
         fUp.rotateToUpOrientation(accordingTo: .up)
         XCTAssertEqual(f, fUp)
     }
 
     func testRotateUpMirrored() throws {
-        let url = Bundle.module.url(forResource: "F-UpMirrored", withExtension: "png")!
-        var fUpMirrored = try Bitmap(pngData: try Data(contentsOf: url))
+        var fUpMirrored = try Bitmap(pngBundleResource: "F-UpMirrored", withExtension: "png")
         fUpMirrored.rotateToUpOrientation(accordingTo: .upMirrored)
-        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
-        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        let fUP = try Bitmap(pngBundleResource: "F-Up", withExtension: "png")
         XCTAssertEqual(fUpMirrored, fUP)
     }
 
     func testRotateDown() throws {
-        let url = Bundle.module.url(forResource: "F-Down", withExtension: "png")!
-        var fDown = try Bitmap(pngData: try Data(contentsOf: url))
+        var fDown = try Bitmap(pngBundleResource: "F-Down", withExtension: "png")
         fDown.rotateToUpOrientation(accordingTo: .down)
-        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
-        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        let fUP = try Bitmap(pngBundleResource: "F-Up", withExtension: "png")
         XCTAssertEqual(fDown, fUP)
     }
 
     func testRotateDownMirrored() throws {
-        let url = Bundle.module.url(forResource: "F-DownMirrored", withExtension: "png")!
-        var fDownMirrored = try Bitmap(pngData: try Data(contentsOf: url))
+        var fDownMirrored = try Bitmap(pngBundleResource: "F-DownMirrored", withExtension: "png")
         fDownMirrored.rotateToUpOrientation(accordingTo: .downMirrored)
-        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
-        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        let fUP = try Bitmap(pngBundleResource: "F-Up", withExtension: "png")
         XCTAssertEqual(fDownMirrored, fUP)
     }
 
     func testRotateLeftMirrored() throws {
-        let url = Bundle.module.url(forResource: "F-LeftMirrored", withExtension: "png")!
-        var fLeftMirrored = try Bitmap(pngData: try Data(contentsOf: url))
+        var fLeftMirrored = try Bitmap(pngBundleResource: "F-LeftMirrored", withExtension: "png")
         fLeftMirrored.rotateToUpOrientation(accordingTo: .leftMirrored)
-        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
-        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        let fUP = try Bitmap(pngBundleResource: "F-Up", withExtension: "png")
         XCTAssertEqual(fLeftMirrored, fUP)
     }
 
     func testRotateLeft() throws {
-        let url = Bundle.module.url(forResource: "F-Left", withExtension: "png")!
-        var fLeft = try Bitmap(pngData: try Data(contentsOf: url))
+        var fLeft = try Bitmap(pngBundleResource: "F-Left", withExtension: "png")
         fLeft.rotateToUpOrientation(accordingTo: .left)
-        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
-        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        let fUP = try Bitmap(pngBundleResource: "F-Up", withExtension: "png")
         XCTAssertEqual(fLeft, fUP)
     }
 
     func testRotateRightMirrored() throws {
-        let url = Bundle.module.url(forResource: "F-RightMirrored", withExtension: "png")!
-        var fRightMirrored = try Bitmap(pngData: try Data(contentsOf: url))
+        var fRightMirrored = try Bitmap(pngBundleResource: "F-RightMirrored", withExtension: "png")
         fRightMirrored.rotateToUpOrientation(accordingTo: .rightMirrored)
-        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
-        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        let fUP = try Bitmap(pngBundleResource: "F-Up", withExtension: "png")
         XCTAssertEqual(fRightMirrored, fUP)
     }
 
     func testRotateRight() throws {
-        let url = Bundle.module.url(forResource: "F-Right", withExtension: "png")!
-        var fRight = try Bitmap(pngData: try Data(contentsOf: url))
+        var fRight = try Bitmap(pngBundleResource: "F-Right", withExtension: "png")
         fRight.rotateToUpOrientation(accordingTo: .right)
-        let urlFUP = Bundle.module.url(forResource: "F-Up", withExtension: "png")!
-        let fUP = try Bitmap(pngData: try Data(contentsOf: urlFUP))
+        let fUP = try Bitmap(pngBundleResource: "F-Up", withExtension: "png")
         XCTAssertEqual(fRight, fUP)
     }
 
     func testBlend() throws {
-        let url = Bundle.module.url(forResource: "63", withExtension: "png")!
-        let bitmap = try Bitmap(pngData: try Data(contentsOf: url))
+        let bitmap = try Bitmap(pngBundleResource: "63", withExtension: "png")
         let bitmapWithWhiteBackgroundBlended = bitmap.blending(background: .white)
         assertSnapshot(
             matching: bitmapWithWhiteBackgroundBlended,

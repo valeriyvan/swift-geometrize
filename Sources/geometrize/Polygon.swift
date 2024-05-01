@@ -43,7 +43,7 @@ extension Polygon {
         }
         var lines: [Scanline] = [Scanline]()
         for (y, xs) in yToXs {
-            let (xMin, xMax) = xs.minAndMax()!
+            let (xMin, xMax) = xs.minAndMax()! // swiftlint:disable:this force_unwrapping
             let line = Scanline(y: Int(y), x1: Int(xMin), x2: Int(xMax))
             lines.append(line)
         }
