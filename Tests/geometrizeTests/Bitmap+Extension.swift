@@ -14,7 +14,11 @@ extension Bitmap {
                 $0[$0.startIndex + 3]
             )
         }
-        let image: PNG.Image = PNG.Image(packing: rgba, size: (x: width, y: height), layout: PNG.Layout(format: .rgba8(palette: [], fill: nil)))
+        let image = PNG.Image(
+            packing: rgba,
+            size: (x: width, y: height),
+            layout: PNG.Layout(format: .rgba8(palette: [], fill: nil))
+        )
         var destinationStream = DestinationStream()
         try image.compress(stream: &destinationStream)
         return Data(destinationStream.data)

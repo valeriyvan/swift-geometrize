@@ -15,7 +15,10 @@ final class CoreTests: XCTestCase {
         blackBitmapTwoPixelsChanged[0, 1] = .white
 
         // Changing two pixels means there's more difference than changing one.
-        XCTAssertTrue(blackBitmap.differenceFull(with: blackBitmapTwoPixelsChanged) > blackBitmap.differenceFull(with: blackBitmapOnePixelChanged))
+        XCTAssertGreaterThan(
+            blackBitmap.differenceFull(with: blackBitmapTwoPixelsChanged),
+            blackBitmap.differenceFull(with: blackBitmapOnePixelChanged)
+        )
 
         // Now the same for white image
         let whiteBitmap = Bitmap(width: 10, height: 10, color: .white)
@@ -29,7 +32,10 @@ final class CoreTests: XCTestCase {
         whiteBitmapTwoPixelsChanged[0, 1] = .black
 
         // Changing two pixels means there's more difference than changing one.
-        XCTAssertTrue(whiteBitmap.differenceFull(with: whiteBitmapTwoPixelsChanged) > whiteBitmap.differenceFull(with: whiteBitmapOnePixelChanged))
+        XCTAssertGreaterThan(
+            whiteBitmap.differenceFull(with: whiteBitmapTwoPixelsChanged),
+            whiteBitmap.differenceFull(with: whiteBitmapOnePixelChanged)
+        )
     }
 
     func testDifferenceFullComparingResultWithCPlusPlus() throws {
@@ -41,11 +47,15 @@ final class CoreTests: XCTestCase {
     }
 
     func testDifferencePartialComparingResultWithCPlusPlus() throws {
-        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap target", withExtension: "txt")!))
-        let bitmapBefore = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap before", withExtension: "txt")!))
-        let bitmapAfter = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "differencePartial bitmap after", withExtension: "txt")!))
+        let bitmapTargetUrl = Bundle.module.url(forResource: "differencePartial bitmap target", withExtension: "txt")!
+        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: bitmapTargetUrl))
+        let bitmapBeforeUrl = Bundle.module.url(forResource: "differencePartial bitmap before", withExtension: "txt")!
+        let bitmapBefore = Bitmap(stringLiteral: try String(contentsOf: bitmapBeforeUrl))
+        let bitmapAfterUrl = Bundle.module.url(forResource: "differencePartial bitmap after", withExtension: "txt")!
+        let bitmapAfter = Bitmap(stringLiteral: try String(contentsOf: bitmapAfterUrl))
 
-        let scanlinesString = try String(contentsOf: Bundle.module.url(forResource: "differencePartial scanlines", withExtension: "txt")!)
+        let scanlinesUrl = Bundle.module.url(forResource: "differencePartial scanlines", withExtension: "txt")!
+        let scanlinesString = try String(contentsOf: scanlinesUrl)
         var components = scanlinesString.components(separatedBy: "),")
         for i in components.indices.dropLast() {
             components[i] += ")"
@@ -65,17 +75,37 @@ final class CoreTests: XCTestCase {
     }
 
     func testDefaultEnergyFunctionComparingResultWithCPlusPlus() throws {
-        let scanlinesString = try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction scanlines", withExtension: "txt")!)
+        let scanlinesUrl = Bundle.module.url(
+            forResource: "defaultEnergyFunction scanlines",
+            withExtension: "txt"
+        )!
+        let scanlinesString = try String(contentsOf: scanlinesUrl)
         var components = scanlinesString.components(separatedBy: "),")
         for i in components.indices.dropLast() {
             components[i] += ")"
         }
         let scanlines = components.map(Scanline.init)
 
-        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction target bitmap", withExtension: "txt")!))
-        let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction current bitmap", withExtension: "txt")!))
-        var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap", withExtension: "txt")!))
-        let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "defaultEnergyFunction buffer bitmap on exit", withExtension: "txt")!))
+        let targetUrl = Bundle.module.url(
+            forResource: "defaultEnergyFunction target bitmap",
+            withExtension: "txt"
+        )!
+        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: targetUrl))
+        let currentUrl = Bundle.module.url(
+            forResource: "defaultEnergyFunction current bitmap",
+            withExtension: "txt"
+        )!
+        let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: currentUrl))
+        let bufferUrl = Bundle.module.url(
+            forResource: "defaultEnergyFunction buffer bitmap",
+            withExtension: "txt"
+        )!
+        var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: bufferUrl))
+        let bufferOnExitUrl = Bundle.module.url(
+            forResource: "defaultEnergyFunction buffer bitmap on exit",
+            withExtension: "txt"
+        )!
+        let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: bufferOnExitUrl))
 
         XCTAssertEqual(
             defaultEnergyFunction(
@@ -95,7 +125,8 @@ final class CoreTests: XCTestCase {
 
     // fails
     func testHillClimbComparingResultWithCPlusPlus() throws {
-        let randomNumbersString = try String(contentsOf: Bundle.module.url(forResource: "hillClimb randomRange", withExtension: "txt")!)
+        let url = Bundle.module.url(forResource: "hillClimb randomRange", withExtension: "txt")!
+        let randomNumbersString = try String(contentsOf: url)
         let lines = randomNumbersString.components(separatedBy: .newlines)
         var counter = 0
         func randomRangeFromFile(in range: ClosedRange<Int>, using generator: inout SplitMix64) -> Int {
@@ -117,10 +148,14 @@ final class CoreTests: XCTestCase {
         }
         _randomImplementationReference = randomRangeFromFile
 
-        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb target bitmap", withExtension: "txt")!))
-        let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb current bitmap", withExtension: "txt")!))
-        var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap", withExtension: "txt")!))
-        let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: Bundle.module.url(forResource: "hillClimb buffer bitmap on exit", withExtension: "txt")!))
+        let urlTarget = Bundle.module.url(forResource: "hillClimb target bitmap", withExtension: "txt")!
+        let bitmapTarget = Bitmap(stringLiteral: try String(contentsOf: urlTarget))
+        let urlCurrent = Bundle.module.url(forResource: "hillClimb current bitmap", withExtension: "txt")!
+        let bitmapCurrent = Bitmap(stringLiteral: try String(contentsOf: urlCurrent))
+        let urlBuffer = Bundle.module.url(forResource: "hillClimb buffer bitmap", withExtension: "txt")!
+        var bitmapBuffer = Bitmap(stringLiteral: try String(contentsOf: urlBuffer))
+        let urlBufferOnExit = Bundle.module.url(forResource: "hillClimb buffer bitmap on exit", withExtension: "txt")!
+        let bitmapBufferOnExit = Bitmap(stringLiteral: try String(contentsOf: urlBufferOnExit))
 
         let rectangle = Rectangle(strokeWidth: 1, x1: 281, y1: 193, x2: 309, y2: 225)
         // rectangle.setupImplementation = { r in
@@ -161,7 +196,8 @@ final class CoreTests: XCTestCase {
             using: &generator
         )
 
-        XCTAssertEqual(stateOnExit.score, stateOnExitSample.score, accuracy: 0.000001) // ("0.15865964089795329") is not equal to ("0.162824") +/- ("1e-06")
+        // ("0.15865964089795329") is not equal to ("0.162824") +/- ("1e-06")
+        XCTAssertEqual(stateOnExit.score, stateOnExitSample.score, accuracy: 0.000001)
         XCTAssertEqual(stateOnExit.alpha, stateOnExitSample.alpha)
         XCTAssertTrue(stateOnExit.shape == stateOnExitSample.shape) // XCTAssertTrue failed
 

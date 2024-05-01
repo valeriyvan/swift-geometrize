@@ -104,7 +104,12 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         currentBitmap.draw(lines: lines, color: color)
 
         // Check for an improvement - if not, roll back and return no result
-        let newScore: Double = before.differencePartial(with: currentBitmap, target: targetBitmap, score: lastScore, mask: lines)
+        let newScore: Double = before.differencePartial(
+            with: currentBitmap,
+            target: targetBitmap,
+            score: lastScore,
+            mask: lines
+        )
         guard addShapePrecondition(lastScore, newScore, shape, lines, color, before, currentBitmap, targetBitmap) else {
             currentBitmap = before
             return nil

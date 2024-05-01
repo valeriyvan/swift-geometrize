@@ -184,7 +184,8 @@ public struct Bitmap { // swiftlint:disable:this type_body_length
         let newWidth = width + inset * 2
         let newHeight = height + inset * 2
         let newCapacity = newWidth * newHeight * 4
-        let newBacking = ContiguousArray<UInt8>(unsafeUninitializedCapacity: newCapacity) { buffer, initializedCapacity in
+        let newBacking = ContiguousArray<UInt8>(unsafeUninitializedCapacity: newCapacity) {
+            buffer, initializedCapacity in // swiftlint:disable:this closure_parameter_position
             for y in 0..<newHeight {
                 for x in 0..<newWidth {
                     let targetOffset =  (newWidth * y + x) * 4

@@ -75,7 +75,8 @@ public struct SVGExporter {
         """
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-        <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" width=\"\(width)\" height=\"\(height)\" viewBox=\"0 0 \(width) \(height)\">
+        <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            width=\"\(width)\" height=\"\(height)\" viewBox=\"0 0 \(width) \(height)\">
         \(singleShapeData(color: color, shape: shape, options: options))
         </svg>
         """
@@ -99,7 +100,8 @@ public struct SVGExporter {
         var str = """
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-        <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" width=\"\(width)\" height=\"\(height)\" viewBox=\"0 0 \(width) \(height)\">\n
+        <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            width=\"\(width)\" height=\"\(height)\" viewBox=\"0 0 \(width) \(height)\">\n
         """
         var options = options
         for (number, shapeResult) in data.enumerated() {
@@ -124,16 +126,24 @@ public struct SVGExporter {
     }
 
     private func shapeData(rectangle r: Rectangle) -> String {
-        "<rect x=\"\(min(r.x1, r.x2))\" y=\"\(min(r.y1, r.y2))\" width=\"\(max(r.x1, r.x2) - min(r.x1, r.x2))\" height=\"\(max(r.y1, r.y2) - min(r.y1, r.y2))\" \(svg_style_hook) />"
+        "<rect x=\"\(min(r.x1, r.x2))\" y=\"\(min(r.y1, r.y2))\" " +
+        "width=\"\(max(r.x1, r.x2) - min(r.x1, r.x2))\" height=\"\(max(r.y1, r.y2) - min(r.y1, r.y2))\" " +
+        "\(svg_style_hook)/>"
     }
 
     private func shapeData(rotatedRectangle r: RotatedRectangle) -> String {
-        let cp = r.cornerPoints
-        return "<polygon points=\"\(cp.0.x),\(cp.0.y) \(cp.1.x),\(cp.1.y) \(cp.2.x),\(cp.2.y) \(cp.3.x),\(cp.3.y)\" \(svg_style_hook)/>"
+        "<polygon points=\"" +
+        "\(r.cornerPoints.0.x),\(r.cornerPoints.0.y) " +
+        "\(r.cornerPoints.1.x),\(r.cornerPoints.1.y) " +
+        "\(r.cornerPoints.2.x),\(r.cornerPoints.2.y) " +
+        "\(r.cornerPoints.3.x),\(r.cornerPoints.3.y)\" " +
+        "\(svg_style_hook)/>"
     }
 
     private func shapeData(rotatedRectangle r: RotatedEllipse) -> String {
-        "<g transform=\"translate(\(r.x) \(r.y)) rotate(\(r.angleDegrees)) scale(\(r.rx) \(r.ry))\"><ellipse cx=\"0\" cy=\"0\" rx=\"1\" ry=\"1\" \(svg_style_hook) /></g>"
+        "<g transform=\"translate(\(r.x) \(r.y)) rotate(\(r.angleDegrees)) scale(\(r.rx) \(r.ry))\">" +
+        "<ellipse cx=\"0\" cy=\"0\" rx=\"1\" ry=\"1\" \(svg_style_hook)/>" +
+        "</g>"
     }
 
     private func shapeData(triangle t: Triangle) -> String {
@@ -153,12 +163,12 @@ public struct SVGExporter {
     }
 
     private func shapeData(polyline l: Polyline) -> String {
-        "<polyline points=\"" + l.points.map { "\($0.x),\($0.y)" }.joined(separator: " ") + "\" \(svg_style_hook) />"
+        "<polyline points=\"" + l.points.map { "\($0.x),\($0.y)" }.joined(separator: " ") + "\" \(svg_style_hook)/>"
     }
 
     private func shapeData(quadraticBezier q: QuadraticBezier) -> String {
         // TODO: have to do something with double coordinates in shapes
-        "<path d=\"M\(Int(q.x1)) \(Int(q.y1)) Q \(Int(q.cx)) \(Int(q.cy)) \(Int(q.x2)) \(Int(q.y2))\" \(svg_style_hook)/>"
+        "<path d=\"M\(Int(q.x1)) \(Int(q.y1)) Q\(Int(q.cx)) \(Int(q.cy)) \(Int(q.x2)) \(Int(q.y2))\" \(svg_style_hook)/>"
     }
 
     private func shapeData(shape: any Shape, options: ExportOptions) -> String {
