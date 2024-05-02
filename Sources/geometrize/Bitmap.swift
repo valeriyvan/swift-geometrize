@@ -437,6 +437,48 @@ extension Bitmap {
 
 }
 
+// MARK: export/initializers into/from Netpbm formats
+
+extension Bitmap {
+
+//    init(ppmString: String) throws {
+//        let scanner = Scanner(string: ppmString)
+//        scanner.scanString("P1\n")
+//        width = 0
+//        height = 0
+//        let pixelCount = width * height
+//        let capacity =  pixelCount * 4
+//        backing = ContiguousArray<UInt8>(unsafeUninitializedCapacity: capacity) { buffer, initializedCapacity in
+//            for index in 0 ..< pixelCount {
+//                let offset = index * 4
+//                buffer[offset + 0] = color.r
+//                buffer[offset + 1] = color.g
+//                buffer[offset + 2] = color.b
+//                buffer[offset + 3] = color.a
+//            }
+//            initializedCapacity = capacity
+//        }
+//    }
+
+    public func ppmString(background: Rgba = .white) -> String {
+        var string =
+            """
+            P3
+            \(width) \(height)
+            255
+
+            """
+        backing.withUnsafeBufferPointer {
+            for i in stride(from: 0, to: $0.count, by: 4) {
+                let blendedColor = Rgba($0[i..<i + 4]).blending(background: background)
+                string += "\n\(blendedColor.r) \(blendedColor.g) \(blendedColor.b)"
+            }
+        }
+        return string
+    }
+
+}
+
 // TODO: what's right way to implement this init as failable or throwing?
 // One hint is here https://forums.swift.org/t/how-to-make-expressiblebystringliteral-init-either-failable-somehow-or-throws/47973/3:
 
