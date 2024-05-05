@@ -14,4 +14,16 @@ final class RgbaTests: XCTestCase {
         )
     }
 
+    func testArray() {
+        let array: [UInt8] = [1, 2, 3, 4]
+        let rgba = Rgba(array)
+        XCTAssertEqual(rgba.asArray, array)
+    }
+
+    func testTuple() {
+        let tuple = (UInt8(1), UInt8(2), UInt8(3), UInt8(4))
+        let rgba = Rgba(tuple)
+        XCTAssertTrue(rgba.asTuple == tuple)
+    }
+
 }

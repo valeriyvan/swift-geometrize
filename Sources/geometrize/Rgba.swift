@@ -15,7 +15,22 @@ public struct Rgba {
         self.a = a
     }
 
+    public init(_ tuple: (r: UInt8, g: UInt8, b: UInt8, a: UInt8)) {
+        self.r = tuple.r
+        self.g = tuple.g
+        self.b = tuple.b
+        self.a = tuple.a
+    }
+
     public init(_ array: [UInt8]) {
+        assert(array.count == 4)
+        self.r = array[0]
+        self.g = array[1]
+        self.b = array[2]
+        self.a = array[3]
+    }
+
+    public init(_ array: ContiguousArray<UInt8>) {
         assert(array.count == 4)
         self.r = array[0]
         self.g = array[1]
@@ -73,6 +88,10 @@ public struct Rgba {
             a: 255
         )
     }
+
+    public var asArray: [UInt8] { [r, g, b, a] }
+
+    public var asTuple: (UInt8, UInt8, UInt8, UInt8) { (r, g, b, a) }
 
 }
 
