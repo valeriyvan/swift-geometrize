@@ -437,48 +437,6 @@ extension Bitmap {
 
 }
 
-// MARK: export/initializers into/from Netpbm formats
-
-extension Bitmap {
-
-//    init(ppmString: String) throws {
-//        let scanner = Scanner(string: ppmString)
-//        scanner.scanString("P1\n")
-//        width = 0
-//        height = 0
-//        let pixelCount = width * height
-//        let capacity =  pixelCount * 4
-//        backing = ContiguousArray<UInt8>(unsafeUninitializedCapacity: capacity) { buffer, initializedCapacity in
-//            for index in 0 ..< pixelCount {
-//                let offset = index * 4
-//                buffer[offset + 0] = color.r
-//                buffer[offset + 1] = color.g
-//                buffer[offset + 2] = color.b
-//                buffer[offset + 3] = color.a
-//            }
-//            initializedCapacity = capacity
-//        }
-//    }
-
-    public func ppmString(background: Rgba = .white) -> String {
-        var string =
-            """
-            P3
-            \(width) \(height)
-            255
-
-            """
-        backing.withUnsafeBufferPointer {
-            for i in stride(from: 0, to: $0.count, by: 4) {
-                let blendedColor = Rgba($0[i..<i + 4]).blending(background: background)
-                string += "\n\(blendedColor.r) \(blendedColor.g) \(blendedColor.b)"
-            }
-        }
-        return string
-    }
-
-}
-
 // TODO: what's right way to implement this init as failable or throwing?
 // One hint is here https://forums.swift.org/t/how-to-make-expressiblebystringliteral-init-either-failable-somehow-or-throws/47973/3:
 
@@ -523,6 +481,81 @@ extension Bitmap: CustomStringConvertible {
         "width: \(width), height: \(height)\n" + backing.map(String.init).joined(separator: ",")
     }
 
+}
+
+extension Bitmap {
+
+    public enum ParsePpmError: Error {
+        case noP3
+        case inconsistentHeader(String)
+        case maxElementNot255(String)
+        case wrongElement(String)
+        case excessiveCharacters(String)
+    }
+
+    // Format is described in https://en.wikipedia.org/wiki/Netpbm and https://netpbm.sourceforge.net/doc/ppm.html
+    public init(ppmString string: String) throws {
+        let scanner = Scanner(string: string)
+        scanner.charactersToBeSkipped = .whitespacesAndNewlines
+        guard scanner.scanString("P3") != nil else {
+            throw ParsePpmError.noP3
+        }
+        guard let width = scanner.scanInt(), width > 0, let height = scanner.scanInt(), height > 0 else {
+            throw ParsePpmError.inconsistentHeader(String(string[..<scanner.currentIndex]))
+        }
+        guard let maxValue = scanner.scanInt(), maxValue == 255
+        else {
+            throw ParsePpmError.maxElementNot255(String(string[..<scanner.currentIndex]))
+        }
+        self.width = width
+        self.height = height
+        let capacity = width * height * 4
+        self.backing = try ContiguousArray<UInt8>(unsafeUninitializedCapacity: capacity) { buffer, initializedCount in
+            var counter: Int = 0
+            repeat {
+                let startIndex = scanner.currentIndex
+                guard
+                    let red = scanner.scanInt(), 0...255 ~= red,
+                    let green = scanner.scanInt(), 0...255 ~= green,
+                    let blue = scanner.scanInt(), 0...255 ~= blue
+                else {
+                    throw ParsePpmError.wrongElement(String(string[startIndex..<scanner.currentIndex]).trimmingCharacters(in: .whitespacesAndNewlines))
+                }
+                buffer[counter] = UInt8(red)
+                counter += 1
+                buffer[counter] = UInt8(green)
+                counter += 1
+                buffer[counter] = UInt8(blue)
+                counter += 1
+                buffer[counter] = 255
+                counter += 1
+            } while counter < capacity
+
+            let startIndex = scanner.currentIndex
+            guard scanner.isAtEnd else {
+                throw ParsePpmError.excessiveCharacters(String(string[startIndex...]).trimmingCharacters(in: .whitespacesAndNewlines))
+            }
+            initializedCount = capacity
+        }
+    }
+
+    public func ppmString(background: Rgba = .white) -> String {
+        """
+        P3
+        \(width) \(height)
+        255
+
+        """
+        +
+        backing
+            // .lazy ???
+            .chunks(ofCount: 4)
+            .map { Rgba($0).blending(background: background).asArray.dropLast() }
+            .compactMap { $0.map(String.init).joined(separator: " ") + "\n" }
+            .joined()
+    }
+
+    public var ppmString: String { ppmString() }
 }
 
 extension Bitmap {
