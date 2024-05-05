@@ -366,6 +366,138 @@ final class BitmapTests: XCTestCase {
         }
     }
 
+    func testInitPpmString() throws {
+        XCTAssertEqual(
+            try Bitmap(ppmString:
+            """
+            P3
+            3 2
+            255
+            1 2 3
+            4 5 6
+            7 8 9
+            10 11 12
+            13 14 15
+            16 17 18
+
+            """),
+            Bitmap(
+               stringLiteral:
+               """
+               width: 3, height: 2
+               1,2,3,255,4,5,6,255,7,8,9,255,10,11,12,255,
+               13,14,15,255,16,17,18,255
+               """
+            )
+        )
+
+        XCTAssertThrowsError(
+            try Bitmap(ppmString:
+            """
+            P
+            3 2
+            255
+            1 2 3
+            4 5 6
+            7 8 9
+            10 11 12
+            13 14 15
+            16 17 18
+
+            """)
+        )
+        { error in
+            guard case Bitmap.ParsePpmError.noP3 = error else {
+                return XCTFail("Bitmap.ParsePpmError.noP3 wasn't threw")
+            }
+        }
+
+        XCTAssertThrowsError(
+            try Bitmap(ppmString:
+            """
+            P3
+            3 2
+            500
+            1 2 3
+            4 5 6
+            7 8 9
+            10 11 12
+            13 14 15
+            16 17 18
+
+            """)
+        )
+        { error in
+            guard case Bitmap.ParsePpmError.maxElementNot255(let context) = error, context == "P3\n3 2\n500" else {
+                return XCTFail("Bitmap.ParsePpmError.maxElementNot255 wasn't threw or context isn't as expected")
+            }
+        }
+
+        XCTAssertThrowsError(
+            try Bitmap(ppmString:
+            """
+            P3
+            -10 2
+            255
+            1 2 3
+            4 5 6
+            7 8 9
+            10 11 12
+            13 14 15
+            16 17 18
+
+            """)
+        )
+        { error in
+            guard case Bitmap.ParsePpmError.inconsistentHeader(let context) = error, context == "P3\n-10" else {
+                return XCTFail("Bitmap.ParsePpmError.inconsistentHeader wasn't threw or context isn't as expected")
+            }
+        }
+
+        XCTAssertThrowsError(
+            try Bitmap(ppmString:
+            """
+            P3
+            3 2
+            255
+            1 2 3
+            4 5 6
+            7 -1 9
+            10 11 12
+            13 14 15
+            16 17 18
+
+            """)
+        )
+        { error in
+            guard case Bitmap.ParsePpmError.wrongElement(let context) = error, context == "7 -1" else {
+                return XCTFail("Bitmap.ParsePpmError.wrongElement wasn't threw or context isn't as expected")
+            }
+        }
+
+        XCTAssertThrowsError(
+            try Bitmap(ppmString:
+            """
+            P3
+            3 2
+            255
+            1 2 3
+            4 5 6
+            7 8 9
+            10 11 12
+            13 14 15
+            16 17 18
+            19
+
+            """)
+        )
+        { error in
+            guard case Bitmap.ParsePpmError.excessiveCharacters(let context) = error, context == "19" else {
+                return XCTFail("Bitmap.ParsePpmError.wrongElement wasn't threw or context isn't as expected")
+            }
+        }
+    }
+
     func testPpmString() {
         XCTAssertEqual(
             Bitmap(
