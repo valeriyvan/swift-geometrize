@@ -500,8 +500,7 @@ final class BitmapTests: XCTestCase {
 
     func testPpmString() {
         XCTAssertEqual(
-            Bitmap(
-                stringLiteral:
+            Bitmap(stringLiteral:
                 """
                 width: 3, height: 2
                 1,2,3,255,4,5,6,255,7,8,9,255,10,11,12,255,
@@ -511,15 +510,15 @@ final class BitmapTests: XCTestCase {
             .ppmString(background: .white),
             """
             P3
-            \(3) \(2)
+            3 2
             255
-
             1 2 3
             4 5 6
             7 8 9
             10 11 12
             13 14 15
             16 17 18
+
             """
         )
     }
