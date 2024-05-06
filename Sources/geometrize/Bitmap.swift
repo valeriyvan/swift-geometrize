@@ -519,7 +519,9 @@ extension Bitmap {
                     let green = scanner.scanInt(), 0...255 ~= green,
                     let blue = scanner.scanInt(), 0...255 ~= blue
                 else {
-                    throw ParsePpmError.wrongElement(String(string[startIndex..<scanner.currentIndex]).trimmingCharacters(in: .whitespacesAndNewlines))
+                    let context = String(string[startIndex..<scanner.currentIndex])
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                    throw ParsePpmError.wrongElement(context)
                 }
                 buffer[counter] = UInt8(red)
                 counter += 1
@@ -533,7 +535,8 @@ extension Bitmap {
 
             let startIndex = scanner.currentIndex
             guard scanner.isAtEnd else {
-                throw ParsePpmError.excessiveCharacters(String(string[startIndex...]).trimmingCharacters(in: .whitespacesAndNewlines))
+                let context = String(string[startIndex...]).trimmingCharacters(in: .whitespacesAndNewlines)
+                throw ParsePpmError.excessiveCharacters(context)
             }
             initializedCount = capacity
         }

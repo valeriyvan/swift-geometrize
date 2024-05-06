@@ -366,7 +366,7 @@ final class BitmapTests: XCTestCase {
         }
     }
 
-    func testInitPpmString() throws {
+    func testInitPpmString() throws { // swiftlint:disable:this function_body_length
         XCTAssertEqual(
             try Bitmap(ppmString:
             """
@@ -405,8 +405,7 @@ final class BitmapTests: XCTestCase {
             16 17 18
 
             """)
-        )
-        { error in
+        ) { error in
             guard case Bitmap.ParsePpmError.noP3 = error else {
                 return XCTFail("Bitmap.ParsePpmError.noP3 wasn't threw")
             }
@@ -426,8 +425,7 @@ final class BitmapTests: XCTestCase {
             16 17 18
 
             """)
-        )
-        { error in
+        ) { error in
             guard case Bitmap.ParsePpmError.maxElementNot255(let context) = error, context == "P3\n3 2\n500" else {
                 return XCTFail("Bitmap.ParsePpmError.maxElementNot255 wasn't threw or context isn't as expected")
             }
@@ -447,8 +445,7 @@ final class BitmapTests: XCTestCase {
             16 17 18
 
             """)
-        )
-        { error in
+        ) { error in
             guard case Bitmap.ParsePpmError.inconsistentHeader(let context) = error, context == "P3\n-10" else {
                 return XCTFail("Bitmap.ParsePpmError.inconsistentHeader wasn't threw or context isn't as expected")
             }
@@ -468,8 +465,7 @@ final class BitmapTests: XCTestCase {
             16 17 18
 
             """)
-        )
-        { error in
+        ) { error in
             guard case Bitmap.ParsePpmError.wrongElement(let context) = error, context == "7 -1" else {
                 return XCTFail("Bitmap.ParsePpmError.wrongElement wasn't threw or context isn't as expected")
             }
@@ -490,8 +486,7 @@ final class BitmapTests: XCTestCase {
             19
 
             """)
-        )
-        { error in
+        ) { error in
             guard case Bitmap.ParsePpmError.excessiveCharacters(let context) = error, context == "19" else {
                 return XCTFail("Bitmap.ParsePpmError.wrongElement wasn't threw or context isn't as expected")
             }
