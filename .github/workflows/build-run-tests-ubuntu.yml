@@ -103,3 +103,5 @@ jobs:
       run: /opt/swift/bin/swift build -v
     - name: Run tests
       run: /opt/swift/bin/swift test -v
+    - name: Lint
+      run: /opt/swift/bin/swift package swiftlint lint         
