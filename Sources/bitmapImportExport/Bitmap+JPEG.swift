@@ -65,13 +65,7 @@ public extension Bitmap {
     }
 
     init(jpegData data: Data) throws {
-        let bytes = data.withUnsafeBytes { rawBufferPointer in
-            [UInt8](unsafeUninitializedCapacity: rawBufferPointer.count) { buffer, initializedCount in
-                _ = buffer.initialize(from: rawBufferPointer)
-                initializedCount = buffer.count
-            }
-        }
-        var sourceStream = SourceStream(bytes)
+        var sourceStream = SourceStream(data)
         let image: JPEG.Data.Rectangular<JPEG.Common> = try .decompress(stream: &sourceStream)
         let rgb: [JPEG.RGB] = image.unpack(as: JPEG.RGB.self)
         let (width, height) = image.size
