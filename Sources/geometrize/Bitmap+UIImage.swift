@@ -42,7 +42,7 @@ extension Bitmap {
         var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Big.rawValue |
             CGImageAlphaInfo.premultipliedLast.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
         var mutableBacking = backing
-        return mutableBacking.withUnsafeMutableBufferPointer() {
+        return mutableBacking.withUnsafeMutableBufferPointer {
             CGContext(
                 data: $0.baseAddress,
                 width: width,
