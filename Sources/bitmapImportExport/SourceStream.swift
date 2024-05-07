@@ -4,11 +4,11 @@ import JPEG
 
 struct SourceStream: PNG.BytestreamSource, _JPEGBytestreamSource {
 
-    private(set) var data: [UInt8] // TODO: use Data instead
+    private(set) var data: Data
     private(set) var position: Int
     private(set) var available: Int
 
-    init(_ data: [UInt8]) {
+    init(_ data: Data) {
         self.data = data
         self.position = data.startIndex
         self.available = data.startIndex
