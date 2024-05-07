@@ -31,6 +31,10 @@ let package = Package(
             name: "Geometrize",
             targets: ["Geometrize"]
         ),
+        .library(
+            name: "BitmapImportExport",
+            targets: ["BitmapImportExport"]
+        ),
         .executable(
             name: "geometrize-cli",
             targets: ["geometrize-cli"]
@@ -48,10 +52,21 @@ let package = Package(
             path: "Sources/geometrize",
             plugins: plugins
         ),
+        .target(
+            name: "BitmapImportExport",
+            dependencies: [
+                "Geometrize",
+                .product(name: "PNG", package: "swift-png"),
+                .product(name: "JPEG", package: "jpeg", moduleAliases: ["JPEG": "SwiftJPEG"])
+            ],
+            path: "Sources/bitmapImportExport",
+            plugins: plugins
+        ),
         .executableTarget(
             name: "geometrize-cli",
             dependencies: [
                 "Geometrize",
+                "BitmapImportExport",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "PNG", package: "swift-png"),
                 .product(name: "JPEG", package: "jpeg", moduleAliases: ["JPEG": "SwiftJPEG"])
@@ -67,6 +82,7 @@ let package = Package(
             name: "geometrizeTests",
             dependencies: [
                 "Geometrize",
+                "BitmapImportExport",
                 .product(name: "PNG", package: "swift-png"),
                 .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
             ],
