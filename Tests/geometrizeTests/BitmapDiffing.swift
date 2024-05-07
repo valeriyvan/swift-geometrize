@@ -2,6 +2,7 @@ import XCTest
 import SnapshotTesting
 import PNG
 @testable import Geometrize
+import BitmapImportExport
 
 // On Ubuntu this produces error
 // error: initializers in structs are not marked with 'convenience'
