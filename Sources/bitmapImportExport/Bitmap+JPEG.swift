@@ -4,14 +4,16 @@ import Geometrize
 
 public extension Bitmap {
 
-    func jpegData() throws -> Data {
-        let rgb: [JPEG.RGB] = backing.chunks(ofCount: 4).map {
-            JPEG.RGB(
-                $0[$0.startIndex + 0],
-                $0[$0.startIndex + 1],
-                $0[$0.startIndex + 2]
-            )
-        }
+    /// Creates data of JPEG image
+    /// - Parameters:
+    ///   - blending: Background color to be blended. This has effect only if image has non opaque pixels (pixels with alpha less then 255).
+    ///   Alpha of background itself is ignored.
+    func jpegData(blending background: Rgba = .white) throws -> Data {
+        let rgb: [JPEG.RGB] = backing
+            //.lazy // TODO: make lazy work!
+            .chunks(ofCount: 4)
+            .map { Rgba($0).blending(background: background) }
+            .map { JPEG.RGB($0.r, $0.g, $0.b) }
 
         let format: JPEG.Common = .ycc8
 
