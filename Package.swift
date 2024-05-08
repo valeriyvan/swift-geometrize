@@ -50,6 +50,7 @@ let package = Package(
                 .product(name: "Algorithms", package: "swift-algorithms")
             ],
             path: "Sources/geometrize",
+            resources: [.copy("PrivacyInfo.xcprivacy")],
             plugins: plugins
         ),
         .target(
@@ -60,6 +61,7 @@ let package = Package(
                 .product(name: "JPEG", package: "jpeg", moduleAliases: ["JPEG": "SwiftJPEG"])
             ],
             path: "Sources/bitmapImportExport",
+            resources: [.copy("PrivacyInfo.xcprivacy")],
             plugins: plugins
         ),
         .executableTarget(
@@ -76,6 +78,8 @@ let package = Package(
                 // https://forums.swift.org/t/product-names-from-different-packages-collide-if-packages-are-used-as-dependencies-in-same-package/60178
                 // Uses Swift 5.7 feature https://github.com/apple/swift-evolution/blob/main/proposals/0339-module-aliasing-for-disambiguation.md
             ],
+            path: "Sources/geometrize-cli",
+            resources: [.copy("PrivacyInfo.xcprivacy")],
             plugins: plugins
         ),
         .testTarget(
