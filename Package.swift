@@ -36,7 +36,7 @@ let package = Package(
             targets: ["BitmapImportExport"]
         ),
         .executable(
-            name: "geometrize-cli",
+            name: "geometrize",
             targets: ["geometrize-cli"]
         )
     ],
