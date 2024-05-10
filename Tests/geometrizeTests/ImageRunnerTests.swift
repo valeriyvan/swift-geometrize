@@ -4,6 +4,66 @@ import PNG
 
 final class ImageRunnerTests: XCTestCase {
 
+    func testImageRunnerRedImage() throws {
+        let width = 100, height = 100
+        let targetBitmap = Bitmap(width: width, height: height, color: .red)
+        
+        let options = ImageRunnerOptions(
+            shapeTypes: [RotatedEllipse.self],
+            strokeWidth: 1,
+            alpha: 128,
+            shapeCount: 500,
+            maxShapeMutations: 100,
+            seed: 9001,
+            maxThreads: 1,
+            shapeBounds: ImageRunnerShapeBoundsOptions(
+                enabled: false,
+                xMinPercent: 0, yMinPercent: 0, xMaxPercent: 100, yMaxPercent: 100
+            )
+        )
+        
+        var runner = ImageRunner(targetBitmap: targetBitmap)
+        
+        var shapeData: [ShapeResult] = []
+        
+        // Hack to add a single background rectangle as the initial shape
+        let rect = Rectangle(
+            strokeWidth: 1,
+            x1: 0, y1: 0,
+            x2: Double(targetBitmap.width), y2: Double(targetBitmap.height)
+        )
+        shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape: rect))
+        
+        var counter = 0
+        // Here set count of shapes final image should have. Remember background is the first shape.
+        while shapeData.count <= 1000 {
+            print("Step \(counter)", terminator: "")
+            let shapeResult = runner.step(
+                options: options,
+                shapeCreator: nil,
+                energyFunction: defaultEnergyFunction,
+                addShapePrecondition: defaultAddShapePrecondition
+            )
+            if let shapeResult {
+                shapeData.append(shapeResult)
+            }
+            print(", \(shapeResult == nil ? "no" : "1") shape was added. Total count of shapes \(shapeData.count ).")
+            counter += 1
+        }
+        
+        XCTAssertEqual(
+            SVGExporter().export(data: shapeData, width: width, height: height),
+            """
+            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+            <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+            <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                width="100" height="100" viewBox="0 0 100 100">
+            <rect x="0.0" y="0.0" width="100.0" height="100.0" id="0" fill="rgb(255,0,0)" fill-opacity="1.0"/>
+            </svg>
+            """
+        )
+    }
+
     func testImageRunner() throws {
         throw XCTSkip("Randomness should be somehow handled in this test.")
 
