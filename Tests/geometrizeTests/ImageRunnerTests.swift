@@ -7,7 +7,7 @@ final class ImageRunnerTests: XCTestCase {
     func testImageRunnerRedImage() throws {
         let width = 100, height = 100
         let targetBitmap = Bitmap(width: width, height: height, color: .red)
-        
+
         let options = ImageRunnerOptions(
             shapeTypes: [RotatedEllipse.self],
             strokeWidth: 1,
@@ -21,11 +21,11 @@ final class ImageRunnerTests: XCTestCase {
                 xMinPercent: 0, yMinPercent: 0, xMaxPercent: 100, yMaxPercent: 100
             )
         )
-        
+
         var runner = ImageRunner(targetBitmap: targetBitmap)
-        
+
         var shapeData: [ShapeResult] = []
-        
+
         // Hack to add a single background rectangle as the initial shape
         let rect = Rectangle(
             strokeWidth: 1,
@@ -33,24 +33,32 @@ final class ImageRunnerTests: XCTestCase {
             x2: Double(targetBitmap.width), y2: Double(targetBitmap.height)
         )
         shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape: rect))
-        
+
         var counter = 0
         // Here set count of shapes final image should have. Remember background is the first shape.
-        while shapeData.count <= 1000 {
+        loop: while shapeData.count <= 1000 {
             print("Step \(counter)", terminator: "")
-            let shapeResult = runner.step(
+            let stepResult = runner.step(
                 options: options,
                 shapeCreator: nil,
                 energyFunction: defaultEnergyFunction,
                 addShapePrecondition: defaultAddShapePrecondition
             )
-            if let shapeResult {
+            switch stepResult {
+            case .success(let shapeResult):
                 shapeData.append(shapeResult)
+                print(", \(shapeResult.shape.description) added.", terminator: "")
+            case .match:
+                print(", geometrizing matched source image.", terminator: "")
+                break loop
+            case .failure:
+                print(", no shapes added.", terminator: "")
+                // TODO: should it break as well?
             }
-            print(", \(shapeResult == nil ? "no" : "1") shape was added. Total count of shapes \(shapeData.count ).")
+            // print(", \(shapeResult == nil ? "no" : "1") shape was added. Total count of shapes \(shapeData.count ).")
             counter += 1
         }
-        
+
         XCTAssertEqual(
             SVGExporter().export(data: shapeData, width: width, height: height),
             """
