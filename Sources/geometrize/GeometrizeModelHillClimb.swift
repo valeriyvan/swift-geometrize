@@ -1,5 +1,11 @@
 import Foundation
 
+public enum StepGeometrizationResult {
+    case success(ShapeResult)
+    case match
+    case failure
+}
+
 /// The model class is the model for the core optimization/fitting algorithm.
 class GeometrizeModelHillClimb: GeometrizeModelBase {
 
@@ -76,7 +82,7 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         maxThreads: Int,
         energyFunction: @escaping EnergyFunction,
         addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction = defaultAddShapePrecondition
-    ) -> ShapeResult? {
+    ) -> StepGeometrizationResult {
 
         let states: [State] = getHillClimbState(
             shapeCreator: shapeCreator,
@@ -112,13 +118,17 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         )
         guard addShapePrecondition(lastScore, newScore, shape, lines, color, before, currentBitmap, targetBitmap) else {
             currentBitmap = before
-            return nil
+            if before == currentBitmap {
+                return .match
+            } else {
+                return .failure
+            }
         }
 
         // Improvement - set new baseline and return the new shape
         lastScore = newScore
 
-        return ShapeResult(score: lastScore, color: color, shape: shape)
+        return .success(ShapeResult(score: lastScore, color: color, shape: shape))
     }
 
     /// Sets the seed that the random number generators of this model use.
