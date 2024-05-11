@@ -107,25 +107,32 @@ shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape
 var counter = 0
 // Here in shapeCount set count of shapes final image should have.
 // Remember background is the first shape.
-while shapeData.count <= shapeCount {
+loop: while shapeData.count <= shapeCount {
     if options.verbose {
         print("Step \(counter)", terminator: "")
     }
-    let shapeResult = runner.step(
+    let stepResult = runner.step(
         options: runnerOptions,
         shapeCreator: nil,
         energyFunction: defaultEnergyFunction,
         addShapePrecondition: defaultAddShapePrecondition
     )
-    if let shapeResult {
+    switch stepResult {
+    case .success(let shapeResult):
         shapeData.append(shapeResult)
         if options.verbose {
             print(", \(shapeResult.shape.description) added.", terminator: "")
         }
-    } else {
+    case .match:
+        if options.verbose {
+            print(", geometrizing matched source image.", terminator: "")
+        }
+        break loop
+    case .failure:
         if options.verbose {
             print(", no shapes added.", terminator: "")
         }
+        // TODO: should it break as well?
     }
     if options.verbose {
         print(" Total count of shapes \(shapeData.count ).")
