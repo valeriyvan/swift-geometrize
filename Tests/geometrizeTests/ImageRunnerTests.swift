@@ -52,10 +52,10 @@ final class ImageRunnerTests: XCTestCase {
                 print(", geometrizing matched source image.", terminator: "")
                 break loop
             case .failure:
-                print(", no shapes added.", terminator: "")
+                print(", failure, no shapes added.", terminator: "")
                 // TODO: should it break as well?
             }
-            // print(", \(shapeResult == nil ? "no" : "1") shape was added. Total count of shapes \(shapeData.count ).")
+            print(" Total count of shapes \(shapeData.count ).")
             counter += 1
         }
 
@@ -118,20 +118,28 @@ final class ImageRunnerTests: XCTestCase {
 
         var counter = 0
         // Here set count of shapes final image should have. Remember background is the first shape.
-        while shapeData.count <= 1000 {
+        loop: while shapeData.count <= 1000 {
             print("Step \(counter)", terminator: "")
-            let shapeResult = runner.step(
+            let stepResult = runner.step(
                 options: options,
                 shapeCreator: nil,
                 energyFunction: defaultEnergyFunction,
                 addShapePrecondition: defaultAddShapePrecondition
             )
-            if let shapeResult {
+            switch stepResult {
+            case .success(let shapeResult):
                 shapeData.append(shapeResult)
+                print(", \(shapeResult.shape.description) added.", terminator: "")
+            case .match:
+                print(", geometrizing matched source image.", terminator: "")
+                break loop
+            case .failure:
+                print(", failure, no shapes added.", terminator: "")
+                // TODO: should it break as well?
             }
-            print(", \(shapeResult == nil ? "no" : "1") shape was added. Total count of shapes \(shapeData.count ).")
+            print(" Total count of shapes \(shapeData.count ).")
             counter += 1
-        }
+    }
 
         let svg = SVGExporter().export(data: shapeData, width: width, height: height)
 
