@@ -39,7 +39,7 @@ public final class Circle: Shape {
         case 1:
             r = Double((Int(r) + Int._random(in: range16, using: &generator)).clamped(to: 1...xRange.upperBound))
         default:
-            fatalError()
+            fatalError("Internal inconsistency")
         }
     }
 
