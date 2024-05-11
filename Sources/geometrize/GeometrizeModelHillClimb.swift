@@ -63,8 +63,8 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         return states
     }
 
-    /// Concurrently runs several optimization sessions tying improving image geometrization by adding a shape to it
-    /// and returns result of the best optimization or nil if improvement of image wasn't found.
+    /// Concurrently runs several optimization sessions trying to improve image geometrization by adding a shape to it,
+    /// returns result of the best optimization or nil if improvement of image wasn't found.
     /// - Parameters:
     ///   - shapeCreator: A function that will produce the shapes.
     ///   - alpha: The alpha of the shape.
