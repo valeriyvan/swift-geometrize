@@ -127,6 +127,7 @@ final class CoreTests: XCTestCase {
             return random
         }
         _randomImplementationReference = randomRangeFromFile
+        defer { _randomImplementationReference = _randomImplementation }
 
         let bitmapTarget = try Bitmap(
             stringBundleResource: "hillClimb target bitmap",
