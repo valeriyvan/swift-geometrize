@@ -110,7 +110,7 @@ public struct ImageRunner {
         shapeCreator: ShapeCreator? = nil,
         energyFunction: @escaping EnergyFunction,
         addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
-    ) -> ShapeResult? {
+    ) -> StepGeometrizationResult {
         let types = options.shapeTypes
 
         let shapeCreator = shapeCreator ??
