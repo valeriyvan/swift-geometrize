@@ -56,7 +56,7 @@ public final class Triangle: Shape {
             x3 = Double((Int(x2) + Int._random(in: range32, using: &generator)).clamped(to: xRange))
             y3 = Double((Int(y2) + Int._random(in: range32, using: &generator)).clamped(to: yRange))
         default:
-            fatalError()
+            fatalError("Internal inconsistency")
         }
     }
 

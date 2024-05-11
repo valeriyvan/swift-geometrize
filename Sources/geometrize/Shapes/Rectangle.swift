@@ -48,7 +48,7 @@ public final class Rectangle: Shape {
             x2 = Double((Int(x2) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
             y2 = Double((Int(y2) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
         default:
-            fatalError()
+            fatalError("Internal inconsistency")
         }
     }
 

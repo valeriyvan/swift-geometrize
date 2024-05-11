@@ -45,7 +45,7 @@ public final class Ellipse: Shape {
         case 2:
             ry = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yRange.upperBound))
         default:
-            fatalError()
+            fatalError("Internal inconsistency")
         }
     }
 

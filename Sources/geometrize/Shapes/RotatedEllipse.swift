@@ -55,7 +55,7 @@ public final class RotatedEllipse: Shape {
                 (Int(angleDegrees) + Int._random(in: range16, using: &generator)).clamped(to: 0...360)
             )
         default:
-            fatalError()
+            fatalError("Internal inconsistency")
         }
     }
 

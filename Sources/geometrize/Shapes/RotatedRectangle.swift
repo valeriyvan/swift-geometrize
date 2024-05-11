@@ -52,7 +52,7 @@ public final class RotatedRectangle: Shape {
         case 2:
             angleDegrees = Double((Int(angleDegrees) + Int._random(in: -4...4, using: &generator)).clamped(to: 0...360))
         default:
-            fatalError()
+            fatalError("Internal inconsistency")
         }
     }
 

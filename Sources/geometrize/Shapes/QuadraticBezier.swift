@@ -62,7 +62,7 @@ public final class QuadraticBezier: Shape {
             y2 = Double((Int(y2) + Int._random(in: range8, using: &generator))
                     .clamped(to: yRange.lowerBound + 1...yRange.upperBound))
         default:
-            fatalError()
+            fatalError("Internal inconsistency")
         }
     }
 
