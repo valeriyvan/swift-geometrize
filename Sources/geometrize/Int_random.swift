@@ -6,7 +6,7 @@ import Foundation
 // swiftlint:disable:next identifier_name
 var _randomImplementationReference = _randomImplementation
 
-private func _randomImplementation(in range: ClosedRange<Int>, using generator: inout SplitMix64) -> Int {
+func _randomImplementation(in range: ClosedRange<Int>, using generator: inout SplitMix64) -> Int {
     Int.random(in: range, using: &generator)
 }
 
