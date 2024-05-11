@@ -111,9 +111,11 @@ final class CoreTests: XCTestCase {
         let randomNumbersString = try String(contentsOf: url)
         let lines = randomNumbersString.components(separatedBy: .newlines)
         var counter = 0
+
         func randomRangeFromFile(in range: ClosedRange<Int>, using generator: inout SplitMix64) -> Int {
             defer { counter += 1 }
-            let scanner = Scanner(string: lines[counter])
+            let line = lines[counter]
+            let scanner = Scanner(string: line)
             guard
                 let random = scanner.scanInt(),
                 scanner.scanString("(min:") != nil,
@@ -122,7 +124,7 @@ final class CoreTests: XCTestCase {
                 let theMax = scanner.scanInt(),
                 theMin == range.lowerBound, theMax == range.upperBound
             else {
-                fatalError()
+                fatalError("Line \(counter + 1) unexpected: \(String(line[..<scanner.currentIndex])). range = \(range)")
             }
             return random
         }
