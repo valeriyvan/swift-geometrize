@@ -23,6 +23,7 @@ struct State {
     }
 
     /// The score of the state, a measure of the improvement applying the state to the current bitmap will have.
+    // TODO: what is valid range of the score?
     var score: Double
 
     /// The alpha of the shape.
@@ -34,8 +35,8 @@ struct State {
     ///  Modifies the current state in a random fashion.
     /// - Returns: The old state, useful for undoing the mutation or keeping track of previous states.
     mutating func mutate(
-        x xRange: ClosedRange<Int>,
-        y yRange: ClosedRange<Int>,
+        x xRange: ClosedRange<Int>, // TODO: rename
+        y yRange: ClosedRange<Int>, // TODO: rename
         using generator: inout SplitMix64
     ) -> State {
         let oldState = copy()
