@@ -82,62 +82,18 @@ let shapeCount: Int = Int(options.shapeCount ?? 100)
 
 let strokeWidth: Int = Int(options.lineWidth ?? 1)
 
-let runnerOptions = ImageRunnerOptions(
+let geometrizer = Geometrizer.geometrize(
+    bitmap: targetBitmap,
     shapeTypes: shapeTypes,
     strokeWidth: strokeWidth,
-    alpha: 128,
-    shapeCount: 100,
-    maxShapeMutations: 100,
-    seed: 9001, // TODO: !!!
-    maxThreads: 5,
-    shapeBounds: ImageRunnerShapeBoundsOptions(
-        enabled: false,
-        xMinPercent: 0, yMinPercent: 0, xMaxPercent: 100, yMaxPercent: 100
-    )
+    iterations: 10,
+    shapesPerIteration: shapeCount / 10
 )
-
-var runner = ImageRunner(targetBitmap: targetBitmap)
 
 var shapeData: [ShapeResult] = []
 
-// Hack to add a single background rectangle as the initial shape
-let rect = Rectangle(strokeWidth: 1, x1: 0, y1: 0, x2: Double(targetBitmap.width), y2: Double(targetBitmap.height))
-shapeData.append(ShapeResult(score: 0, color: targetBitmap.averageColor(), shape: rect))
-
-var counter = 0
-// Here in shapeCount set count of shapes final image should have.
-// Remember background is the first shape.
-loop: while shapeData.count <= shapeCount {
-    if options.verbose {
-        print("Step \(counter)", terminator: "")
-    }
-    let stepResult = runner.step(
-        options: runnerOptions,
-        shapeCreator: nil,
-        energyFunction: defaultEnergyFunction,
-        addShapePrecondition: defaultAddShapePrecondition
-    )
-    switch stepResult {
-    case .success(let shapeResult):
-        shapeData.append(shapeResult)
-        if options.verbose {
-            print(", \(shapeResult.shape.description) added.", terminator: "")
-        }
-    case .match:
-        if options.verbose {
-            print(", geometrizing matched source image.", terminator: "")
-        }
-        break loop
-    case .failure:
-        if options.verbose {
-            print(", no shapes added.", terminator: "")
-        }
-        // TODO: should it break as well?
-    }
-    if options.verbose {
-        print(" Total count of shapes \(shapeData.count ).")
-    }
-    counter += 1
+for iteration in geometrizer {
+    shapeData.append(contentsOf: iteration)
 }
 
 do {
