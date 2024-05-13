@@ -23,8 +23,7 @@ struct State {
     }
 
     /// The score of the state, a measure of the improvement applying the state to the current bitmap will have.
-    // TODO: what is valid range of the score?
-    var score: Double
+    var score: Double // TODO: what is valid range of the score?
 
     /// The alpha of the shape.
     var alpha: UInt8
