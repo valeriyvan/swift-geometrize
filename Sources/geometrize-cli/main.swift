@@ -82,7 +82,9 @@ let shapeCount: Int = Int(options.shapeCount ?? 100)
 
 let strokeWidth: Int = Int(options.lineWidth ?? 1)
 
-let geometrizer = Geometrizer.geometrize(
+var shapeData: [ShapeResult] = []
+
+let geometrizingSequence = GeometrizingSequence(
     bitmap: targetBitmap,
     shapeTypes: shapeTypes,
     strokeWidth: strokeWidth,
@@ -90,9 +92,7 @@ let geometrizer = Geometrizer.geometrize(
     shapesPerIteration: shapeCount / 10
 )
 
-var shapeData: [ShapeResult] = []
-
-for iteration in geometrizer {
+for iteration in geometrizingSequence {
     shapeData.append(contentsOf: iteration)
 }
 

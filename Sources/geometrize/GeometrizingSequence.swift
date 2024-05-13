@@ -11,7 +11,7 @@ public struct GeometrizingSequence: Sequence {
     let shapesPerIteration: Int
     let verbose: Bool
 
-    init(
+    public init(
         bitmap: Bitmap,
         shapeTypes: [Shape.Type],
         strokeWidth: Int,
