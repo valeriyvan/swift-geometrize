@@ -6,7 +6,7 @@
 <a href="https://github.com/valeriyvan/swift-geometrize/actions/workflows/build-run-tests-ubuntu.yml"><img src="https://github.com/valeriyvan/swift-geometrize/actions/workflows/build-run-tests-ubuntu.yml/badge.svg"/></a>
 </p>
 
-![Geometrize logo fulltext](https://github.com/valeriyvan/swift-geometrize/assets/1630974/57fec4a6-39f0-41c2-9220-0838b3a0f2c3)
+![Geometrize logo fulltext](/images/geometrize-logo.svg)
 
 ## swift-geometrize
 
@@ -22,11 +22,11 @@ The matrix below shows typical results for a combination of circles, triangles, 
 
 |                    | 50 Shapes     | 200 Shapes    | 500 Shapes   |
 | ------------------ | ------------- | ------------- | ------------ |
-| Circles            | ![Chicken 50 Circles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/a6be73e5-a050-48db-9aa5-3e1bd89e262a) | ![Chicken 200 Circles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/d8c91920-20d4-4f20-8690-87b04bb57547) | ![Chicken 500 Circles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/92d80ea7-1f32-4479-a4c6-dc9ea7f542f1) |
-| Triangles          |![Chicken 50 Triangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/9f86e1e7-baf2-47dd-95e9-d4edcbb6cb9a) | ![Chicken 200 Triangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/5db19159-00a5-4e39-ba62-969e7832a021) | ![Chicken 500 Triangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/951d6e79-e306-4693-972f-b0eccb76307b) |
-| Rotated Rectangles | ![Chicken 50 RotatedRectangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/24c2ce23-0c51-4c59-9114-097d8a245ad9) | ![Chicken 200 RotatedRectangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/8b67deaa-7975-4df2-b508-4ae75977ed25) | ![Chicken 500 RotatedRectangles](https://github.com/valeriyvan/swift-geometrize/assets/1630974/380b5422-60f7-467f-852d-47dc6dfd63e0) |
-| Rotated Ellipses   | ![Chicken 50 RotatedEllipses](https://github.com/valeriyvan/swift-geometrize/assets/1630974/2b9b9f3a-3c83-4c33-b17a-83361c377399) | ![Chicken 200 RotatedEllipses](https://github.com/valeriyvan/swift-geometrize/assets/1630974/f66ead22-d77c-4d1c-a68b-1533e0225b07) |![Chicken 500 RotatedEllipses](https://github.com/valeriyvan/swift-geometrize/assets/1630974/47043915-08e7-4939-9c65-d5962f8f1af9) |
-| All Shapes         | ![Chicken 50 All Shapes](https://github.com/valeriyvan/swift-geometrize/assets/1630974/a92de12f-cc32-45e8-8e51-1738d67e3f67) | ![Chicken 200 All Shapes](https://github.com/valeriyvan/swift-geometrize/assets/1630974/59fc400b-1030-426c-8ed1-ce47dfaf6598) | ![Chicken 500 All Shapes](https://github.com/valeriyvan/swift-geometrize/assets/1630974/32f532a0-7281-44ef-a258-3fa95f060024) |
+| Circles            | ![Chicken 50 Circles](/images/chicken-circles-50.svg) | ![Chicken 200 Circles](/images/chicken-circles-200.svg) | ![Chicken 500 Circles](/images/chicken-circles-500.svg) |
+| Triangles          |![Chicken 50 Triangles](/images/chicken-triangles-50.svg) | ![Chicken 200 Triangles](/images/chicken-triangles-200.svg) | ![Chicken 500 Triangles](/images/chicken-triangles-500.svg) |
+| Rotated Rectangles | ![Chicken 50 RotatedRectangles](/images/chicken-rotated-rectangles-50.svg) | ![Chicken 200 RotatedRectangles](/images/chicken-rotated-rectangles-200.svg) | ![Chicken 500 RotatedRectangles](/images/chicken-rotated-rectangles-500.svg) |
+| Rotated Ellipses   | ![Chicken 50 RotatedEllipses](/images/chicken-rotated-ellipses-50.svg) | ![Chicken 200 RotatedEllipses](/images/chicken-rotated-ellipses-200.svg) |![Chicken 500 RotatedEllipses](/images/chicken-rotated-ellipses-500.svg) |
+| All Shapes         | ![Chicken 50 All Shapes](/images/chicken-all-shapes-50.svg) | ![Chicken 200 All Shapes](/images/chicken-all-shapes-200.svg) | ![Chicken 500 All Shapes](/images/chicken-all-shapes-500.svg) |
 
 ## Geometrizebot
 
