@@ -494,6 +494,30 @@ final class BitmapTests: XCTestCase {
                 return XCTFail("Bitmap.ParsePpmError.wrongElement wasn't threw or context isn't as expected")
             }
         }
+
+        assertSnapshot(
+            matching: try Bitmap(ppmString: """
+            P3
+            # "P3" means this is a RGB color image in ASCII
+            # "3 2" is the width and height of the image in pixels
+            # "255" is the maximum value for each color
+            # This, up through the "255" line below are the header.
+            # Everything after that is the image data: RGB triplets.
+            # In order: red, green, blue, yellow, white, and black.
+            # This example is taken from https://en.wikipedia.org/wiki/Netpbm
+            3 2
+            255
+            255   0   0
+              0 255   0
+              0   0 255
+            255 255   0
+            255 255 255
+              0   0   0
+            """
+            ),
+            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
+        )
+
     }
 
     func testPpmString() {
