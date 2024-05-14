@@ -8,7 +8,7 @@ var dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.13.0"),
     .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.0.0"),
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.4"),
-    .package(url: "https://github.com/realm/SwiftLint.git", branch: "main")
+    .package(url: "https://github.com/realm/SwiftLint.git", from: "0.55.0")
 ]
 
 #if os(macOS)
