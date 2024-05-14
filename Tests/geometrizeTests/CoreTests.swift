@@ -39,15 +39,15 @@ final class CoreTests: XCTestCase {
     }
 
     func testDifferenceFullComparingResultWithCPlusPlus() throws {
-        let bitmapFirst = try Bitmap(stringBundleResource: "differenceFull bitmap first", withExtension: "txt")
-        let bitmapSecond = try Bitmap(stringBundleResource: "differenceFull bitmap second", withExtension: "txt")
+        let bitmapFirst = try Bitmap(ppmBundleResource: "differenceFull bitmap first", withExtension: "ppm")
+        let bitmapSecond = try Bitmap(ppmBundleResource: "differenceFull bitmap second", withExtension: "ppm")
         XCTAssertEqual(bitmapFirst.differenceFull(with: bitmapSecond), 0.170819, accuracy: 0.000001)
     }
 
     func testDifferencePartialComparingResultWithCPlusPlus() throws {
-        let bitmapTarget = try Bitmap(stringBundleResource: "differencePartial bitmap target", withExtension: "txt")
-        let bitmapBefore = try Bitmap(stringBundleResource: "differencePartial bitmap before", withExtension: "txt")
-        let bitmapAfter = try Bitmap(stringBundleResource: "differencePartial bitmap after", withExtension: "txt")
+        let bitmapTarget = try Bitmap(ppmBundleResource: "differencePartial bitmap target", withExtension: "ppm")
+        let bitmapBefore = try Bitmap(ppmBundleResource: "differencePartial bitmap before", withExtension: "ppm")
+        let bitmapAfter = try Bitmap(ppmBundleResource: "differencePartial bitmap after", withExtension: "ppm")
         let scanlines = try [Scanline](stringBundleResource: "differencePartial scanlines", withExtension: "txt")
         XCTAssertEqual(
             bitmapBefore.differencePartial(
@@ -67,20 +67,20 @@ final class CoreTests: XCTestCase {
             withExtension: "txt"
         )
         let bitmapTarget = try Bitmap(
-            stringBundleResource: "defaultEnergyFunction target bitmap",
-            withExtension: "txt"
+            ppmBundleResource: "defaultEnergyFunction target bitmap",
+            withExtension: "ppm"
         )
         let bitmapCurrent = try Bitmap(
-            stringBundleResource: "defaultEnergyFunction current bitmap",
-            withExtension: "txt"
+            ppmBundleResource: "defaultEnergyFunction current bitmap",
+            withExtension: "ppm"
         )
         var bitmapBuffer = try Bitmap(
-            stringBundleResource: "defaultEnergyFunction buffer bitmap",
-            withExtension: "txt"
+            ppmBundleResource: "defaultEnergyFunction buffer bitmap",
+            withExtension: "ppm"
         )
         let bitmapBufferOnExit = try Bitmap(
-            stringBundleResource: "defaultEnergyFunction buffer bitmap on exit",
-            withExtension: "txt"
+            ppmBundleResource: "defaultEnergyFunction buffer bitmap on exit",
+            withExtension: "ppm"
         )
 
         XCTAssertEqual(
@@ -132,20 +132,20 @@ final class CoreTests: XCTestCase {
         defer { _randomImplementationReference = _randomImplementation }
 
         let bitmapTarget = try Bitmap(
-            stringBundleResource: "hillClimb target bitmap",
-            withExtension: "txt"
+            ppmBundleResource: "hillClimb target bitmap",
+            withExtension: "ppm"
         )
         let bitmapCurrent = try Bitmap(
-            stringBundleResource: "hillClimb current bitmap",
-            withExtension: "txt"
+            ppmBundleResource: "hillClimb current bitmap",
+            withExtension: "ppm"
         )
         var bitmapBuffer = try Bitmap(
-            stringBundleResource: "hillClimb buffer bitmap",
-            withExtension: "txt"
+            ppmBundleResource: "hillClimb buffer bitmap",
+            withExtension: "ppm"
         )
         let bitmapBufferOnExit = try Bitmap(
-            stringBundleResource: "hillClimb buffer bitmap on exit",
-            withExtension: "txt"
+            ppmBundleResource: "hillClimb buffer bitmap on exit",
+            withExtension: "ppm"
         )
 
         let rectangle = Rectangle(strokeWidth: 1, x1: 281, y1: 193, x2: 309, y2: 225)
