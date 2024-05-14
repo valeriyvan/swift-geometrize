@@ -449,7 +449,13 @@ extension Bitmap {
 
     // Format is described in https://en.wikipedia.org/wiki/Netpbm and https://netpbm.sourceforge.net/doc/ppm.html
     public init(ppmString string: String) throws {
-        let scanner = Scanner(string: string)
+        var stringWithTrimmedComments = ""
+        string.enumerateLines { line, _ in
+            let endIndex = line.firstIndex(of: "#") ?? line.endIndex
+            stringWithTrimmedComments.append(line[..<endIndex].trimmingCharacters(in: .whitespacesAndNewlines))
+            stringWithTrimmedComments.append(" ")
+        }
+        let scanner = Scanner(string: stringWithTrimmedComments)
         scanner.charactersToBeSkipped = .whitespacesAndNewlines
         guard scanner.scanString("P3") != nil else {
             throw ParsePpmError.noP3
