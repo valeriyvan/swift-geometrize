@@ -437,52 +437,6 @@ extension Bitmap {
 
 }
 
-// TODO: what's right way to implement this init as failable or throwing?
-// One hint is here https://forums.swift.org/t/how-to-make-expressiblebystringliteral-init-either-failable-somehow-or-throws/47973/3:
-
-extension Bitmap: ExpressibleByStringLiteral {
-
-    public init(stringLiteral value: String) {
-        let scanner = Scanner(string: value)
-        scanner.charactersToBeSkipped = .whitespacesAndNewlines
-        guard
-            scanner.scanString("width:") != nil,
-            let width = scanner.scanInt(), width > 0,
-            scanner.scanString(",") != nil,
-            scanner.scanString("height:") != nil,
-            let height = scanner.scanInt(), height > 0
-        else {
-            fatalError()
-        }
-        self.width = width
-        self.height = height
-        backing = ContiguousArray<UInt8>(repeating: 0, count: width * height * 4)
-
-        var counter: Int = 0
-
-        repeat {
-            guard let int = scanner.scanInt(), 0...255 ~= int else {
-                fatalError()
-            }
-            backing[counter] = UInt8(int)
-            counter += 1
-        } while scanner.scanString(",") != nil
-
-        guard counter == width * height * 4 else {
-            fatalError()
-        }
-    }
-
-}
-
-extension Bitmap: CustomStringConvertible {
-
-    public var description: String {
-        "width: \(width), height: \(height)\n" + backing.map(String.init).joined(separator: ",")
-    }
-
-}
-
 extension Bitmap {
 
     public enum ParsePpmError: Error {

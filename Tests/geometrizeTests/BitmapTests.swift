@@ -382,12 +382,15 @@ final class BitmapTests: XCTestCase {
 
             """),
             Bitmap(
-               stringLiteral:
-               """
-               width: 3, height: 2
-               1,2,3,255,4,5,6,255,7,8,9,255,10,11,12,255,
-               13,14,15,255,16,17,18,255
-               """
+                width: 3, height: 2,
+                data: [
+                    1, 2, 3, 255,
+                    4, 5, 6, 255,
+                    7, 8, 9, 255,
+                    10, 11, 12, 255,
+                    13, 14, 15, 255,
+                    16, 17, 18, 255
+                ]
             )
         )
 
@@ -495,12 +498,16 @@ final class BitmapTests: XCTestCase {
 
     func testPpmString() {
         XCTAssertEqual(
-            Bitmap(stringLiteral:
-                """
-                width: 3, height: 2
-                1,2,3,255,4,5,6,255,7,8,9,255,10,11,12,255,
-                13,14,15,255,16,17,18,255
-                """
+            Bitmap(
+                width: 3, height: 2,
+                data: [
+                    1, 2, 3, 255,
+                    4, 5, 6, 255,
+                    7, 8, 9, 255,
+                    10, 11, 12, 255,
+                    13, 14, 15, 255,
+                    16, 17, 18, 255
+                ]
             )
             .ppmString(background: .white),
             """
@@ -514,36 +521,6 @@ final class BitmapTests: XCTestCase {
             13 14 15
             16 17 18
 
-            """
-        )
-    }
-
-    func testInitFromString() {
-        XCTAssertEqual(
-            Bitmap(
-                stringLiteral:
-                """
-                width: 3, height: 2
-                1,2,3,4,5,6,7,8,9,10,11,12,
-                13,14,15,16,17,18,19,20,21,22,23,24
-                """
-            ),
-            Bitmap(
-                width: 3, height: 2,
-                data: Array(1...24)
-            )
-        )
-    }
-
-    func testDescription() {
-        XCTAssertEqual(
-            Bitmap(
-                width: 3, height: 2,
-                data: Array(1...24)
-            ).description,
-            """
-            width: 3, height: 2
-            1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
             """
         )
     }
