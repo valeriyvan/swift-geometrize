@@ -7,39 +7,16 @@ public struct SVGExporter {
     /// A hook that an SVG exporter should use to augment shape styling produced by the getSvgShapeData method.
     private let svg_style_hook = "::svg_style_hook::" // swiftlint:disable:this identifier_name
 
-    // TODO: get rid of this
-    public enum RotatedEllipseSVGExportMode {
-        /// Export as a translated, rotated and scaled svg <ellipse>. OpenFL's SVG library can't handle this
-        case ellipseItem
-        /// Export as a <polygon>, OpenFL's SVG library can handle this, but it looks quite ugly
-        case polygon
-    }
-
-    // TODO: get rid of this
-    /// Represents the options that can be set for the SVG
-    public struct ExportOptions {
-        /// Technique to use when exporting rotated ellipses
-        let rotatedEllipseExportMode: RotatedEllipseSVGExportMode
-        /// Id to tag the exported SVG shapes with
-        var itemId: Int // TODO: it is not nice how it is used
-        public init(rotatedEllipseExportMode: RotatedEllipseSVGExportMode = .ellipseItem, itemId: Int = 0) {
-            self.rotatedEllipseExportMode = rotatedEllipseExportMode
-            self.itemId = itemId
-        }
-    }
-
     /// Gets the SVG data for a single shape. This is just the <rect>/<path> etc block for the shape itself,
     /// not a complete SVG image.
     /// - Parameters:
     ///   - color: The color of the shape
     ///   - shape: The shape to convert to SVG data
-    ///   - options: additional options used by the exporter
     /// - Returns: The SVG shape data for the given shape
-    func singleShapeData(color: Rgba, shape: any Shape, options: ExportOptions = ExportOptions()) -> String {
-        var shapeData: String = shapeData(shape: shape, options: options)
+    func singleShapeData(color: Rgba, shape: any Shape) -> String {
+        var shapeData: String = shapeData(shape: shape)
 
-        var styles: String = "id=\"\(options.itemId)\" "
-
+        var styles: String = ""
         if shape.self is Line || shape.self is Polyline || shape.self is QuadraticBezier {
             styles += strokeAttrib(color: color)
             styles += " stroke-width=\"\(Int(shape.strokeWidth))\" fill=\"none\" "
@@ -63,21 +40,23 @@ public struct SVGExporter {
     ///   - shape: The shape to export.
     ///   - width: The width of the SVG image.
     ///   - height: The height of the SVG image.
-    ///   - options: Additional options used by the exporter.
+    ///   - originWidth: The width of the original image.
+    ///   - originHeight: The height of the original image.
     /// - Returns: A string representing the SVG image.
-    func exportSingleShape(
+    func exportSingleShape( // swiftlint:disable:this function_parameter_count
         color: Rgba,
         shape: any Shape,
         width: Int,
         height: Int,
-        options: ExportOptions = ExportOptions()
+        originWidth: Int,
+        originHeight: Int
     ) -> String {
         """
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
         <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg"
             width=\"\(width)\" height=\"\(height)\" viewBox=\"0 0 \(width) \(height)\">
-        \(singleShapeData(color: color, shape: shape, options: options))
+        \(singleShapeData(color: color, shape: shape))
         </svg>
         """
     }
@@ -87,14 +66,16 @@ public struct SVGExporter {
     ///   - data The shape data to export.
     ///   - width The width of the SVG image.
     ///   - height The height of the SVG image.
-    ///   - options additional options used by the exporter.
+    ///   - originWidth: The width of the original image.
+    ///   - originHeight: The height of the original image.
     ///   - updateMarker place where new elements should be inserted. Better if this will be correct XML comment.
     /// - Returns: A string representing the SVG image.
-    public func export(
+    public func exportCompleteSVG(
         data: [ShapeResult],
         width: Int,
         height: Int,
-        options: ExportOptions = ExportOptions(),
+        originWidth: Int,
+        originHeight: Int,
         updateMarker: String? = nil
     ) -> String {
         var str = """
@@ -103,26 +84,16 @@ public struct SVGExporter {
         <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg"
             width=\"\(width)\" height=\"\(height)\" viewBox=\"0 0 \(width) \(height)\">\n
         """
-        var options = options
-        for (number, shapeResult) in data.enumerated() {
-            options.itemId = number
-            str += singleShapeData(color: shapeResult.color, shape: shapeResult.shape, options: options)
-        }
-
+        str += exportShapesAsSVGFragment(data: data)
         if let updateMarker {
             str += updateMarker
         }
-
         str += "</svg>"
-
         return str
     }
 
-    public func export(
-        shapeResult: ShapeResult,
-        options: ExportOptions = ExportOptions()
-    ) -> String {
-        singleShapeData(color: shapeResult.color, shape: shapeResult.shape, options: options)
+    public func exportShapesAsSVGFragment(data: [ShapeResult]) -> String {
+        data.reduce(into: "") { $0 += singleShapeData(color: $1.color, shape: $1.shape) }
     }
 
     private func shapeData(rectangle r: Rectangle) -> String {
@@ -171,7 +142,7 @@ public struct SVGExporter {
         "<path d=\"M\(Int(q.x1)) \(Int(q.y1)) Q\(Int(q.cx)) \(Int(q.cy)) \(Int(q.x2)) \(Int(q.y2))\" \(svg_style_hook)/>"
     }
 
-    private func shapeData(shape: any Shape, options: ExportOptions) -> String {
+    private func shapeData(shape: any Shape) -> String {
         switch shape {
         case let rectangle as Rectangle:
             return shapeData(rectangle: rectangle)
