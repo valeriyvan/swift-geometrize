@@ -110,7 +110,12 @@ do {
         let jpegData = try bitmap.jpegData()
         try jpegData.write(to: outputUrl)
     case "svg":
-        let svg = SVGExporter().export(data: shapeData, width: width, height: height)
+        let svg = SVGExporter()
+            .exportCompleteSVG(
+                data: shapeData,
+                width: width, height: height,
+                originWidth: width, originHeight: height // we don't downsample yet
+            )
         if options.outputPath == "-" {
             print(svg)
         } else {
