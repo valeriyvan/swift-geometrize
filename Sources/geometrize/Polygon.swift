@@ -1,7 +1,7 @@
 import Foundation
 import Algorithms
 
-struct Polygon<N: SignedInteger> {
+struct Polygon<N: SignedInteger & Sendable> {
     var vertices: [Point<N>]
 
     init(vertices: [Point<N>]) throws {

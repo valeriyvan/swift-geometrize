@@ -1,7 +1,7 @@
 import Foundation
 
-public struct Point<N: Numeric> {
-    public var x, y: N
+public struct Point<N: Numeric & Sendable>: Sendable {
+    public let x, y: N
 
     public init(x: N, y: N) {
         self.x = x

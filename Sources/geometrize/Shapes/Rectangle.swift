@@ -1,11 +1,11 @@
 import Foundation
 
 // Represents a rectangle.
-public final class Rectangle: Shape {
-    public var strokeWidth: Double
-    public var x1, y1, x2, y2: Double
+public struct Rectangle: Shape {
+    public let strokeWidth: Double
+    public let x1, y1, x2, y2: Double
 
-    required public init(strokeWidth: Double) {
+    public init(strokeWidth: Double) {
         self.strokeWidth = strokeWidth
         x1 = 0.0
         y1 = 0.0
@@ -22,34 +22,47 @@ public final class Rectangle: Shape {
     }
 
     // Rectangle taking whole size of canvas
-    public convenience init(canvasWidth width: Int, height: Int) {
+    public init(canvasWidth width: Int, height: Int) {
         self.init(strokeWidth: 1, x1: 0.0, y1: 0.0, x2: Double(width), y2: Double(height))
     }
 
-    public func copy() -> Rectangle {
-        Rectangle(strokeWidth: strokeWidth, x1: x1, y1: y1, x2: x2, y2: y2)
-    }
-
-    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+    public func setup(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> Rectangle {
         let range32 = 1...32
-        x1 = Double(Int._random(in: xRange, using: &generator))
-        y1 = Double(Int._random(in: yRange, using: &generator))
-        x2 = Double((Int(x1) + Int._random(in: range32, using: &generator)).clamped(to: xRange))
-        y2 = Double((Int(y1) + Int._random(in: range32, using: &generator)).clamped(to: yRange))
+        return Rectangle(
+            strokeWidth: strokeWidth,
+            x1: Double(Int._random(in: xRange, using: &generator)),
+            y1: Double(Int._random(in: yRange, using: &generator)),
+            x2: Double((Int(x1) + Int._random(in: range32, using: &generator)).clamped(to: xRange)),
+            y2: Double((Int(y1) + Int._random(in: range32, using: &generator)).clamped(to: yRange))
+        )
     }
 
-    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+    public func mutate(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> Rectangle {
         let range16 = -16...16
+        let newX1, newY1, newX2, newY2: Double
         switch Int._random(in: 0...1, using: &generator) {
         case 0:
-            x1 = Double((Int(x1) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
-            y1 = Double((Int(y1) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
+            newX1 = Double((Int(x1) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
+            newY1 = Double((Int(y1) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
+            newX2 = x2
+            newY2 = y2
         case 1:
-            x2 = Double((Int(x2) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
-            y2 = Double((Int(y2) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
+            newX1 = x1
+            newY1 = y1
+            newX2 = Double((Int(x2) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
+            newY2 = Double((Int(y2) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
         default:
             fatalError("Internal inconsistency")
         }
+        return Rectangle(strokeWidth: strokeWidth, x1: newX1, y1: newY1, x2: newX2, y2: newY2)
     }
 
     public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {

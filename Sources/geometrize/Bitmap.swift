@@ -2,7 +2,7 @@ import Foundation
 
 /// Helper for working with bitmap data.
 /// Pixels are ordered line by line, like arrays in C.
-public struct Bitmap { // swiftlint:disable:this type_body_length
+public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
     /// Creates useless empty bitmap.
     public init() {
