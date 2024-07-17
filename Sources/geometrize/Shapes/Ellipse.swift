@@ -1,11 +1,11 @@
 import Foundation
 
-public final class Ellipse: Shape {
-    public var strokeWidth: Double
-    public var x: Double // x-coordinate.
-    public var y: Double // y-coordinate.
-    public var rx: Double // x-radius.
-    public var ry: Double // y-radius.
+public struct Ellipse: Shape {
+    public let strokeWidth: Double
+    public let x: Double // x-coordinate.
+    public let y: Double // y-coordinate.
+    public let rx: Double // x-radius.
+    public let ry: Double // y-radius.
 
     public init(strokeWidth: Double) {
         self.strokeWidth = strokeWidth
@@ -23,30 +23,47 @@ public final class Ellipse: Shape {
         self.ry = ry
     }
 
-    public func copy() -> Ellipse {
-        Ellipse(strokeWidth: strokeWidth, x: x, y: y, rx: rx, ry: ry)
+    public func setup(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> Ellipse {
+        Ellipse(
+            strokeWidth: strokeWidth,
+            x: Double(Int._random(in: xRange, using: &generator)),
+            y: Double(Int._random(in: yRange, using: &generator)),
+            rx: Double(Int._random(in: 1...32, using: &generator)),
+            ry: Double(Int._random(in: 1...32, using: &generator))
+        )
     }
 
-    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
-        x = Double(Int._random(in: xRange, using: &generator))
-        y = Double(Int._random(in: yRange, using: &generator))
-        rx = Double(Int._random(in: 1...32, using: &generator))
-        ry = Double(Int._random(in: 1...32, using: &generator))
-    }
-
-    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+    public func mutate(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> Ellipse {
         let range16 = -16...16
+        let newX, newY, newRx, newRy: Double
         switch Int._random(in: 0...2, using: &generator) {
         case 0:
-            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
-            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
+            newX = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
+            newY = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
+            newRx = rx
+            newRy  = ry
         case 1:
-            rx = Double((Int(rx) + Int._random(in: range16, using: &generator)).clamped(to: 1...xRange.upperBound))
+            newX = x
+            newY = y
+            newRx = Double((Int(rx) + Int._random(in: range16, using: &generator)).clamped(to: 1...xRange.upperBound))
+            newRy = ry
         case 2:
-            ry = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yRange.upperBound))
+            newX = x
+            newY = y
+            newRx = rx
+            newRy = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yRange.upperBound))
         default:
             fatalError("Internal inconsistency")
         }
+        return Ellipse(strokeWidth: strokeWidth, x: newX, y: newY, rx: newRx, ry: newRy)
     }
 
     public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {

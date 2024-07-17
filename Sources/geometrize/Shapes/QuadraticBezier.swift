@@ -1,14 +1,14 @@
 import Foundation
 import Algorithms
 
-public final class QuadraticBezier: Shape {
-    public var strokeWidth: Double
-    public var x1: Double // First x-coordinate.
-    public var y1: Double // First y-coordinate.
-    public var x2: Double // Second x-coordinate.
-    public var y2: Double // Second y-coordinate.
-    public var cx: Double // Control point x-coordinate.
-    public var cy: Double // Control point y-coordinate.
+public struct QuadraticBezier: Shape {
+    public let strokeWidth: Double
+    public let x1: Double // First x-coordinate.
+    public let y1: Double // First y-coordinate.
+    public let x2: Double // Second x-coordinate.
+    public let y2: Double // Second y-coordinate.
+    public let cx: Double // Control point x-coordinate.
+    public let cy: Double // Control point y-coordinate.
 
     public init(strokeWidth: Double) {
         self.strokeWidth = strokeWidth
@@ -30,40 +30,69 @@ public final class QuadraticBezier: Shape {
         self.y2 = y2
     }
 
-    public func copy() -> QuadraticBezier {
-        QuadraticBezier(strokeWidth: strokeWidth, cx: cx, cy: cy, x1: x1, y1: y1, x2: x2, y2: y2)
+    public func setup(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> QuadraticBezier {
+        QuadraticBezier(
+            strokeWidth: strokeWidth,
+            cx: Double(Int._random(in: xRange, using: &generator)),
+            cy: Double(Int._random(in: yRange, using: &generator)),
+            x1: Double(Int._random(in: xRange, using: &generator)),
+            y1: Double(Int._random(in: yRange, using: &generator)),
+            x2: Double(Int._random(in: xRange, using: &generator)),
+            y2: Double(Int._random(in: yRange, using: &generator))
+        )
     }
 
-    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
-        cx = Double(Int._random(in: xRange, using: &generator))
-        cy = Double(Int._random(in: yRange, using: &generator))
-        x1 = Double(Int._random(in: xRange, using: &generator))
-        y1 = Double(Int._random(in: yRange, using: &generator))
-        x2 = Double(Int._random(in: xRange, using: &generator))
-        y2 = Double(Int._random(in: yRange, using: &generator))
-    }
-
-    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+    public func mutate(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> QuadraticBezier {
         let range8 = -8...8
+        let newX1, newY1, newX2, newY2, newCx, newCy: Double
         switch Int._random(in: 0...2, using: &generator) {
         case 0:
-            cx = Double((Int(cx) + Int._random(in: range8, using: &generator))
+            newX1 = x1
+            newY1 = y1
+            newX2 = x2
+            newY2 = y2
+            newCx = Double((Int(cx) + Int._random(in: range8, using: &generator))
                     .clamped(to: xRange))
-            cy = Double((Int(cy) + Int._random(in: range8, using: &generator))
+            newCy = Double((Int(cy) + Int._random(in: range8, using: &generator))
                     .clamped(to: yRange))
         case 1:
-            x1 = Double((Int(x1) + Int._random(in: range8, using: &generator))
+            newX1 = Double((Int(x1) + Int._random(in: range8, using: &generator))
                     .clamped(to: xRange.lowerBound + 1...xRange.upperBound))
-            y1 = Double((Int(y1) + Int._random(in: range8, using: &generator))
+            newY1 = Double((Int(y1) + Int._random(in: range8, using: &generator))
                     .clamped(to: yRange.lowerBound + 1...yRange.upperBound))
+            newX2 = x2
+            newY2 = y2
+            newCx = cx
+            newCy = cy
         case 2:
-            x2 = Double((Int(x2) + Int._random(in: range8, using: &generator))
+            newX1 = x1
+            newY1 = y1
+            newX2 = Double((Int(x2) + Int._random(in: range8, using: &generator))
                     .clamped(to: xRange.lowerBound + 1...xRange.upperBound))
-            y2 = Double((Int(y2) + Int._random(in: range8, using: &generator))
+            newY2 = Double((Int(y2) + Int._random(in: range8, using: &generator))
                     .clamped(to: yRange.lowerBound + 1...yRange.upperBound))
+            newCx = cx
+            newCy = cy
         default:
             fatalError("Internal inconsistency")
         }
+        return QuadraticBezier(
+            strokeWidth: strokeWidth,
+            cx: newCx,
+            cy: newCy,
+            x1: newX1,
+            y1: newY1,
+            x2: newX2,
+            y2: newY2
+        )
     }
 
     public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {

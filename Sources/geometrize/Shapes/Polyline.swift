@@ -1,8 +1,8 @@
 import Foundation
 
-public final class Polyline: Shape {
-    public var strokeWidth: Double
-    public var points: [Point<Double>]
+public struct Polyline: Shape {
+    public let strokeWidth: Double
+    public let points: [Point<Double>]
 
     public init(strokeWidth: Double) {
         self.strokeWidth = strokeWidth
@@ -14,11 +14,11 @@ public final class Polyline: Shape {
         self.points = points
     }
 
-    public func copy() -> Polyline {
-        Polyline(strokeWidth: strokeWidth, points: points)
-    }
-
-    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+    public func setup(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> Polyline {
         let range32 = -32...32
         let startingPoint = Point(
             x: Int._random(in: xRange, using: &generator),
@@ -33,16 +33,24 @@ public final class Polyline: Shape {
                 )
             )
         }
-        self.points = points
+        return Polyline(strokeWidth: strokeWidth, points: points)
     }
 
-    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+    public func mutate(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> Polyline {
+        let range64 = -64...64
         let i = Int._random(in: 0...points.count-1, using: &generator)
         var point = points[i]
-        let range64 = -64...64
-        point.x = Double((Int(point.x) + Int._random(in: range64, using: &generator)).clamped(to: xRange))
-        point.y = Double((Int(point.y) + Int._random(in: range64, using: &generator)).clamped(to: yRange))
-        points[i] = point
+        point = Point(
+            x: Double((Int(point.x) + Int._random(in: range64, using: &generator)).clamped(to: xRange)),
+            y: Double((Int(point.y) + Int._random(in: range64, using: &generator)).clamped(to: yRange))
+        )
+        var newPoints = points
+        newPoints[i] = point
+        return Polyline(strokeWidth: strokeWidth, points: newPoints)
     }
 
     public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {

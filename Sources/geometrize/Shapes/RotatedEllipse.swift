@@ -1,15 +1,15 @@
 import Foundation
 
 // Represents a rotated ellipse.
-public final class RotatedEllipse: Shape {
-    public var strokeWidth: Double
-    public var x: Double // x-coordinate.
-    public var y: Double // y-coordinate.
-    public var rx: Double // x-radius.
-    public var ry: Double // y-radius.
-    public var angleDegrees: Double // Rotation angle in degrees.
+public struct RotatedEllipse: Shape {
+    public let strokeWidth: Double
+    public let x: Double // x-coordinate.
+    public let y: Double // y-coordinate.
+    public let rx: Double // x-radius.
+    public let ry: Double // y-radius.
+    public let angleDegrees: Double // Rotation angle in degrees.
 
-    public required init(strokeWidth: Double) {
+    public init(strokeWidth: Double) {
         self.strokeWidth = strokeWidth
         x = 0.0
         y = 0.0
@@ -27,36 +27,67 @@ public final class RotatedEllipse: Shape {
         self.angleDegrees = angleDegrees
     }
 
-    public func copy() -> RotatedEllipse {
-        RotatedEllipse(strokeWidth: strokeWidth, x: x, y: y, rx: rx, ry: ry, angleDegrees: angleDegrees)
-    }
-
-    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
-        x = Double(Int._random(in: xRange, using: &generator))
-        y = Double(Int._random(in: yRange, using: &generator))
+    public func setup(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> RotatedEllipse {
         let range32 = 1...32
-        rx = Double(Int._random(in: range32, using: &generator))
-        ry = Double(Int._random(in: range32, using: &generator))
-        angleDegrees = Double(Int._random(in: 0...360, using: &generator))
+        return RotatedEllipse(
+            strokeWidth: strokeWidth,
+            x: Double(Int._random(in: xRange, using: &generator)),
+            y: Double(Int._random(in: yRange, using: &generator)),
+            rx: Double(Int._random(in: range32, using: &generator)),
+            ry: Double(Int._random(in: range32, using: &generator)),
+            angleDegrees: Double(Int._random(in: 0...360, using: &generator))
+        )
     }
 
-    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+    public func mutate(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> RotatedEllipse {
         let range16 = -16...16
+        var newX, newY, newRx, newRy, newAngleDegrees: Double
         switch Int._random(in: 0...3, using: &generator) {
         case 0:
-            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
-            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
+            newX = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
+            newY = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
+            newRx = rx
+            newRy = ry
+            newAngleDegrees = angleDegrees
         case 1:
-            rx = Double((Int(rx) + Int._random(in: range16, using: &generator)).clamped(to: 1...xRange.upperBound))
+            newX = x
+            newY = y
+            newRx = Double((Int(rx) + Int._random(in: range16, using: &generator)).clamped(to: 1...xRange.upperBound))
+            newRy = ry
+            newAngleDegrees = angleDegrees
         case 2:
-            ry = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yRange.upperBound))
+            newX = x
+            newY = y
+            newRx = rx
+            newRy = Double((Int(ry) + Int._random(in: range16, using: &generator)).clamped(to: 1...yRange.upperBound))
+            newAngleDegrees = angleDegrees
         case 3:
-            angleDegrees = Double(
+            newX = x
+            newY = y
+            newRx = rx
+            newRy = ry
+            newAngleDegrees = Double(
                 (Int(angleDegrees) + Int._random(in: range16, using: &generator)).clamped(to: 0...360)
             )
         default:
             fatalError("Internal inconsistency")
         }
+        return RotatedEllipse(
+            strokeWidth: strokeWidth,
+            x: newX,
+            y: newY,
+            rx: newRx,
+            ry: newRy,
+            angleDegrees: newAngleDegrees
+        )
     }
 
     public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {

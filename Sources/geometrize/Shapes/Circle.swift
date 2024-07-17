@@ -1,10 +1,10 @@
 import Foundation
 
-public final class Circle: Shape {
-    public var strokeWidth: Double
-    public var x: Double // x-coordinate.
-    public var y: Double // y-coordinate.
-    public var r: Double // Radius.
+public struct Circle: Shape {
+    public let strokeWidth: Double
+    public let x: Double // x-coordinate.
+    public let y: Double // y-coordinate.
+    public let r: Double // Radius.
 
     public init(strokeWidth: Double) {
         self.strokeWidth = strokeWidth
@@ -20,27 +20,39 @@ public final class Circle: Shape {
         self.r = r
     }
 
-    public func copy() -> Circle {
-        Circle(strokeWidth: strokeWidth, x: x, y: y, r: r)
+    public func setup(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> Circle {
+        Circle(
+            strokeWidth: strokeWidth,
+            x: Double(Int._random(in: xRange, using: &generator)),
+            y: Double(Int._random(in: yRange, using: &generator)),
+            r: Double(Int._random(in: 1...32, using: &generator))
+        )
     }
 
-    public func setup(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
-        x = Double(Int._random(in: xRange, using: &generator))
-        y = Double(Int._random(in: yRange, using: &generator))
-        r = Double(Int._random(in: 1...32, using: &generator))
-    }
-
-    public func mutate(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, using generator: inout SplitMix64) {
+    public func mutate(
+        x xRange: ClosedRange<Int>,
+        y yRange: ClosedRange<Int>,
+        using generator: inout SplitMix64
+    ) -> Circle {
         let range16 = -16...16
+        var newX, newY, newR: Double
         switch Int._random(in: 0...1, using: &generator) {
         case 0:
-            x = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
-            y = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
+            newX = Double((Int(x) + Int._random(in: range16, using: &generator)).clamped(to: xRange))
+            newY = Double((Int(y) + Int._random(in: range16, using: &generator)).clamped(to: yRange))
+            newR = r
         case 1:
-            r = Double((Int(r) + Int._random(in: range16, using: &generator)).clamped(to: 1...xRange.upperBound))
+            newX = x
+            newY = y
+            newR = Double((Int(r) + Int._random(in: range16, using: &generator)).clamped(to: 1...xRange.upperBound))
         default:
             fatalError("Internal inconsistency")
         }
+        return Circle(strokeWidth: strokeWidth, x: newX, y: newY, r: newR)
     }
 
     public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {

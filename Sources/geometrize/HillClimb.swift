@@ -78,26 +78,28 @@ func hillClimb( // swiftlint:disable:this function_parameter_count
     using generator: inout SplitMix64
 ) -> State {
     let xRange = 0...target.width - 1, yRange = 0...target.height - 1
-    var s: State = state.copy()
-    var bestState: State = state.copy()
+    var s: State = state
+    var bestState: State = state
     var bestEnergy: Double = bestState.score
     var age: Int = 0
     while age < maxAge {
-        let undo: State = s.mutate(x: xRange, y: yRange, using: &generator)
-        s.score = energyFunction(
-            s.shape.rasterize(x: xRange, y: yRange),
-            s.alpha,
-            target,
-            current,
-            &buffer,
-            lastScore
-        )
-        let energy: Double = s.score
-        if energy >= bestEnergy {
-            s = undo.copy()
+        let undo = s
+        let alpha = s.alpha
+        s = s.mutate(x: xRange, y: yRange, using: &generator) { aShape in
+            return energyFunction(
+                aShape.rasterize(x: xRange, y: yRange),
+                alpha,
+                target,
+                current,
+                &buffer,
+                lastScore
+            )
+        }
+        if s.score >= bestEnergy {
+            s = undo
         } else {
-            bestEnergy = energy
-            bestState = s.copy()
+            bestEnergy = s.score
+            bestState = s
             age = Int.max // TODO: What's the point??? And following increment overflows.
         }
         if age == Int.max {
@@ -133,35 +135,31 @@ private func bestRandomState( // swiftlint:disable:this function_parameter_count
     using generator: inout SplitMix64
 ) -> State {
     let xRange = 0...target.width - 1, yRange = 0...target.height - 1
-    let shape = shapeCreator(&generator)
-    shape.setup(x: xRange, y: yRange, using: &generator)
-    var bestState: State = State(shape: shape, alpha: alpha)
-    bestState.score = energyFunction(
-        bestState.shape.rasterize(x: xRange, y: yRange),
-        bestState.alpha,
+    let shape = shapeCreator(&generator).setup(x: xRange, y: yRange, using: &generator)
+    var bestEnergy: Double = energyFunction(
+        shape.rasterize(x: xRange, y: yRange),
+        alpha,
         target,
         current,
         &buffer,
         lastScore
     )
-    var bestEnergy: Double = bestState.score
+    var bestState: State = State(score: bestEnergy, alpha: alpha, shape: shape)
     for i in 0...n {
-        let shape = shapeCreator(&generator)
-        shape.setup(x: xRange, y: yRange, using: &generator)
-        var state: State = State(shape: shape, alpha: alpha)
-        state.score = energyFunction(
-            state.shape.rasterize(x: xRange, y: yRange),
-            state.alpha,
+        let shape = shapeCreator(&generator).setup(x: xRange, y: yRange, using: &generator)
+        let energy: Double = energyFunction(
+            shape.rasterize(x: xRange, y: yRange),
+            alpha,
             target,
             current,
             &buffer,
             lastScore
         )
-        let energy: Double = state.score
+        let state: State = State(score: energy, alpha: alpha, shape: shape)
         if i == 0 || energy < bestEnergy {
             bestEnergy = energy
-            bestState = state.copy()
+            bestState = state
         }
     }
-    return bestState.copy() // TODO: is copy needed here???
+    return bestState
 }
