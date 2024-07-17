@@ -10,7 +10,7 @@ public extension Bitmap {
     ///   Alpha of background itself is ignored.
     func jpegData(blending background: Rgba = .white) throws -> Data {
         let rgb: [JPEG.RGB] = backing
-            //.lazy // TODO: make lazy work!
+            // .lazy // TODO: make lazy work!
             .chunks(ofCount: 4)
             .map { Rgba($0).blending(background: background) }
             .map { JPEG.RGB($0.r, $0.g, $0.b) }
