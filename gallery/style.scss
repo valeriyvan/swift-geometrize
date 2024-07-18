@@ -1,0 +1,51 @@
+.container {
+  position: relative;
+  width: 800px;
+  height: 533px;
+  border: 2px solid white;
+  .img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 800px 100%;
+  }
+  .background-img {
+    background-image: url('Яворів-line-10000.svg');
+  }
+  .foreground-img {
+    background-image: url('Яворів.jpg');
+    width: 50%;
+  }
+}
+
+@mixin center() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slider {
+    position: absolute;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    background: rgba(#f2f2f2, .3);
+    outline: none;
+    margin: 0;
+    transition: all .2s;
+    @include center;
+    &:hover {
+      background: rgba(#f2f2f2, .1);
+    }
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 6px;
+      height: 533px;
+      background: white;
+      cursor: pointer;
+  }
+}
