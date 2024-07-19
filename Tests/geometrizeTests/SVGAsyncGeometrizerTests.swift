@@ -2,14 +2,10 @@ import XCTest
 import SnapshotTesting
 @testable import Geometrize
 
-@MainActor
 final class SVGAsyncGeometrizerTests: XCTestCase {
 
     func testAsyncGeometrizerCompleteSVGEachIteration() async throws {
-        guard
-            let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm"),
-            let urlOutput = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "svg")
-        else {
+        guard let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm") else {
             fatalError()
         }
         let ppmString = try String(contentsOf: urlSource)
@@ -36,10 +32,7 @@ final class SVGAsyncGeometrizerTests: XCTestCase {
     }
 
     func testAsyncGeometrizerCompleteSVGFirstIterationThenDeltas() async throws {
-        guard
-            let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm"),
-            let urlOutput = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "svg")
-        else {
+        guard let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm") else {
             fatalError("No resource files")
         }
         print("point0")
