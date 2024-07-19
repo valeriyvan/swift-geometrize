@@ -11,7 +11,7 @@ import Foundation
 ///   - after The image as it would be after adding the shape
 ///   - target The image that we are trying to replicate.
 /// - Returns: True to add the shape to the image, false not to.
-public typealias ShapeAcceptancePreconditionFunction = (
+public typealias ShapeAcceptancePreconditionFunction = @Sendable (
     _ lastScore: Double,
     _ newScore: Double,
     _ shape: any Shape,
@@ -22,7 +22,7 @@ public typealias ShapeAcceptancePreconditionFunction = (
     _ target: Bitmap
 ) -> Bool
 
-public func defaultAddShapePrecondition( // swiftlint:disable:this function_parameter_count
+@Sendable public func defaultAddShapePrecondition( // swiftlint:disable:this function_parameter_count
     lastScore: Double,
     newScore: Double,
     shape: any Shape,
