@@ -1,7 +1,7 @@
 import XCTest
 @testable import Geometrize
 
-final class CoreTests: XCTestCase {
+final class HillClimbTests: XCTestCase {
 
     // fails
     func testHillClimbComparingResultWithCPlusPlus() throws { // swiftlint:disable:this function_body_length
