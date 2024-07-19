@@ -10,7 +10,7 @@ import Foundation
 ///   - buffer The buffer bitmap.
 ///   - score The score.
 /// - Returns: The energy measure.
-public typealias EnergyFunction = (
+public typealias EnergyFunction = @Sendable (
     _ lines: [Scanline],
     _ alpha: UInt8,
     _ target: Bitmap,
@@ -29,7 +29,7 @@ public typealias EnergyFunction = (
 ///   - buffer: The buffer bitmap.
 ///   - score: The score.
 /// - Returns: The energy measure.
-public func defaultEnergyFunction( // swiftlint:disable:this function_parameter_count
+@Sendable public func defaultEnergyFunction( // swiftlint:disable:this function_parameter_count
     _ lines: [Scanline],
     _ alpha: UInt8,
     _ target: Bitmap,

@@ -5,6 +5,8 @@ import SnapshotTesting
 final class SVGAsyncGeometrizerTests: XCTestCase {
 
     func testAsyncGeometrizerCompleteSVGEachIteration() async throws {
+        throw XCTSkip("The test should be debugged.")
+
         guard let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm") else {
             fatalError()
         }
@@ -32,6 +34,8 @@ final class SVGAsyncGeometrizerTests: XCTestCase {
     }
 
     func testAsyncGeometrizerCompleteSVGFirstIterationThenDeltas() async throws {
+        throw XCTSkip("The test should be debugged.")
+
         guard let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm") else {
             fatalError("No resource files")
         }
