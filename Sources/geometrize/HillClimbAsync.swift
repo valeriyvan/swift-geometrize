@@ -11,47 +11,44 @@ import Foundation
 ///   - buffer: The buffer bitmap.
 ///   - lastScore: The last score.
 ///   - energyFunction: A function to calculate the energy.
-///   - using: The Random number generator to use.
-///   - callback: The closure to call with resulting state.
-///   - queue: The queue to call callback
+///   - seed: The Random number generator to use.
 /// - Returns: The best state acquired from hill climbing i.e. the one with the lowest energy.
-func bestHillClimbState( // swiftlint:disable:this function_parameter_count
+func bestHillClimbStateAsync( // swiftlint:disable:this function_parameter_count
     shapeCreator: ShapeCreator,
     alpha: UInt8,
     n: Int,
     age: Int,
     target: Bitmap,
     current: Bitmap,
-    buffer: inout Bitmap,
     lastScore: Double,
     energyFunction: EnergyFunction = defaultEnergyFunction,
-    using generator: inout SplitMix64,
-    callback: @escaping (State) -> Void,
-    queue: DispatchQueue
-) {
-    let state: State = bestRandomState(
-        shapeCreator: shapeCreator,
-        alpha: alpha,
-        n: n,
-        target: target,
-        current: current,
-        buffer: &buffer,
-        lastScore: lastScore,
-        energyFunction: energyFunction,
-        using: &generator
-    )
-    let resState = hillClimb(
-        state: state,
-        maxAge: age,
-        target: target,
-        current: current,
-        buffer: &buffer,
-        lastScore: lastScore,
-        energyFunction: energyFunction,
-        using: &generator
-    )
-    queue.async {
-        callback(resState)
+    seed: UInt64
+) async -> State {
+    var buffer = current
+    var generator = SplitMix64(seed: seed)
+    return await withCheckedContinuation { continuation in
+        let state: State = bestRandomState(
+            shapeCreator: shapeCreator,
+            alpha: alpha,
+            n: n,
+            target: target,
+            current: current,
+            buffer: &buffer, // TODO: should it be inout?
+            lastScore: lastScore,
+            energyFunction: energyFunction,
+            using: &generator
+        )
+        let resState = hillClimb(
+            state: state,
+            maxAge: age,
+            target: target,
+            current: current,
+            buffer: &buffer, // TODO: should it be inout?
+            lastScore: lastScore,
+            energyFunction: energyFunction,
+            using: &generator
+        )
+        continuation.resume(returning: resState)
     }
 }
 
@@ -67,7 +64,7 @@ func bestHillClimbState( // swiftlint:disable:this function_parameter_count
 ///   - energyFunction: An energy function to be used.
 ///   - using: The Random number generator to use.
 /// - Returns: The best state found from hillclimbing.
-func hillClimb( // swiftlint:disable:this function_parameter_count
+func hillClimbAsync( // swiftlint:disable:this function_parameter_count
     state: State,
     maxAge: Int,
     target: Bitmap,
@@ -123,7 +120,7 @@ func hillClimb( // swiftlint:disable:this function_parameter_count
 ///   - energyFunction: An energy function to be used.
 ///   - using: The Random number generator to use.
 /// - Returns: The best random state i.e. the one with the lowest energy.
-internal func bestRandomState( // swiftlint:disable:this function_parameter_count
+private func bestRandomStateAsync( // swiftlint:disable:this function_parameter_count
     shapeCreator: ShapeCreator,
     alpha: UInt8,
     n: Int,

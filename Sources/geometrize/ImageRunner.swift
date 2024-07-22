@@ -132,6 +132,33 @@ public struct ImageRunner {
         )
     }
 
+    public mutating func stepAsync(
+        options: ImageRunnerOptions,
+        shapeCreator: ShapeCreator? = nil,
+        energyFunction: @escaping EnergyFunction,
+        addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction
+    ) async -> StepGeometrizationResult {
+        let types = options.shapeTypes
+
+        let shapeCreator = shapeCreator ??
+            makeDefaultShapeCreator(
+                types: types,
+                strokeWidth: Double(options.strokeWidth)
+            )
+
+        model.setSeed(options.seed)
+
+        return await model.stepAsync(
+            shapeCreator: shapeCreator,
+            alpha: options.alpha,
+            shapeCount: options.shapeCount,
+            maxShapeMutations: options.maxShapeMutations,
+            maxThreads: options.maxThreads,
+            energyFunction: energyFunction,
+            addShapePrecondition: addShapePrecondition
+        )
+    }
+
     public var currentBitmap: Bitmap {
         model.currentBitmap
     }

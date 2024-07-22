@@ -4,7 +4,7 @@ import PNG
 
 final class ImageRunnerTests: XCTestCase {
 
-    func testImageRunnerRedImage() throws {
+    func testImageRunnerRedImage() throws { // swiftlint:disable:this function_body_length
         let width = 100, height = 100
         let targetBitmap = Bitmap(width: width, height: height, color: .red)
 
@@ -77,7 +77,7 @@ final class ImageRunnerTests: XCTestCase {
         )
     }
 
-    func testImageRunner() throws {
+    func testImageRunner() throws { // swiftlint:disable:this function_body_length
         throw XCTSkip("Randomness should be somehow handled in this test.")
 
         // seedRandomGenerator(9001)
