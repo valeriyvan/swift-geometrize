@@ -63,6 +63,51 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         return states
     }
 
+    private func getHillClimbStateAsync( // swiftlint:disable:this function_parameter_count
+        shapeCreator: @escaping ShapeCreator,
+        alpha: UInt8,
+        shapeCount: Int,
+        maxShapeMutations: Int,
+        maxThreads: Int, // Ignored. Single thread is used at the moment.
+        energyFunction: @escaping EnergyFunction
+    ) async -> [State] {
+        // Ensure that the results of the random generation are the same between tasks with identical settings
+        // The RNG is thread-local and std::async may use a thread pool (which is why this is necessary)
+        // Note this implementation requires maxThreads to be the same between tasks for each task to produce the same results.
+
+        let lastScore = lastScore
+        let target = targetBitmap
+        let current = currentBitmap
+
+        let states = await withTaskGroup(of: State.self, returning: [State].self) { taskGroup in
+            for _ in 0..<maxThreads {
+                let seed = UInt64(baseRandomSeed + randomSeedOffset) // TODO: fix
+                randomSeedOffset += 1
+                taskGroup.addTask {
+                    let state = await bestHillClimbStateAsync(
+                        shapeCreator: shapeCreator,
+                        alpha: alpha,
+                        n: shapeCount,
+                        age: maxShapeMutations,
+                        target: target,
+                        current: current,
+                        lastScore: lastScore,
+                        energyFunction: energyFunction,
+                        seed: seed
+                    )
+                    return state
+                }
+            }
+
+            var states = [State]()
+            for await result in taskGroup {
+                states.append(result)
+            }
+            return states
+        }
+        return states
+    }
+
     /// Concurrently runs several optimization sessions trying to improve image geometrization by adding a shape to it,
     /// returns result of the best optimization or nil if improvement of image wasn't found.
     /// - Parameters:
@@ -85,6 +130,63 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
     ) -> StepGeometrizationResult {
 
         let states: [State] = getHillClimbState(
+            shapeCreator: shapeCreator,
+            alpha: alpha,
+            shapeCount: shapeCount,
+            maxShapeMutations: maxShapeMutations,
+            maxThreads: maxThreads,
+            energyFunction: energyFunction
+        )
+
+        guard !states.isEmpty else {
+            fatalError("Failed to get a hill climb state.")
+        }
+
+        // State with min score
+        guard let it = states.min(by: { $0.score < $1.score }) else {
+            fatalError("Failed to get a state with min score.")
+        }
+
+        // Draw the shape onto the image
+        let shape = it.shape
+        let lines: [Scanline] = shape.rasterize(x: 0...width - 1, y: 0...height - 1)
+        let color: Rgba = lines.computeColor(target: targetBitmap, current: currentBitmap, alpha: alpha)
+        let before: Bitmap = currentBitmap
+        currentBitmap.draw(lines: lines, color: color)
+
+        // Check for an improvement - if not, roll back and return no result
+        let newScore: Double = before.differencePartial(
+            with: currentBitmap,
+            target: targetBitmap,
+            score: lastScore,
+            mask: lines
+        )
+        guard addShapePrecondition(lastScore, newScore, shape, lines, color, before, currentBitmap, targetBitmap) else {
+            currentBitmap = before
+            if before == currentBitmap {
+                return .match
+            } else {
+                return .failure
+            }
+        }
+
+        // Improvement - set new baseline and return the new shape
+        lastScore = newScore
+
+        return .success(ShapeResult(score: lastScore, color: color, shape: shape))
+    }
+
+    func stepAsync( // swiftlint:disable:this function_parameter_count
+        shapeCreator: @escaping ShapeCreator,
+        alpha: UInt8,
+        shapeCount: Int,
+        maxShapeMutations: Int,
+        maxThreads: Int,
+        energyFunction: @escaping EnergyFunction,
+        addShapePrecondition: @escaping ShapeAcceptancePreconditionFunction = defaultAddShapePrecondition
+    ) async -> StepGeometrizationResult {
+
+        let states: [State] = await getHillClimbStateAsync(
             shapeCreator: shapeCreator,
             alpha: alpha,
             shapeCount: shapeCount,

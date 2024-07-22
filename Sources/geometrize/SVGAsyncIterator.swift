@@ -116,7 +116,7 @@ public struct SVGAsyncIterator: AsyncIteratorProtocol {
             if verbose {
                 print("Step \(stepCounter)", terminator: "")
             }
-            let stepResult = runner.step(
+            let stepResult = await runner.stepAsync(
                 options: runnerOptions,
                 energyFunction: defaultEnergyFunction,
                 addShapePrecondition: defaultAddShapePrecondition
@@ -177,14 +177,6 @@ public struct SVGAsyncIterator: AsyncIteratorProtocol {
 
         iterationCounter += 1
 
-        // var svg = SVGExporter().export(data: shapeData, width: width, height: height)
-
-        // Fix SVG to keep original image size
-//        let range = svg.range(of: "width=")!.lowerBound ..< svg.range(of: "viewBox=")!.lowerBound
-//        svg.replaceSubrange(range.relative(to: svg), with: " width=\"\(originWidth)\" height=\"\(originHeight)\" ")
-//
-//        print("Iteration \(iterationCounter) complete, \(iterationShapeData.count) shapes in iteration, " +
-//              "\(shapeData.count) shapes in total.")
         return GeometrizingResult(svg: svg, thumbnail: runner.currentBitmap)
     }
 
