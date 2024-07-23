@@ -116,6 +116,7 @@ public struct SVGAsyncIterator: AsyncIteratorProtocol {
             if verbose {
                 print("Step \(stepCounter)", terminator: "")
             }
+
             let stepResult = await runner.stepAsync(
                 options: runnerOptions,
                 energyFunction: defaultEnergyFunction,

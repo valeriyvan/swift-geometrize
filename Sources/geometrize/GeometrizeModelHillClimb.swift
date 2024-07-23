@@ -64,18 +64,24 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
             for _ in 0..<maxThreads {
                 let seed = UInt64(baseRandomSeed + randomSeedOffset) // TODO: fix
                 randomSeedOffset += 1
-                taskGroup.addTask {
-                    let state = await bestHillClimbStateAsync(
-                        shapeCreator: shapeCreator,
-                        alpha: alpha,
-                        n: shapeCount,
-                        age: maxShapeMutations,
-                        target: target,
-                        current: current,
-                        lastScore: lastScore,
-                        energyFunction: energyFunction,
-                        seed: seed
-                    )
+                taskGroup.addTask { [current] in
+                    var generator = SplitMix64(seed: seed)
+                    let state = await withCheckedContinuation { continuation in
+                        var buffer = current
+                        let state = bestHillClimbState(
+                            shapeCreator: shapeCreator,
+                            alpha: alpha,
+                            n: shapeCount,
+                            age: maxShapeMutations,
+                            target: target,
+                            current: current,
+                            buffer: &buffer,
+                            lastScore: lastScore,
+                            energyFunction: energyFunction,
+                            using: &generator
+                        )
+                        continuation.resume(returning: state)
+                    }
                     return state
                 }
             }
