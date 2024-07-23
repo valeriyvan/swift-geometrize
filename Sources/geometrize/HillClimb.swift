@@ -25,10 +25,7 @@ func bestHillClimbState( // swiftlint:disable:this function_parameter_count
     buffer: inout Bitmap,
     lastScore: Double,
     energyFunction: EnergyFunction = defaultEnergyFunction,
-    using generator: inout SplitMix64,
-    callback: @escaping (State) -> Void,
-    queue: DispatchQueue
-) {
+    using generator: inout SplitMix64) -> State {
     let state: State = bestRandomState(
         shapeCreator: shapeCreator,
         alpha: alpha,
@@ -40,7 +37,7 @@ func bestHillClimbState( // swiftlint:disable:this function_parameter_count
         energyFunction: energyFunction,
         using: &generator
     )
-    let resState = hillClimb(
+    let resultingState = hillClimb(
         state: state,
         maxAge: age,
         target: target,
@@ -50,9 +47,7 @@ func bestHillClimbState( // swiftlint:disable:this function_parameter_count
         energyFunction: energyFunction,
         using: &generator
     )
-    queue.async {
-        callback(resState)
-    }
+    return resultingState
 }
 
 /// Hill climbing optimization algorithm, attempts to minimize energy (the error/difference).
