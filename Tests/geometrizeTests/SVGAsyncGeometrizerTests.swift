@@ -39,13 +39,11 @@ final class SVGAsyncGeometrizerTests: XCTestCase {
         guard let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm") else {
             fatalError("No resource files")
         }
-        print("point0")
         let ppmString = try String(contentsOf: urlSource)
         let bitmap = try Bitmap(ppmString: ppmString)
 
         let updateMarker = "<!-- insert here next shapes -->\n"
         
-        print("point1")
         let svgSequence: SVGAsyncSequence = try await SVGAsyncGeometrizer.geometrize(
             bitmap: bitmap,
             shapeTypes: [RotatedEllipse.self],
@@ -58,7 +56,6 @@ final class SVGAsyncGeometrizerTests: XCTestCase {
         var firstSVG: String? = nil
         var svgAdOns: String = ""
 
-        print("point2")
         var counter = 0
         for await result in svgSequence {
             if firstSVG != nil {
