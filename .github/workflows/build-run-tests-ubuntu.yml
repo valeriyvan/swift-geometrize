@@ -102,4 +102,4 @@ jobs:
     - name: Build
       run: /opt/swift/bin/swift build -v
     - name: Run tests
-      run: /opt/swift/bin/swift test -v
+      run: /opt/swift/bin/swift test -v -c release
