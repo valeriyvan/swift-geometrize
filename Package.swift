@@ -1,14 +1,14 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 5.10
 
 import PackageDescription
 
 var dependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/tayloraswift/swift-png.git", from: "4.4.1"),
+    .package(url: "https://github.com/tayloraswift/swift-png.git", from: "4.4.4"),
     .package(url: "https://github.com/tayloraswift/jpeg.git", from: "1.1.0"),
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.13.0"),
-    .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.0.0"),
-    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.4"),
-    .package(url: "https://github.com/realm/SwiftLint.git", from: "0.55.0")
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.17.2"),
+    .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.2.0"),
+    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.5.0"),
+    .package(url: "https://github.com/realm/SwiftLint.git", from: "0.55.1")
 ]
 
 #if os(macOS)
@@ -23,7 +23,7 @@ let package = Package(
     name: "swift-geometrize",
 
     platforms: [
-        .macOS(.v12), .iOS(.v14)
+        .macOS("13.3"), .iOS(.v14)
     ],
 
     products: [
@@ -44,6 +44,7 @@ let package = Package(
     dependencies: dependencies,
 
     targets: [
+
         .target(
             name: "Geometrize",
             dependencies: [
