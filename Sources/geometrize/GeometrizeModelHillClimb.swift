@@ -18,12 +18,15 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         alpha: UInt8,
         shapeCount: Int,
         maxShapeMutations: Int,
-        maxThreads: Int, // Ignored. Single thread is used at the moment.
+        maxThreads: Int,
         energyFunction: @escaping EnergyFunction
     ) -> [State] {
         // Ensure that the results of the random generation are the same between tasks with identical settings
         // The RNG is thread-local and std::async may use a thread pool (which is why this is necessary)
         // Note this implementation requires maxThreads to be the same between tasks for each task to produce the same results.
+
+        precondition(maxThreads > 0)
+
         let lastScore = lastScore
         let seed = baseRandomSeed + randomSeedOffset
         randomSeedOffset += 1
@@ -49,12 +52,14 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
         alpha: UInt8,
         shapeCount: Int,
         maxShapeMutations: Int,
-        maxThreads: Int, // Ignored. Single thread is used at the moment.
+        maxThreads: Int,
         energyFunction: @escaping EnergyFunction
     ) async -> [State] {
         // Ensure that the results of the random generation are the same between tasks with identical settings
         // The RNG is thread-local and std::async may use a thread pool (which is why this is necessary)
         // Note this implementation requires maxThreads to be the same between tasks for each task to produce the same results.
+
+        precondition(maxThreads > 0)
 
         let lastScore = lastScore
         let target = targetBitmap
@@ -72,7 +77,7 @@ class GeometrizeModelHillClimb: GeometrizeModelBase {
                             shapeCreator: shapeCreator,
                             alpha: alpha,
                             n: shapeCount,
-                            age: maxShapeMutations,
+                            age: maxShapeMutations / maxThreads, // TODO: think of this
                             target: target,
                             current: current,
                             buffer: &buffer,
