@@ -4,7 +4,7 @@ import Foundation
 // Tests could change default implementation e.g. to read pre-generated random numbers from file.
 
 // swiftlint:disable:next identifier_name
-var _randomImplementationReference = _randomImplementation
+nonisolated(unsafe) var _randomImplementationReference = _randomImplementation
 
 // swiftlint:disable:next identifier_name
 func _randomImplementation(in range: ClosedRange<Int>, using generator: inout SplitMix64) -> Int {
