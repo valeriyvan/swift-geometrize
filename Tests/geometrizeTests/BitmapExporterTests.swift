@@ -21,7 +21,7 @@ final class BitmapExporterTests: XCTestCase {
         let exporter = BitmapExporter()
         let bitmap = exporter.export(data: results, width: 100, height: 100)
         assertSnapshot(
-            matching: bitmap,
+            of: bitmap,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
     }

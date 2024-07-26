@@ -49,7 +49,7 @@ final class ImageRunnerTests: XCTestCase {
                 shapeData.append(shapeResult)
                 print(", \(shapeResult.shape.description) added.", terminator: "")
             case .match:
-                print(", geometrizing matched source image.", terminator: "")
+                //print(", geometrizing matched source image.", terminator: "")
                 break loop
             case .failure:
                 print(", failure, no shapes added.", terminator: "")

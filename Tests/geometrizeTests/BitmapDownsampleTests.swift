@@ -26,7 +26,7 @@ final class BitmapDownsampleTests: XCTestCase {
 
         let bitmapDownsampledBy2 = bitmap.downsample(factor: 2)
         assertSnapshot(
-            matching: bitmapDownsampledBy2,
+            of: bitmapDownsampledBy2,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
     }
