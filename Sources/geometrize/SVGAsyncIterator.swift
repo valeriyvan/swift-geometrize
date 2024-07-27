@@ -79,7 +79,7 @@ public struct SVGAsyncIterator: AsyncIteratorProtocol {
             shapeCount: 500, // TODO: ???
             maxShapeMutations: 100,
             seed: 9001, // TODO: !!!
-            maxThreads: ProcessInfo().processorCount - 1,
+            maxThreads: ProcessInfo.processInfo.processorCount - 1,
             shapeBounds: ImageRunnerShapeBoundsOptions(
                 enabled: false,
                 xMinPercent: 0, yMinPercent: 0, xMaxPercent: 100, yMaxPercent: 100
