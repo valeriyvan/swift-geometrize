@@ -52,7 +52,7 @@ final class BitmapTests: XCTestCase {
             blending: .yellow
         )
         assertSnapshot(
-            matching: bitmapWithYellowBackgroundBlended,
+            of: bitmapWithYellowBackgroundBlended,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
     }
@@ -189,7 +189,7 @@ final class BitmapTests: XCTestCase {
         bitmap.transpose()
 
         assertSnapshot(
-            matching: bitmap,
+            of: bitmap,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
     }
@@ -209,7 +209,7 @@ final class BitmapTests: XCTestCase {
         bitmap.swap(x1: 10, y1: 10, x2: width / 2, y2: height / 2)
 
         assertSnapshot(
-            matching: bitmap,
+            of: bitmap,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
     }
@@ -236,7 +236,7 @@ final class BitmapTests: XCTestCase {
         bitmap.reflectVertically()
 
         assertSnapshot(
-            matching: bitmap,
+            of: bitmap,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
     }
@@ -263,7 +263,7 @@ final class BitmapTests: XCTestCase {
         bitmap.reflectHorizontally()
 
         assertSnapshot(
-            matching: bitmap,
+            of: bitmap,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
     }
@@ -328,12 +328,12 @@ final class BitmapTests: XCTestCase {
         let bitmap = try Bitmap(pngBundleResource: "63", withExtension: "png")
         let bitmapWithWhiteBackgroundBlended = bitmap.blending(background: .white)
         assertSnapshot(
-            matching: bitmapWithWhiteBackgroundBlended,
+            of: bitmapWithWhiteBackgroundBlended,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
         let bitmapWithRedBackgroundBlended = bitmap.blending(background: .red)
         assertSnapshot(
-            matching: bitmapWithRedBackgroundBlended,
+            of: bitmapWithRedBackgroundBlended,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
     }
@@ -496,7 +496,7 @@ final class BitmapTests: XCTestCase {
         }
 
         assertSnapshot(
-            matching: try Bitmap(ppmString: """
+            of: try Bitmap(ppmString: """
             P3
             # "P3" means this is a RGB color image in ASCII
             # "3 2" is the width and height of the image in pixels
