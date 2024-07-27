@@ -24,7 +24,7 @@ final class LineTests: XCTestCase {
                 .black
         )
         assertSnapshot(
-            matching: bitmap,
+            of: bitmap,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
     }

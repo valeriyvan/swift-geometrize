@@ -17,7 +17,7 @@ final class QuadraticBezierTests: XCTestCase {
         )
         bitmap.draw(lines: scaleScanlinesTrimmed(width: width, height: height, step: 100), color: .black)
         assertSnapshot(
-            matching: bitmap,
+            of: bitmap,
             as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
         )
     }
