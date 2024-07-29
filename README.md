@@ -40,7 +40,7 @@ You could try swift-geometrize in action in Telegram bot [Geometrizebot](https:/
 * solve dealing with randomness in tests;
 * geometrize with predefined or user supplied brush strokes;
 * geometrize with characters (on output will be something which could be called ascii art or art produced by [James Cook Type Writer Artist](https://jamescookartwork.com));
-* photo mosaic,
+* photo mosaic;
 * [string art](https://en.wikipedia.org/wiki/String_art).
 
 ## License
