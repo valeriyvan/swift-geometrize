@@ -14,7 +14,7 @@ import Foundation
 public typealias ShapeAcceptancePreconditionFunction = @Sendable (
     _ lastScore: Double,
     _ newScore: Double,
-    _ shape: any Shape,
+    _ shape: Shape,
     _ lines: [Scanline],
     _ color: Rgba,
     _ before: Bitmap,
@@ -25,7 +25,7 @@ public typealias ShapeAcceptancePreconditionFunction = @Sendable (
 @Sendable public func defaultAddShapePrecondition( // swiftlint:disable:this function_parameter_count
     lastScore: Double,
     newScore: Double,
-    shape: any Shape,
+    shape: Shape,
     lines: [Scanline],
     color: Rgba,
     _: Bitmap,
