@@ -4,9 +4,9 @@ import Foundation
 public struct ShapeResult {
     public let score: Double
     public let color: Rgba
-    public let shape: any Shape
+    public let shape: Shape
 
-    public init(score: Double, color: Rgba, shape: any Shape) {
+    public init(score: Double, color: Rgba, shape: Shape) {
         self.score = score
         self.color = color
         self.shape = shape
