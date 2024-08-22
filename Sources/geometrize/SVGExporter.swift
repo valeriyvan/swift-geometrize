@@ -13,7 +13,7 @@ public struct SVGExporter {
     ///   - color: The color of the shape
     ///   - shape: The shape to convert to SVG data
     /// - Returns: The SVG shape data for the given shape
-    func singleShapeData(color: Rgba, shape: any Shape) -> String {
+    func singleShapeData(color: Rgba, shape: Shape) -> String {
         var shapeData: String = shapeData(shape: shape)
 
         var styles: String = ""
@@ -45,7 +45,7 @@ public struct SVGExporter {
     /// - Returns: A string representing the SVG image.
     func exportSingleShape( // swiftlint:disable:this function_parameter_count
         color: Rgba,
-        shape: any Shape,
+        shape: Shape,
         width: Int,
         height: Int,
         originWidth: Int,
@@ -142,7 +142,7 @@ public struct SVGExporter {
         "<path d=\"M\(Int(q.x1)) \(Int(q.y1)) Q\(Int(q.cx)) \(Int(q.cy)) \(Int(q.x2)) \(Int(q.y2))\" \(svg_style_hook)/>"
     }
 
-    private func shapeData(shape: any Shape) -> String {
+    private func shapeData(shape: Shape) -> String {
         switch shape {
         case let rectangle as Rectangle:
             return shapeData(rectangle: rectangle)
