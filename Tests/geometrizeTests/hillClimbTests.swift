@@ -79,7 +79,7 @@ final class HillClimbTests: XCTestCase {
 
 }
 
-func == (lhs: any Shape, rhs: any Shape) -> Bool {
+func == (lhs: Shape, rhs: Shape) -> Bool {
     switch (lhs, rhs) {
     case (let lhs as Circle, let rhs as Circle): return lhs == rhs
     case (let lhs as Ellipse, let rhs as Ellipse): return lhs == rhs
