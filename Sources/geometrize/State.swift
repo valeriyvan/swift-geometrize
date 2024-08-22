@@ -2,7 +2,7 @@ import Foundation
 
 struct State: Sendable {
 
-    init(score: Double, alpha: UInt8, shape: some Shape) {
+    init(score: Double, alpha: UInt8, shape: Shape) {
         self.score = score
         self.alpha = alpha
         self.shape = shape
@@ -15,7 +15,7 @@ struct State: Sendable {
     let alpha: UInt8
 
     /// The geometric primitive owned by the state.
-    let shape: any Shape
+    let shape: Shape
 
     ///  Modifies the current state in a random fashion.
     /// - Returns: new mutated state.
@@ -23,7 +23,7 @@ struct State: Sendable {
         x xRange: ClosedRange<Int>, // TODO: rename
         y yRange: ClosedRange<Int>, // TODO: rename
         using generator: inout SplitMix64,
-        score: ((any Shape) -> Double)
+        score: ((Shape) -> Double)
     ) -> State {
         let mutatedShape = shape.mutate(x: xRange, y: yRange, using: &generator)
         return State(score: score(mutatedShape), alpha: alpha, shape: mutatedShape)
