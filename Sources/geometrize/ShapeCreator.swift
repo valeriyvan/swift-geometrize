@@ -1,6 +1,6 @@
 import Foundation
 
-public typealias ShapeCreator = @Sendable (inout SplitMix64) -> any Shape
+public typealias ShapeCreator = @Sendable (inout SplitMix64) -> Shape
 
 /// Creates a function for creating instances of  Shape. Returned instances should be set up!
 /// - Parameters:
