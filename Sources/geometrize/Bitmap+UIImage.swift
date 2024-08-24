@@ -12,7 +12,7 @@ extension Bitmap {
         // Redraw image for correct pixel format
 
         let colorSpace = CGColorSpaceCreateDeviceRGB()
-        var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Big.rawValue
+        let bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Big.rawValue
             | CGImageAlphaInfo.premultipliedLast.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
 
         let width = Int(image.size.width)
@@ -39,7 +39,7 @@ extension Bitmap {
 
     public func uiImage() -> UIImage? {
         let colorSpace = CGColorSpaceCreateDeviceRGB()
-        var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Big.rawValue |
+        let bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Big.rawValue |
             CGImageAlphaInfo.premultipliedLast.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
         var mutableBacking = backing
         return mutableBacking.withUnsafeMutableBufferPointer {
