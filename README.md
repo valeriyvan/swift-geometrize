@@ -41,7 +41,7 @@ You could try swift-geometrize in action in Telegram bot [Geometrizebot](https:/
 * geometrize with predefined or user supplied brush strokes;
 * geometrize with characters (on output will be something which could be called ascii art or art produced by [James Cook Type Writer Artist](https://jamescookartwork.com));
 * photo mosaic;
-* [string art](https://en.wikipedia.org/wiki/String_art): [1](https://www.youtube.com/watch?v=WGccIFf6MF8), [2](https://www.youtube.com/watch?v=dBlSmg5T13M);
+* [string art](https://en.wikipedia.org/wiki/String_art): [1](https://www.youtube.com/watch?v=WGccIFf6MF8), [2](https://www.youtube.com/watch?v=dBlSmg5T13M), [3](https://sites.google.com/view/virtuallypassed/home?authuser=0), [4](https://www.youtube.com/watch?v=M1gXuKFspgY);
 * [tape art](https://www.tapeartacademy.com): [1](/images/Tape-that-1.jpeg), [2](/images/Tape-that-2.jpeg), [3](/images/Tape-that-3.jpeg), [4](/images/Tape-that-4.jpeg), [5](/images/Tape-that-5.jpeg), [6](https://www.tapethatcollective.com).
 
 ## License
