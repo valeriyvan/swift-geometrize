@@ -195,8 +195,11 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
                     let targetOffset =  (newWidth * y + x) * 4
                     if (inset..<newWidth-inset ~= x) && (inset..<newHeight-inset ~= y) {
                         let sourceOffset = (width * (y - inset) + (x - inset)) * 4
-                        for i in 0..<4 {
-                            buffer[targetOffset + i] = backing[sourceOffset + i] // TODO: withUnsafeBufferPointer
+                        backing.withUnsafeBufferPointer { source in
+                            buffer[targetOffset + 0] = source[sourceOffset + 0]
+                            buffer[targetOffset + 1] = source[sourceOffset + 1]
+                            buffer[targetOffset + 2] = source[sourceOffset + 2]
+                            buffer[targetOffset + 3] = source[sourceOffset + 3]
                         }
                     } else {
                         buffer[targetOffset + 0] = color.r
