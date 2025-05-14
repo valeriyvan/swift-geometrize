@@ -245,9 +245,9 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
         let offset1 = offset(x: x1, y: y1)
         let offset2 = offset(x: x2, y: y2)
-        
+
         guard offset1 != offset2 else { return }
-        
+
         backing.withUnsafeMutableBufferPointer { buffer in
             for i in 0..<4 {
                 let temp = buffer[offset1 + i]
@@ -259,14 +259,14 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
     // Reflects bitmap around vertical axis
     mutating func reflectVertically() {
-        guard width > 1 else { return }
-
-        // Replaces naïve implementation
+        // Naively it's:
         // for x in 0 ..< width / 2 {
         //     for y in 0 ..< height {
         //         swap(x1: x, y1: y, x2: width - x - 1, y2: y)
         //     }
         // }
+
+        guard width > 1 else { return }
 
         backing.withUnsafeMutableBufferPointer { buffer in
             for y in 0 ..< height {
@@ -286,14 +286,14 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
     // Reflects bitmap around horizontal axis
     mutating func reflectHorizontally() {
-        guard height > 1 else { return }
-
-        // Replaces naïve implementation
+        // Naively it's:
         // for x in 0 ..< width {
         //     for y in 0 ..< height / 2 {
         //         swap(x1: x, y1: y, x2: x, y2: height - y - 1)
         //     }
         // }
+
+        guard height > 1 else { return }
 
         backing.withUnsafeMutableBufferPointer { buffer in
             for x in 0 ..< width {
@@ -302,7 +302,7 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
                     let offset2 = ((height - y - 1) * width + x) * 4
                     // Swap all 4 RGBA components at once
                     (buffer[offset1], buffer[offset1+1], buffer[offset1+2], buffer[offset1+3],
-                     buffer[offset2], buffer[offset2+1], buffer[offset2+2], buffer[offset2+3]) = 
+                     buffer[offset2], buffer[offset2+1], buffer[offset2+2], buffer[offset2+3]) =
                     (buffer[offset2], buffer[offset2+1], buffer[offset2+2], buffer[offset2+3],
                      buffer[offset1], buffer[offset1+1], buffer[offset1+2], buffer[offset1+3])
                 }
@@ -315,8 +315,9 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
         // self = Bitmap(width: width, height: height) { x, y in
         //     self[width - x - 1, height - y - 1]
         // }
+
         guard width > 0 && height > 0 else { return }
-        
+
         let totalPixels = pixelCount
 
         // We only need to process half of the pixels.
@@ -332,7 +333,7 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
                 let offset1 = (y1 * width + x1) * 4
                 let offset2 = (y2 * width + x2) * 4
-                
+
                 // Swap all 4 RGBA components at once
                 (buffer[offset1], buffer[offset1 + 1], buffer[offset1 + 2], buffer[offset1 + 3],
                  buffer[offset2], buffer[offset2 + 1], buffer[offset2 + 2], buffer[offset2 + 3]) =
@@ -343,9 +344,33 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     }
 
     private mutating func reflectLeftMirrored() {
-        self = Bitmap(width: height, height: width) { x, y in
-            self[y, x]
+        // Naively it's:
+        // self = Bitmap(width: height, height: width) { x, y in
+        //     self[y, x]
+        // }
+
+        guard width > 0 && height > 0 else { return }
+
+        // Create a new backing array with transposed dimensions
+        let newBacking = ContiguousArray<UInt8>(unsafeUninitializedCapacity: width * height * 4) {
+            buffer, initializedCapacity in
+            backing.withUnsafeBufferPointer { source in
+                for y in 0..<height {
+                    for x in 0..<width {
+                        let srcOffset = (y * width + x) * 4
+                        let destOffset = (x * height + y) * 4
+                        buffer[destOffset + 0] = source[srcOffset + 0]
+                        buffer[destOffset + 1] = source[srcOffset + 1]
+                        buffer[destOffset + 2] = source[srcOffset + 2]
+                        buffer[destOffset + 3] = source[srcOffset + 3]
+                    }
+                }
+            }
+            initializedCapacity = width * height * 4
         }
+
+        (width, height) = (height, width)
+        backing = newBacking
     }
 
     private mutating func reflectLeft() {
