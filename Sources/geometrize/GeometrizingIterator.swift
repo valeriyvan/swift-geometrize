@@ -133,7 +133,7 @@ public struct GeometrizingIterator: IteratorProtocol {
                     break loop
             }
             if verbose {
-                print(" Total count of shapes \(shapeData.count ).")
+                print(" Total count of shapes \(shapeData.count + iterationShapeData.count).")
             }
             stepCounter += 1
         }
@@ -143,7 +143,7 @@ public struct GeometrizingIterator: IteratorProtocol {
         iterationCounter += 1
 
         if verbose {
-            print("Iteration \(iterationCounter) complete, \(iterationShapeData.count) shapes in iteration, " +
+            print("Iteration \(iterationCounter) has completed, \(iterationShapeData.count) shapes per iteration, " +
                   "\(shapeData.count) shapes in total.")
         }
 

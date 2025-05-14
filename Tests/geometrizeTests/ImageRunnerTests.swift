@@ -55,7 +55,7 @@ final class ImageRunnerTests: XCTestCase {
                 print(", failure, no shapes added.", terminator: "")
                 // TODO: should it break as well?
             }
-            print(" Total count of shapes \(shapeData.count ).")
+            print(" Total count of shapes \(shapeData.count).")
             counter += 1
         }
 
@@ -142,7 +142,7 @@ final class ImageRunnerTests: XCTestCase {
                 print(", failure, no shapes added.", terminator: "")
                 // TODO: should it break as well?
             }
-            print(" Total count of shapes \(shapeData.count ).")
+            print(" Total count of shapes \(shapeData.count).")
             counter += 1
     }
 

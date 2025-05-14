@@ -142,7 +142,7 @@ public struct SVGAsyncIterator: AsyncIteratorProtocol {
                 break loop
             }
             if verbose {
-                print(" Total count of shapes \(shapeData.count ).")
+                print(" Total count of shapes \(shapeData.count + iterationShapeData.count).")
             }
             stepCounter += 1
         }
