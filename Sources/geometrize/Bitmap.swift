@@ -310,10 +310,35 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
         }
     }
 
-    // TODO: is it possible to do in place?
     private mutating func reflectDown() {
-        self = Bitmap(width: width, height: height) { x, y in
-            self[width - x - 1, height - y - 1]
+        // Naively it's:
+        // self = Bitmap(width: width, height: height) { x, y in
+        //     self[width - x - 1, height - y - 1]
+        // }
+        guard width > 0 && height > 0 else { return }
+        
+        let totalPixels = pixelCount
+
+        // We only need to process half of the pixels.
+        // For odd dimensions, the center pixel stays in place.
+        let pixelsToProcess = totalPixels / 2
+
+        backing.withUnsafeMutableBufferPointer { buffer in
+            for i in 0..<pixelsToProcess {
+                let x1 = i % width
+                let y1 = i / width
+                let x2 = width - x1 - 1
+                let y2 = height - y1 - 1
+
+                let offset1 = (y1 * width + x1) * 4
+                let offset2 = (y2 * width + x2) * 4
+                
+                // Swap all 4 RGBA components at once
+                (buffer[offset1], buffer[offset1 + 1], buffer[offset1 + 2], buffer[offset1 + 3],
+                 buffer[offset2], buffer[offset2 + 1], buffer[offset2 + 2], buffer[offset2 + 3]) =
+                (buffer[offset2], buffer[offset2 + 1], buffer[offset2 + 2], buffer[offset2 + 3],
+                 buffer[offset1], buffer[offset1 + 1], buffer[offset1 + 2], buffer[offset1 + 3])
+            }
         }
     }
 
