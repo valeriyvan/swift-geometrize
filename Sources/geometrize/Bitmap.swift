@@ -259,7 +259,7 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
     // Reflects bitmap around vertical axis
     mutating func reflectVertically() {
-        // Naively it's:
+        // Naïvely it's:
         // for x in 0 ..< width / 2 {
         //     for y in 0 ..< height {
         //         swap(x1: x, y1: y, x2: width - x - 1, y2: y)
@@ -286,7 +286,7 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
     // Reflects bitmap around horizontal axis
     mutating func reflectHorizontally() {
-        // Naively it's:
+        // Naïvely it's:
         // for x in 0 ..< width {
         //     for y in 0 ..< height / 2 {
         //         swap(x1: x, y1: y, x2: x, y2: height - y - 1)
@@ -311,7 +311,7 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     }
 
     private mutating func reflectDown() {
-        // Naively it's:
+        // Naïvely it's:
         // self = Bitmap(width: width, height: height) { x, y in
         //     self[width - x - 1, height - y - 1]
         // }
@@ -344,14 +344,13 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     }
 
     private mutating func reflectLeftMirrored() {
-        // Naively it's:
+        // Naïvely it's:
         // self = Bitmap(width: height, height: width) { x, y in
         //     self[y, x]
         // }
 
         guard width > 0 && height > 0 else { return }
 
-        // Create a new backing array with transposed dimensions
         let newBacking = ContiguousArray<UInt8>(unsafeUninitializedCapacity: width * height * 4) {
             buffer, initializedCapacity in
             backing.withUnsafeBufferPointer { source in
@@ -374,9 +373,32 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     }
 
     private mutating func reflectLeft() {
-        self = Bitmap(width: height, height: width) { x, y in
-            self[y, height - x - 1]
+        // Naïvely it's:
+        // self = Bitmap(width: height, height: width) { x, y in
+        //     self[y, height - x - 1]
+        // }
+
+        guard width > 0 && height > 0 else { return }
+
+        let newBacking = ContiguousArray<UInt8>(unsafeUninitializedCapacity: width * height * 4) {
+            buffer, initializedCapacity in
+            backing.withUnsafeBufferPointer { source in
+                for y in 0..<height {
+                    for x in 0..<width {
+                        let srcOffset = (y * width + x) * 4
+                        let destOffset = (x * height + (height - y - 1)) * 4
+                        buffer[destOffset + 0] = source[srcOffset + 0]
+                        buffer[destOffset + 1] = source[srcOffset + 1]
+                        buffer[destOffset + 2] = source[srcOffset + 2]
+                        buffer[destOffset + 3] = source[srcOffset + 3]
+                    }
+                }
+            }
+            initializedCapacity = width * height * 4
         }
+
+        (width, height) = (height, width)
+        backing = newBacking
     }
 
     private mutating func reflectRightMirrored() {
