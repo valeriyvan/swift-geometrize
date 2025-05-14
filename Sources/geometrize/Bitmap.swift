@@ -402,9 +402,36 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     }
 
     private mutating func reflectRightMirrored() {
-        self = Bitmap(width: height, height: width) { x, y in
-            self[width - y - 1, height - x - 1]
+        // Naïvely it's:
+        // self = Bitmap(width: height, height: width) { x, y in
+        //     self[width - y - 1, height - x - 1]
+        // }
+
+        guard width > 0 && height > 0 else { return }
+
+        let newWidth = height
+        let newHeight = width
+        let newBacking = ContiguousArray<UInt8>(unsafeUninitializedCapacity: newWidth * newHeight * 4) {
+            buffer, initializedCapacity in
+            backing.withUnsafeBufferPointer { source in
+                for y in 0..<height {
+                    for x in 0..<width {
+                        let srcOffset = (y * width + x) * 4
+                        let newX = height - y - 1
+                        let newY = width - x - 1
+                        let destOffset = (newY * newWidth + newX) * 4
+                        buffer[destOffset + 0] = source[srcOffset + 0]
+                        buffer[destOffset + 1] = source[srcOffset + 1]
+                        buffer[destOffset + 2] = source[srcOffset + 2]
+                        buffer[destOffset + 3] = source[srcOffset + 3]
+                    }
+                }
+            }
+            initializedCapacity = newWidth * newHeight * 4
         }
+
+        (width, height) = (newWidth, newHeight)
+        backing = newBacking
     }
 
     private mutating func reflectRight() {
