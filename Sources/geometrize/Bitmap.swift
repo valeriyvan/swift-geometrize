@@ -134,18 +134,18 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
     public subscript(x: Int, y: Int) -> Rgba {
         get {
-            backing.withUnsafeBufferPointer {
+            backing.withUnsafeBufferPointer { buffer in
                 let offset = offset(x: x, y: y)
-                return Rgba($0[offset..<offset + 4])
+                return Rgba(buffer[offset..<offset + 4])
             }
         }
         set {
             let offset = offset(x: x, y: y)
-            backing.withUnsafeMutableBufferPointer {
-                $0[offset + 0] = newValue.r
-                $0[offset + 1] = newValue.g
-                $0[offset + 2] = newValue.b
-                $0[offset + 3] = newValue.a
+            backing.withUnsafeMutableBufferPointer { buffer in
+                buffer[offset + 0] = newValue.r
+                buffer[offset + 1] = newValue.g
+                buffer[offset + 2] = newValue.b
+                buffer[offset + 3] = newValue.a
             }
 
         }
@@ -164,13 +164,13 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     /// - Parameter color: The color to fill the bitmap with.
     public mutating func fill(color: Rgba) {
         let count = pixelCount
-        backing.withUnsafeMutableBufferPointer {
+        backing.withUnsafeMutableBufferPointer { buffer in
             for index in 0 ..< count {
                 let offset = index * 4
-                $0[offset + 0] = color.r
-                $0[offset + 1] = color.g
-                $0[offset + 2] = color.b
-                $0[offset + 3] = color.a
+                buffer[offset + 0] = color.r
+                buffer[offset + 1] = color.g
+                buffer[offset + 2] = color.b
+                buffer[offset + 3] = color.a
             }
         }
     }
@@ -233,8 +233,8 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
     // Transposes Bitmap
     mutating func transpose() {
-        self = Bitmap(width: height, height: width) {
-            self[$1, $0]
+        self = Bitmap(width: height, height: width) { x, y in
+            self[y, x]
         }
     }
 
@@ -268,32 +268,32 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
     // TODO: is it possible to do in place?
     private mutating func reflectDown() {
-        self = Bitmap(width: width, height: height) {
-            self[width - $0 - 1, height - $1 - 1]
+        self = Bitmap(width: width, height: height) { x, y in
+            self[width - x - 1, height - y - 1]
         }
     }
 
     private mutating func reflectLeftMirrored() {
-        self = Bitmap(width: height, height: width) {
-            self[$1, $0]
+        self = Bitmap(width: height, height: width) { x, y in
+            self[y, x]
         }
     }
 
     private mutating func reflectLeft() {
-        self = Bitmap(width: height, height: width) {
-            self[$1, height - $0 - 1]
+        self = Bitmap(width: height, height: width) { x, y in
+            self[y, height - x - 1]
         }
     }
 
     private mutating func reflectRightMirrored() {
-        self = Bitmap(width: height, height: width) {
-            self[width - $1 - 1, height - $0 - 1]
+        self = Bitmap(width: height, height: width) { x, y in
+            self[width - y - 1, height - x - 1]
         }
     }
 
     private mutating func reflectRight() {
-        self = Bitmap(width: height, height: width) {
-            self[width - $1 - 1, $0]
+        self = Bitmap(width: height, height: width) { x, y in
+            self[width - y - 1, x]
         }
     }
 
@@ -357,11 +357,11 @@ extension Bitmap {
         var totalRed: Int = 0
         var totalGreen: Int = 0
         var totalBlue: Int = 0
-        backing.withUnsafeBufferPointer {
-            for i in stride(from: 0, to: $0.count, by: 4) {
-                totalRed += Int($0[i])
-                totalGreen += Int($0[i + 1])
-                totalBlue += Int($0[i + 2])
+        backing.withUnsafeBufferPointer { buffer in
+            for i in stride(from: 0, to: buffer.count, by: 4) {
+                totalRed += Int(buffer[i])
+                totalGreen += Int(buffer[i + 1])
+                totalBlue += Int(buffer[i + 2])
             }
         }
 
