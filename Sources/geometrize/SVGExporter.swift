@@ -48,8 +48,8 @@ public struct SVGExporter {
         shape: Shape,
         width: Int,
         height: Int,
-        originWidth: Int,
-        originHeight: Int
+        originWidth: Int, // TODO: not used!
+        originHeight: Int // TODO: not used!
     ) -> String {
         """
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -74,8 +74,8 @@ public struct SVGExporter {
         data: [ShapeResult],
         width: Int,
         height: Int,
-        originWidth: Int,
-        originHeight: Int,
+        originWidth: Int,  // TODO: not used!
+        originHeight: Int, // TODO: not used!
         updateMarker: String? = nil
     ) -> String {
         var str = """

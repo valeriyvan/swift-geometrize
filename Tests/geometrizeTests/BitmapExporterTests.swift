@@ -26,4 +26,9 @@ final class BitmapExporterTests: XCTestCase {
         )
     }
 
+    // TODO: add test for images bigger than 500 pixels.
+    // Iterators inside downsample image by default to max 500 pixels size.
+    // Exporters are not aware of this therefore big geometrized images exported
+    // into png/jpeg (may be svg as well) take only small part of image size.
+
 }
