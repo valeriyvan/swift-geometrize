@@ -258,11 +258,28 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     }
 
     // Reflects bitmap around vertical axis
-    // TODO: optimize
     mutating func reflectVertically() {
-        for x in 0 ..< width / 2 {
+        guard width > 1 else { return }
+
+        // Replaces naïve implementation
+        // for x in 0 ..< width / 2 {
+        //     for y in 0 ..< height {
+        //         swap(x1: x, y1: y, x2: width - x - 1, y2: y)
+        //     }
+        // }
+
+        backing.withUnsafeMutableBufferPointer { buffer in
             for y in 0 ..< height {
-                swap(x1: x, y1: y, x2: width - x - 1, y2: y)
+                let rowBase = y * width * 4
+                for x in 0 ..< width / 2 {
+                    let offset1 = rowBase + x * 4
+                    let offset2 = rowBase + (width - x - 1) * 4
+                    // Swap all 4 RGBA components at once
+                    (buffer[offset1], buffer[offset1 + 1], buffer[offset1 + 2], buffer[offset1 + 3],
+                     buffer[offset2], buffer[offset2 + 1], buffer[offset2 + 2], buffer[offset2 + 3]) =
+                    (buffer[offset2], buffer[offset2 + 1], buffer[offset2 + 2], buffer[offset2 + 3],
+                     buffer[offset1], buffer[offset1 + 1], buffer[offset1 + 2], buffer[offset1 + 3])
+                }
             }
         }
     }
