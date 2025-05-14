@@ -520,22 +520,20 @@ extension Bitmap {
     /// Computes the average RGB color of the pixels in the bitmap.
     /// - Returns: The average RGB color of the image, RGBA8888 format. Alpha is set to opaque (255).
     public func averageColor() -> Rgba {
-        // TODO: carefully check implementation for overflows.
-        // TODO: make it internal
         guard !isEmpty else { return .black }
 
-        var totalRed: Int = 0
-        var totalGreen: Int = 0
-        var totalBlue: Int = 0
+        var totalRed: UInt64 = 0
+        var totalGreen: UInt64 = 0
+        var totalBlue: UInt64 = 0
         backing.withUnsafeBufferPointer { buffer in
             for i in stride(from: 0, to: buffer.count, by: 4) {
-                totalRed += Int(buffer[i])
-                totalGreen += Int(buffer[i + 1])
-                totalBlue += Int(buffer[i + 2])
+                totalRed += UInt64(buffer[i])
+                totalGreen += UInt64(buffer[i + 1])
+                totalBlue += UInt64(buffer[i + 2])
             }
         }
 
-        let pixelCount = self.pixelCount
+        let pixelCount = UInt64(self.pixelCount)
         return Rgba(
             r: UInt8(totalRed / pixelCount),
             g: UInt8(totalGreen / pixelCount),
