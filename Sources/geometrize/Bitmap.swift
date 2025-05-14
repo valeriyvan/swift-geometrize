@@ -239,11 +239,22 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     }
 
     // Swaps points (x1, y1) and (x2, y2)
-    // TODO: optimize
     mutating func swap(x1: Int, y1: Int, x2: Int, y2: Int) {
-        let copy = self[x1, y1]
-        self[x1, y1] = self[x2, y2]
-        self[x2, y2] = copy
+        assert(isInBounds(x: x1, y: y1) && isInBounds(x: x2, y: y2),
+            "Swap coordinates must be within bitmap bounds")
+
+        let offset1 = offset(x: x1, y: y1)
+        let offset2 = offset(x: x2, y: y2)
+        
+        guard offset1 != offset2 else { return }
+        
+        backing.withUnsafeMutableBufferPointer { buffer in
+            for i in 0..<4 {
+                let temp = buffer[offset1 + i]
+                buffer[offset1 + i] = buffer[offset2 + i]
+                buffer[offset2 + i] = temp
+            }
+        }
     }
 
     // Reflects bitmap around vertical axis
