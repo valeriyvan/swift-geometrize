@@ -285,11 +285,27 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     }
 
     // Reflects bitmap around horizontal axis
-    // TODO: optimize
     mutating func reflectHorizontally() {
-        for x in 0 ..< width {
-            for y in 0 ..< height / 2 {
-                swap(x1: x, y1: y, x2: x, y2: height - y - 1)
+        guard height > 1 else { return }
+
+        // Replaces naïve implementation
+        // for x in 0 ..< width {
+        //     for y in 0 ..< height / 2 {
+        //         swap(x1: x, y1: y, x2: x, y2: height - y - 1)
+        //     }
+        // }
+
+        backing.withUnsafeMutableBufferPointer { buffer in
+            for x in 0 ..< width {
+                for y in 0 ..< height / 2 {
+                    let offset1 = (y * width + x) * 4
+                    let offset2 = ((height - y - 1) * width + x) * 4
+                    // Swap all 4 RGBA components at once
+                    (buffer[offset1], buffer[offset1+1], buffer[offset1+2], buffer[offset1+3],
+                     buffer[offset2], buffer[offset2+1], buffer[offset2+2], buffer[offset2+3]) = 
+                    (buffer[offset2], buffer[offset2+1], buffer[offset2+2], buffer[offset2+3],
+                     buffer[offset1], buffer[offset1+1], buffer[offset1+2], buffer[offset1+3])
+                }
             }
         }
     }
