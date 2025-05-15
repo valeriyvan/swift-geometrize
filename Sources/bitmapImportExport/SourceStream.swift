@@ -6,20 +6,14 @@ struct SourceStream: PNG.BytestreamSource, _JPEGBytestreamSource {
 
     private(set) var data: Data
     private(set) var position: Int
-    private(set) var available: Int
 
     init(_ data: Data) {
         self.data = data
         self.position = data.startIndex
-        self.available = data.startIndex
     }
 
     mutating func read(count: Int) -> [UInt8]? {
         guard position + count <= data.endIndex else { return nil }
-        guard position + count < available else {
-            available += 4096
-            return nil
-        }
         defer { position += count }
         return [UInt8](data[position ..< position + count])
     }
