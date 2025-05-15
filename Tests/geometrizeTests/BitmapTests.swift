@@ -14,6 +14,20 @@ final class BitmapTests: XCTestCase {
         XCTAssertTrue(bitmap.isEmpty)
     }
 
+    func testInitJpegData() throws {
+        let resource = "IMG_0180"
+        let `extension` = "jpeg"
+        guard let url = Bundle.module.url(forResource: resource, withExtension: `extension`) else {
+            fatalError("Resource \"\(resource).\(`extension`)\" not found in bundle")
+        }
+        let data = try Data(contentsOf: url)
+        let bitmap = try Bitmap(jpegData: data)
+        assertSnapshot(
+            of: bitmap,
+            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
+        )
+    }
+
     func testInitSizeAndColor() throws {
         let blackBitmap = Bitmap(width: 5, height: 7, color: Rgba(r: 0, g: 0, b: 0, a: 0))
         XCTAssertEqual(blackBitmap.width, 5)
