@@ -34,24 +34,9 @@ struct GeometrizeOptions: ParsableArguments {
 
 let options = GeometrizeOptions.parseOrExit()
 
-let inputUrl = URL(fileURLWithPath: options.inputPath)
+let shapeCount: Int = Int(options.shapeCount ?? 100)
 
-let targetBitmap: Bitmap =
-switch inputUrl.pathExtension.lowercased() {
-case "png":
-    try Bitmap(pngUrl: inputUrl)
-case "jpeg", "jpg":
-    try Bitmap(jpegUrl: inputUrl)
-default:
-        fatalError("Only PNG and JPEG input file formats are supported at the moment.")
-}
-let width = targetBitmap.width
-let height = targetBitmap.height
-
-let outputUrl = URL(fileURLWithPath: options.outputPath)
-guard options.outputPath == "-" || ["svg", "png", "jpeg", "jpg"].contains(outputUrl.pathExtension.lowercased()) else {
-    fatalError("Only SVG, PNG and JPEG output file formats are supported at the moment.")
- }
+let strokeWidth: Int = Int(options.lineWidth ?? 1)
 
 // TODO: use ExpressibleByArgument?
 let shapesStrings = options.shapeTypes.components(separatedBy: .whitespacesAndNewlines)
@@ -76,11 +61,38 @@ if let indexOfNil {
 
 let shapeTypes: [Shape.Type] = shapes.compactMap { $0 }
 
-print("Using shapes: \(shapeTypes.map { "\(type(of: $0))".dropLast(5) /* drop .Type */ }.joined(separator: ", ")).")
+if options.verbose {
+    print("Geometrize Options:")
+    print("  Input: \(options.inputPath)")
+    print("  Output: \(options.outputPath)")
+    print("  Shape Types: \(shapeTypes.map { "\(type(of: $0))".dropLast(5) /* drop .Type */ }.joined(separator: ", "))")
+    print("  Shape Count: \(shapeCount)")
+    print("  Line Width: \(strokeWidth)")
+    print("  Verbose: \(options.verbose)")
+}
 
-let shapeCount: Int = Int(options.shapeCount ?? 100)
+let inputUrl = URL(fileURLWithPath: options.inputPath)
 
-let strokeWidth: Int = Int(options.lineWidth ?? 1)
+let targetBitmap: Bitmap =
+switch inputUrl.pathExtension.lowercased() {
+case "png":
+    try Bitmap(pngUrl: inputUrl)
+case "jpeg", "jpg":
+    try Bitmap(jpegData: try Data(contentsOf: inputUrl))
+default:
+    fatalError("Only PNG and JPEG input file formats are supported at the moment.")
+}
+let width = targetBitmap.width
+let height = targetBitmap.height
+
+if options.verbose {
+    print("Size of input image is width: \(width) x height: \(height)")
+}
+
+let outputUrl = URL(fileURLWithPath: options.outputPath)
+guard options.outputPath == "-" || ["svg", "png", "jpeg", "jpg"].contains(outputUrl.pathExtension.lowercased()) else {
+    fatalError("Only SVG, PNG and JPEG output file formats are supported at the moment.")
+ }
 
 var shapeData: [ShapeResult] = []
 
@@ -89,7 +101,8 @@ let geometrizingSequence = GeometrizingSequence(
     shapeTypes: shapeTypes,
     strokeWidth: strokeWidth,
     iterations: 10,
-    shapesPerIteration: shapeCount / 10
+    shapesPerIteration: shapeCount / 10,
+    verbose: options.verbose
 )
 
 for iteration in geometrizingSequence {
