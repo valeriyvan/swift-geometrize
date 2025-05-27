@@ -538,7 +538,7 @@ extension Bitmap {
             r: UInt8(totalRed / pixelCount),
             g: UInt8(totalGreen / pixelCount),
             b: UInt8(totalBlue / pixelCount),
-            a: 255
+            a: 255 // TODO: calculate average of alpha?
         )
     }
 
