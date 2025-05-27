@@ -2,6 +2,8 @@ import CollectionsBenchmark
 import Geometrize
 import Foundation
 
+// run with `swift run -c release benchmark run results --min-size 10000 --max-size 10000000 --cycles 5`
+
 var benchmark = Benchmark(title: "Bitmap.addFrame")
 benchmark.registerInputGenerator(for: Bitmap.self) { size in
     let width = max(1, Int(Double(size).squareRoot() * Double.random(in: 0.0...0.5)))
