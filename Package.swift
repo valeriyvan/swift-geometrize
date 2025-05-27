@@ -1,4 +1,5 @@
-// swift-tools-version: 5.10
+// swift-tools-version: 6.1
+// Was raised from 5.10 to 6.1 to solve GitHub CI build error after depending on swift-collections-benchmark
 
 import PackageDescription
 
@@ -24,7 +25,7 @@ let package = Package(
     name: "swift-geometrize",
 
     platforms: [
-        .macOS("15.0"), .iOS(.v14)
+        .macOS("15.0") /* raised from 13.3 to 15.0 after depending on swift-collections-benchmark */, .iOS(.v14)
     ],
 
     products: [
