@@ -1,5 +1,5 @@
 import XCTest
-import SnapshotTesting
+@preconcurrency import SnapshotTesting
 import PNG
 @testable import Geometrize
 import BitmapImportExport
