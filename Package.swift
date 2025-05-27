@@ -8,7 +8,8 @@ var dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.17.4"),
     .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.2.0"),
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.5.0"),
-    .package(url: "https://github.com/realm/SwiftLint.git", from: "0.56.2")
+    .package(url: "https://github.com/realm/SwiftLint.git", from: "0.56.2"),
+    .package(url: "https://github.com/apple/swift-collections-benchmark", from: "0.0.4")
 ]
 
 #if os(macOS)
@@ -23,7 +24,7 @@ let package = Package(
     name: "swift-geometrize",
 
     platforms: [
-        .macOS("13.3"), .iOS(.v14)
+        .macOS("15.0"), .iOS(.v14)
     ],
 
     products: [
@@ -38,13 +39,16 @@ let package = Package(
         .executable(
             name: "geometrize",
             targets: ["geometrize-cli"]
+        ),
+        .executable(
+            name: "benchmark",
+            targets: ["benchmark"]
         )
     ],
 
     dependencies: dependencies,
 
     targets: [
-
         .target(
             name: "Geometrize",
             dependencies: [
@@ -97,6 +101,13 @@ let package = Package(
                 .copy("__Snapshots__")
             ],
             plugins: plugins
+        ),
+        .executableTarget(
+            name: "benchmark",
+            dependencies: [
+                "Geometrize",
+                .product(name: "CollectionsBenchmark", package: "swift-collections-benchmark")
+            ]
         )
     ]
 
