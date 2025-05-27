@@ -14,11 +14,22 @@ final class HillClimbTests: XCTestCase {
         }
         let randomNumbersString = try String(contentsOf: url)
         let lines = randomNumbersString.components(separatedBy: .newlines)
-        var counter = 0
+        
+        // Reference type to hold mutable state for the Sendable closure
+        final class RandomState: @unchecked Sendable {
+            var counter = 0
+            let lines: [String]
 
-        func randomRangeFromFile(in range: ClosedRange<Int>, using generator: inout SplitMix64) -> Int {
-            defer { counter += 1 }
-            let line = lines[counter]
+            init(lines: [String]) {
+                self.lines = lines
+            }
+        }
+
+        let randomState = RandomState(lines: lines)
+
+        let randomRangeFromFile: @Sendable (ClosedRange<Int>, inout SplitMix64) -> Int = { range, generator in
+            defer { randomState.counter += 1 }
+            let line = randomState.lines[randomState.counter]
             let scanner = Scanner(string: line)
             guard
                 let random = scanner.scanInt(),
@@ -28,10 +39,11 @@ final class HillClimbTests: XCTestCase {
                 let theMax = scanner.scanInt(),
                 theMin == range.lowerBound, theMax == range.upperBound
             else {
-                fatalError("Line \(counter + 1) unexpected: \(String(line[..<scanner.currentIndex])). range = \(range)")
+                fatalError("Line \(randomState.counter + 1) unexpected: \(String(line[..<scanner.currentIndex])). range = \(range)")
             }
             return random
         }
+
         _randomImplementationReference = randomRangeFromFile
         defer { _randomImplementationReference = _randomImplementation }
 
