@@ -6,7 +6,7 @@ final class RectangleTests: XCTestCase {
 
     func testRasterize() throws {
         let width = 500, height = 300
-        let xRange = 0...width - 1, yRange = 0...height - 1
+        let xRange = 0..<width, yRange = 0..<height
         var bitmap = Bitmap(width: width, height: height, color: .white)
         bitmap.draw(
             lines:
