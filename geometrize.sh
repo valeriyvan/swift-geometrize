@@ -24,16 +24,36 @@ SHAPE_TYPES=("Rectangle" "RotatedRectangle" "Circle" "Ellipse" "RotatedEllipse" 
 
 # Process with each shape type
 for shape in "${SHAPE_TYPES[@]}"; do
-    OUTPUT_FILE="$DEST_DIR/$SOURCE_BASE-$shape.svg"
-    echo "Processing with $shape shapes: $OUTPUT_FILE"
-    swift run -c release geometrize -i "$SOURCE_IMAGE" -t "$shape" -c 1000 -v -o "$OUTPUT_FILE"
-    
-    # Check if processing was successful
+    # Define output files for both SVG and PNG
+    SVG_OUTPUT="$DEST_DIR/$SOURCE_BASE-$shape.svg"
+    PNG_OUTPUT="$DEST_DIR/$SOURCE_BASE-$shape.png"
+
+    echo "Processing with $shape shapes..."
+
+    # Generate SVG output
+    echo "  Generating SVG: $SVG_OUTPUT"
+    swift run -c release geometrize -i "$SOURCE_IMAGE" -t "$shape" -c 1000 -o "$SVG_OUTPUT"
+
+    # Check if SVG processing was successful
     if [ $? -eq 0 ]; then
-        echo "✅ Successfully created $OUTPUT_FILE"
+        echo "  ✅ Successfully created $SVG_OUTPUT"
     else
-        echo "❌ Failed to create $OUTPUT_FILE"
+        echo "  ❌ Failed to create $SVG_OUTPUT"
+        continue  # Skip PNG generation if SVG failed
     fi
+
+    # Generate PNG output
+    echo "  Generating PNG: $PNG_OUTPUT"
+    swift run -c release geometrize -i "$SOURCE_IMAGE" -t "$shape" -c 1000 -o "$PNG_OUTPUT"
+
+    # Check if PNG processing was successful
+    if [ $? -eq 0 ]; then
+        echo "  ✅ Successfully created $PNG_OUTPUT"
+    else
+        echo "  ❌ Failed to create $PNG_OUTPUT"
+    fi
+
+    echo "  Completed processing with $shape shapes"
 done
 
 echo "All processing complete!"
