@@ -1,5 +1,5 @@
 <p align="center" style="padding-bottom:50px;">
-<a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/Swift-5.x-orange.svg?style=flat"/></a> 
+<a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/Swift-6.x-orange.svg?style=flat"/></a> 
 <a href="https://github.com/apple/swift-package-manager"><img src="https://img.shields.io/badge/SPM-compatible-brightgreen.svg"/></a> 
 <a href="https://github.com/valeriyvan/swift-geometrize"><img src="https://img.shields.io/badge/Platforms-macOS%20%7C%20iOS%20%7C%20Linux-lightgrey"/></a> 
 <a href="https://github.com/valeriyvan/swift-geometrize/actions/workflows/build-run-tests-macos.yml"><img src="https://github.com/valeriyvan/swift-geometrize/actions/workflows/build-run-tests-macos.yml/badge.svg"/></a>
