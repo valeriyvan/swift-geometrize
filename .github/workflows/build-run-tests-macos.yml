@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on:  macOS-12 # available versions https://github.com/actions/runner-images/tree/main/images/macos 
+    runs-on:  macOS-15 # available versions https://github.com/actions/runner-images/tree/main/images/macos 
 
     steps:
     - name: Checkout
