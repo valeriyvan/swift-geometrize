@@ -134,6 +134,7 @@ public struct RotatedEllipse: Shape {
         let a = max(rx, ry)
         let b = min(rx, ry)
         let h = pow((a - b) / (a + b), 2)
+        // Uses Ramanujan's approximation for ellipse perimeter
         return .pi * (a + b) * (1 + (3 * h) / (10 + sqrt(4 - 3 * h)))
     }
 
