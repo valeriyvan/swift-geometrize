@@ -11,15 +11,13 @@ public struct BitmapExporter {
     ///   - height: The height of the bitmap (downscaled).
     ///   - originalWidth: The original width of the image (before downscaling).
     ///   - originalHeight: The original height of the image (before downscaling).
-    ///   - scaleFactor: The scale factor between original and downscaled dimensions.
     /// - Returns: A bitmap reconstructed from the shape data.
     public func export(
         data: [ShapeResult],
         width: Int,
         height: Int,
         originalWidth: Int? = nil,
-        originalHeight: Int? = nil,
-        scaleFactor: Double = 1.0
+        originalHeight: Int? = nil
     ) -> Bitmap {
         // Determine if we should output at original size or downscaled size
         let outputWidth = originalWidth ?? width
@@ -49,6 +47,8 @@ public struct BitmapExporter {
 
         // Step 2: Scale the bitmap to the original dimensions
         // We'll use a nearest-neighbor approach as a simple scaling algorithm
+        let scaleFactor = Double(outputWidth) / Double(width)
+
         for y in 0..<outputHeight {
             for x in 0..<outputWidth {
                 // Map from original space to processed space
@@ -63,4 +63,3 @@ public struct BitmapExporter {
         return bitmap
     }
 }
-
