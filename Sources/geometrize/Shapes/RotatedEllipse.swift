@@ -130,6 +130,7 @@ public struct RotatedEllipse: Shape {
     }
 
     private func approximatePerimeter() -> Double {
+        guard !isDegenerate else { return 0.0 }
         let a = max(rx, ry)
         let b = min(rx, ry)
         let h = pow((a - b) / (a + b), 2)
