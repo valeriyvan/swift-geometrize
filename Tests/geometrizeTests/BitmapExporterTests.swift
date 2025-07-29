@@ -26,47 +26,6 @@ final class BitmapExporterTests: XCTestCase {
         )
     }
 
-    func testExport1000() throws {
-        throw XCTSkip("Not ready yet.")
-
-        let resource = "B56A13CE-5A02-4238-A7D2-1BA5223CA547_1_105_c"
-        let `extension` = "jpeg"
-        guard let url = Bundle.module.url(forResource: resource, withExtension: `extension`) else {
-            fatalError("Resource \"\(resource).\(`extension`)\" not found in bundle")
-        }
-        let data = try Data(contentsOf: url)
-        let targetBitmap = try Bitmap(jpegData: data)
-
-        var shapeData: [ShapeResult] = []
-
-        let geometrizingSequence = GeometrizingSequence(
-            bitmap: targetBitmap,
-            shapeTypes: [Rectangle.self],
-            strokeWidth: 1,
-            iterations: 10,
-            shapesPerIteration: 100,
-            verbose: true
-        )
-
-        let iterator = geometrizingSequence.makeIterator()
-
-        for iteration in geometrizingSequence {
-            shapeData.append(contentsOf: iteration)
-        }
-
-        let exporter = BitmapExporter()
-        let bitmap = exporter.export(
-            data: shapeData.map { ShapeResult(score: $0.score, color: $0.color, shape: $0.shape.resize(by: iterator.scaleFactor)) },
-            width: targetBitmap.width,
-            height: targetBitmap.height
-        )
-
-        assertSnapshot(
-            of: bitmap,
-            as: SimplySnapshotting(pathExtension: "png", diffing: Diffing<Bitmap>.image)
-        )
-    }
-
     // TODO: add test for images bigger than 500 pixels.
     // Iterators inside downsample image by default to max 500 pixels size.
     // Exporters are not aware of this therefore big geometrized images exported
