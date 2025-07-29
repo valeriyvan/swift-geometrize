@@ -22,10 +22,10 @@ public struct BitmapExporter {
         // Determine if we should output at original size or downscaled size
         let outputWidth = originalWidth ?? width
         let outputHeight = originalHeight ?? height
-        
+
         // Create bitmap with the right dimensions
         var bitmap = Bitmap(width: outputWidth, height: outputHeight, color: .white)
-        
+
         // If the original dimensions match the processed dimensions, no scaling needed
         if outputWidth == width && outputHeight == height {
             for shapeResult in data {
@@ -47,14 +47,14 @@ public struct BitmapExporter {
 
         // Step 2: Scale the bitmap to the original dimensions
         // We'll use a nearest-neighbor approach as a simple scaling algorithm
-        let scaleFactor = Double(outputWidth) / Double(width)
+        let reciprocalScaleFactorX = Double(width) / Double(outputWidth)
+        let reciprocalScaleFactorY = Double(height) / Double(outputHeight)
 
         for y in 0..<outputHeight {
             for x in 0..<outputWidth {
-                // Map from original space to processed space
-                let srcX = Int(Double(x) / scaleFactor).clamped(to: 0...width-1)
-                let srcY = Int(Double(y) / scaleFactor).clamped(to: 0...height-1)
-                
+                // Map from original space to processed space using multiplication (faster than division)
+                let srcX = Int(Double(x) * reciprocalScaleFactorX).clamped(to: 0...width-1)
+                let srcY = Int(Double(y) * reciprocalScaleFactorY).clamped(to: 0...height-1)
                 // Copy the pixel
                 bitmap[x, y] = processedBitmap[srcX, srcY]
             }
