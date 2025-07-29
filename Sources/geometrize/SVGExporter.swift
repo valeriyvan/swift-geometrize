@@ -1,6 +1,6 @@
 import Foundation
 
-public struct SVGExporter {
+@frozen public struct SVGExporter {
 
     public init() {}
 
@@ -64,25 +64,25 @@ public struct SVGExporter {
     /// Exports shape data as a complete SVG image.
     /// - Parameters:
     ///   - data The shape data to export.
-    ///   - width The width of the SVG image.
-    ///   - height The height of the SVG image.
-    ///   - originWidth: The width of the original image.
-    ///   - originHeight: The height of the original image.
+    ///   - width The width of the SVG image (downscaled).
+    ///   - height The height of the SVG image (downscaled).
+    ///   - originWidth: The width of the original image (before downscaling).
+    ///   - originHeight: The height of the original image (before downscaling).
     ///   - updateMarker place where new elements should be inserted. Better if this will be correct XML comment.
     /// - Returns: A string representing the SVG image.
     public func exportCompleteSVG(
         data: [ShapeResult],
         width: Int,
         height: Int,
-        originWidth: Int,  // TODO: not used!
-        originHeight: Int, // TODO: not used!
+        originWidth: Int,
+        originHeight: Int,
         updateMarker: String? = nil
     ) -> String {
         var str = """
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
         <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg"
-        width=\"\(width)\" height=\"\(height)\" viewBox=\"0 0 \(width) \(height)\">\n
+        width=\"\(originWidth)\" height=\"\(originHeight)\" viewBox=\"0 0 \(width) \(height)\">\n
         """
         str += exportShapesAsSVGFragment(data: data)
         if let updateMarker {
