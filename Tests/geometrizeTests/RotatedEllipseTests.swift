@@ -10,17 +10,17 @@ final class RotatedEllipseTests: XCTestCase {
         var bitmap = Bitmap(width: width, height: height, color: .white)
         bitmap.draw(
             lines:
-                RotatedEllipse(strokeWidth: 1, x: 250.0, y: 250.0, rx: 245.0, ry: 100.0, angleDegrees: 30.0)
+                RotatedEllipse(strokeWidth: 1, x: 250.0, y: 250.0, rx: 300.0, ry: 100.0, angleDegrees: 30.0)
                 .rasterize(x: xRange, y: yRange),
             color:
-                .red.withAlphaComponent(200)
+                .blue.withAlphaComponent(127)
         )
         bitmap.draw(
             lines:
                 RotatedEllipse(strokeWidth: 1, x: 250.0, y: 250.0, rx: 100.0, ry: 245.0, angleDegrees: 60.0)
                 .rasterize(x: xRange, y: yRange),
             color:
-                .green.withAlphaComponent(200)
+                .magenta.withAlphaComponent(127)
         )
         bitmap.draw(lines: scaleScanlinesTrimmed(width: width, height: height, step: 100), color: .black)
         assertSnapshot(
