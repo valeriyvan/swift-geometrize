@@ -4,23 +4,63 @@ public struct BitmapExporter {
 
     public init() {}
 
-    /// Exports shape data as a complete SVG image.
+    /// Exports shape data as a bitmap.
     /// - Parameters:
-    ///   - data The shape data to export.
-    ///   - width The width of the SVG image.
-    ///   - height The height of the SVG image.
-    /// - Returns: A string representing the SVG image.
+    ///   - data: The shape data to export.
+    ///   - width: The width of the bitmap (downscaled).
+    ///   - height: The height of the bitmap (downscaled).
+    ///   - originalWidth: The original width of the image (before downscaling).
+    ///   - originalHeight: The original height of the image (before downscaling).
+    ///   - scaleFactor: The scale factor between original and downscaled dimensions.
+    /// - Returns: A bitmap reconstructed from the shape data.
     public func export(
         data: [ShapeResult],
         width: Int,
-        height: Int
+        height: Int,
+        originalWidth: Int? = nil,
+        originalHeight: Int? = nil,
+        scaleFactor: Double = 1.0
     ) -> Bitmap {
-        var bitmap = Bitmap(width: width, height: height, color: .white)
+        // Determine if we should output at original size or downscaled size
+        let outputWidth = originalWidth ?? width
+        let outputHeight = originalHeight ?? height
+        
+        // Create bitmap with the right dimensions
+        var bitmap = Bitmap(width: outputWidth, height: outputHeight, color: .white)
+        
+        // If the original dimensions match the processed dimensions, no scaling needed
+        if outputWidth == width && outputHeight == height {
+            for shapeResult in data {
+                let lines = shapeResult.shape.rasterize(x: 0...width-1, y: 0...height-1)
+                bitmap.draw(lines: lines, color: shapeResult.color)
+            }
+            return bitmap
+        }
+
+        // We need to create a scaled version of the result
+        // The easiest approach is to create a bitmap at the processed size, then scale it
+
+        // Step 1: Create a bitmap at the processed size and draw all shapes on it
+        var processedBitmap = Bitmap(width: width, height: height, color: .white)
         for shapeResult in data {
             let lines = shapeResult.shape.rasterize(x: 0...width-1, y: 0...height-1)
-            bitmap.draw(lines: lines, color: shapeResult.color)
+            processedBitmap.draw(lines: lines, color: shapeResult.color)
         }
+
+        // Step 2: Scale the bitmap to the original dimensions
+        // We'll use a nearest-neighbor approach as a simple scaling algorithm
+        for y in 0..<outputHeight {
+            for x in 0..<outputWidth {
+                // Map from original space to processed space
+                let srcX = Int(Double(x) / scaleFactor).clamped(to: 0...width-1)
+                let srcY = Int(Double(y) / scaleFactor).clamped(to: 0...height-1)
+                
+                // Copy the pixel
+                bitmap[x, y] = processedBitmap[srcX, srcY]
+            }
+        }
+
         return bitmap
     }
-
 }
+
