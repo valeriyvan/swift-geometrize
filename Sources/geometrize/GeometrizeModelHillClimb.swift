@@ -7,7 +7,7 @@ public enum StepGeometrizationResult {
 }
 
 /// The model class is the model for the core optimization/fitting algorithm.
-class GeometrizeModelHillClimb: GeometrizeModelBase {
+final class GeometrizeModelHillClimb: GeometrizeModelBase {
 
     // Runs concurrently maxThreads optimization sessions and returns array of optimization results.
     // step function then takes the only result with the best score.
