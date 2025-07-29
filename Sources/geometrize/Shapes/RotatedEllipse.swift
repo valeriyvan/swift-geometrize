@@ -91,7 +91,7 @@ public struct RotatedEllipse: Shape {
     }
 
     public func rasterize(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>) -> [Scanline] {
-        guard let polygon = try? Polygon(vertices: points(20).map(Point<Int>.init)) else {
+        guard let polygon = try? Polygon(vertices: vertices().map(Point<Int>.init)) else {
             print("Warning: \(#function) produced no scanlines.")
             return []
         }
@@ -104,7 +104,8 @@ public struct RotatedEllipse: Shape {
         return lines
     }
 
-    private func points(_ count: Int) -> [Point<Double>] {
+    private func vertices() -> [Point<Double>] {
+        let count = optimalVertexCount()
         var points = [Point<Double>]()
         points.reserveCapacity(count)
         let rads = angleDegrees * (.pi / 180.0)
@@ -117,6 +118,22 @@ public struct RotatedEllipse: Shape {
             points.append(Point(x: crx * co - cry * si + x, y: crx * si + cry * co + y))
         }
         return points
+    }
+
+    private func optimalVertexCount() -> Int {
+        let perimeter = approximatePerimeter()
+        let pixelsPerSegment = 2.0
+        let minVertices = 8
+        let maxVertices = 200
+        let calculatedVertices = Int(perimeter / pixelsPerSegment)
+        return max(minVertices, min(maxVertices, calculatedVertices))
+    }
+
+    private func approximatePerimeter() -> Double {
+        let a = max(rx, ry)
+        let b = min(rx, ry)
+        let h = pow((a - b) / (a + b), 2)
+        return .pi * (a + b) * (1 + (3 * h) / (10 + sqrt(4 - 3 * h)))
     }
 
     public var isDegenerate: Bool {
