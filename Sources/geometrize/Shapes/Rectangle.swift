@@ -31,7 +31,7 @@ public struct Rectangle: Shape {
         y yRange: ClosedRange<Int>,
         using generator: inout SplitMix64
     ) -> Rectangle {
-        let range32 = 1...32
+        let range32 = 1...320
         return Rectangle(
             strokeWidth: strokeWidth,
             x1: Double(Int._random(in: xRange, using: &generator)),
@@ -46,7 +46,7 @@ public struct Rectangle: Shape {
         y yRange: ClosedRange<Int>,
         using generator: inout SplitMix64
     ) -> Rectangle {
-        let range16 = -16...16
+        let range16 = -160...160
         let newX1, newY1, newX2, newY2: Double
         switch Int._random(in: 0...1, using: &generator) {
         case 0:
