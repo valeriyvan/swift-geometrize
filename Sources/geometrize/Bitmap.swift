@@ -1,6 +1,6 @@
 import Foundation
 
-/// Helper for working with bitmap data.
+/// Bitmap of Rgba pixels.
 /// Pixels are ordered line by line, like arrays in C.
 public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
 
@@ -550,6 +550,60 @@ extension Bitmap {
         }
     }
 
+    public func computeColor(other: Bitmap, scanlines: [Scanline], alpha: UInt8) -> Rgba {
+        guard width == other.width, height == other.height else {
+            fatalError("Mismatching bitmap sizes \(width)x\(height) vs \(other.width)x\(other.height)")
+        }
+        // Early out to avoid integer divide by 0
+        guard !scanlines.isEmpty else {
+            print("Warning: there are no scanlines.")
+            return .black
+        }
+        guard alpha != 0 else {
+            print("Warning: alpha cannot be 0.")
+            return .black
+        }
+
+        return backing.withUnsafeBufferPointer { buffer in
+            return other.backing.withUnsafeBufferPointer { otherBuffer in
+                var totalRed: Int64 = 0
+                var totalGreen: Int64 = 0
+                var totalBlue: Int64 = 0
+                var count: Int64 = 0
+                let a: Int64 = Int64(257.0 * 255.0 / Double(alpha))
+
+                for line in scanlines {
+                    let offset = offset(x: line.x1, y: line.y)
+                    for i in stride(from: 0, to: (line.x2 - line.x1 + 1) * 4, by: 4) {
+                        // Get the overlapping target and current colors
+                        let tr: Int64 = Int64(buffer[offset + i])
+                        let tg: Int64 = Int64(buffer[offset + i + 1])
+                        let tb: Int64 = Int64(buffer[offset + i + 2])
+                        let cr: Int64 = Int64(otherBuffer[offset + i])
+                        let cg: Int64 = Int64(otherBuffer[offset + i + 1])
+                        let cb: Int64 = Int64(otherBuffer[offset + i + 2])
+
+                        // Mix the red, green and blue components, blending by the given alpha value
+                        totalRed += Int64((tr - cr) * a + cr * 257)
+                        totalGreen += Int64((tg - cg) * a + cg * 257)
+                        totalBlue += Int64((tb - cb) * a + cb * 257)
+                    }
+                    count += Int64(line.x2 - line.x1 + 1)
+                }
+
+                let rr: Int64 = Int64(totalRed / count) >> 8
+                let gg: Int64 = Int64(totalGreen / count) >> 8
+                let bb: Int64 = Int64(totalBlue / count) >> 8
+
+                // Scale totals down to 0-255 range and return average blended color
+                let r: UInt8 = UInt8(rr.clamped(to: 0...255))
+                let g: UInt8 = UInt8(gg.clamped(to: 0...255))
+                let b: UInt8 = UInt8(bb.clamped(to: 0...255))
+
+                return Rgba(r: r, g: g, b: b, a: alpha)
+            }
+        }
+    }
 }
 
 extension Bitmap {
