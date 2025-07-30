@@ -205,7 +205,6 @@ final class SVGExporterTests: XCTestCase {
             height: 20,
             originWidth: 20,
             originHeight: 20,
-            scaleFactor: 1.0,
             updateMarker: "<!-- INSERT NEW SHAPES HERE -->"
         )
         
@@ -223,8 +222,7 @@ final class SVGExporterTests: XCTestCase {
             width: 50,
             height: 50,
             originWidth: 100,
-            originHeight: 100,
-            scaleFactor: 2.0
+            originHeight: 100
         )
         
         XCTAssertTrue(svg.contains("width=\"100\" height=\"100\" viewBox=\"0 0 50 50\">"))
@@ -310,8 +308,7 @@ final class SVGExporterTests: XCTestCase {
             width: 100,
             height: 60,
             originWidth: 200,
-            originHeight: 120,
-            scaleFactor: 2.0
+            originHeight: 120
         )
         
         let svg2 = exporter.exportCompleteSVG(
@@ -319,8 +316,7 @@ final class SVGExporterTests: XCTestCase {
             width: 100,
             height: 60,
             originWidth: 200,
-            originHeight: 120,
-            scaleFactor: 0.5
+            originHeight: 120
         )
         
         // Both should produce identical output since scaleFactor is not currently used
