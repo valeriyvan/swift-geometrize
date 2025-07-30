@@ -71,7 +71,7 @@ extension Scanline: ExpressibleByStringLiteral {
             let x2 = scanner.scanInt(),
             scanner.scanString(")") != nil
         else {
-            fatalError()
+            fatalError("Incorrect format of Scanline: \(value)")
         }
         self.y = y
         self.x1 = x1
@@ -105,59 +105,14 @@ extension Array where Element == Scanline {
     ///   - current: The current image.
     ///   - alpha: The alpha of the scanline.
     /// - Returns: The color of the scanlines.
+    @inlinable
+    @inline(__always)
     func computeColor(
         target: Bitmap,
         current: Bitmap,
         alpha: UInt8
     ) -> Rgba {
-        // Early out to avoid integer divide by 0
-        guard !isEmpty else {
-            print("Warning: there are no scanlines.")
-            return .black
-        }
-        guard alpha != 0 else {
-            print("Warning: alpha cannot be 0.")
-            return .black
-        }
-
-        var totalRed: Int64 = 0
-        var totalGreen: Int64 = 0
-        var totalBlue: Int64 = 0
-        var count: Int64 = 0
-        let a: Int32 = Int32(257.0 * 255.0 / Double(alpha))
-
-        for line in self {
-            let y: Int = line.y
-            for x in line.x1...line.x2 {
-                // Get the overlapping target and current colors
-                let t: Rgba = target[x, y]
-                let c: Rgba = current[x, y]
-
-                let tr: Int32 = Int32(t.r)
-                let tg: Int32 = Int32(t.g)
-                let tb: Int32 = Int32(t.b)
-                let cr: Int32 = Int32(c.r)
-                let cg: Int32 = Int32(c.g)
-                let cb: Int32 = Int32(c.b)
-
-                // Mix the red, green and blue components, blending by the given alpha value
-                totalRed += Int64((tr - cr) * a + cr * 257)
-                totalGreen += Int64((tg - cg) * a + cg * 257)
-                totalBlue += Int64((tb - cb) * a + cb * 257)
-                count += 1
-            }
-        }
-
-        let rr: Int32 = Int32(totalRed / count) >> 8
-        let gg: Int32 = Int32(totalGreen / count) >> 8
-        let bb: Int32 = Int32(totalBlue / count) >> 8
-
-        // Scale totals down to 0-255 range and return average blended color
-        let r: UInt8 = UInt8(rr.clamped(to: 0...255))
-        let g: UInt8 = UInt8(gg.clamped(to: 0...255))
-        let b: UInt8 = UInt8(bb.clamped(to: 0...255))
-
-        return Rgba(r: r, g: g, b: b, a: alpha)
+        target.computeColor(other: current, scanlines: self, alpha: alpha)
     }
 
 }
