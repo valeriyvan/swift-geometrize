@@ -129,8 +129,8 @@ public struct GeometrizingIterator: IteratorProtocol {
                 if verbose {
                     print(", no shapes added.", terminator: "")
                 }
-                    state = .failed
-                    break loop
+                state = .failed
+                break loop
             }
             if verbose {
                 print(" Total count of shapes \(shapeData.count + iterationShapeData.count).")
@@ -149,5 +149,7 @@ public struct GeometrizingIterator: IteratorProtocol {
 
         return iterationShapeData
     }
+
+    public var scaleFactor: Double { Double(originWidth) / Double(width) }
 
 }
