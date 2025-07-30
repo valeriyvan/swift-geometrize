@@ -139,9 +139,14 @@ do {
     case "svg":
         let outputWidth: Int, outputHeight: Int
         if let backgroundRectangle = shapeData.first?.shape as? Rectangle {
+            // If the first shape in the data is a Rectangle, use its dimensions as the output dimensions.
+            // This assumes the rectangle represents the background or canvas size.
             outputWidth = Int(backgroundRectangle.x2 - backgroundRectangle.x1)
             outputHeight = Int(backgroundRectangle.y2 - backgroundRectangle.y1)
         } else {
+            // Fallback to the processed dimensions if no background rectangle is found.
+            // This ensures the output dimensions are always valid, even if the shape data
+            // does not include a rectangle.
             outputWidth = processedWidth
             outputHeight = processedHeight
         }
