@@ -109,25 +109,51 @@ for iteration in geometrizingSequence {
     shapeData.append(contentsOf: iteration)
 }
 
+// Get the original dimensions and scale factor from the sequence
+let originalWidth = targetBitmap.width
+let originalHeight = targetBitmap.height
+let scaleFactor = geometrizingSequence.scaleFactor
+
+if options.verbose && scaleFactor > 1.0 {
+    print("Scale factor from original image: \(scaleFactor)")
+    print("Image was downscaled for processing: \(originalWidth)x\(originalHeight) → \(Int(Double(originalWidth) / scaleFactor))x\(Int(Double(originalHeight) / scaleFactor))")
+}
+
 do {
     let `extension` = options.outputPath == "-" ? "svg" : outputUrl.pathExtension.lowercased()
     switch `extension` {
-    case "png":
+    case "png", "jpeg", "jpg":
         let exporter = BitmapExporter()
-        let bitmap = exporter.export(data: shapeData, width: width, height: height)
-        let pngData = try bitmap.pngData()
-        try pngData.write(to: outputUrl)
-    case "jpeg", "jpg":
-        let exporter = BitmapExporter()
-        let bitmap = exporter.export(data: shapeData, width: width, height: height)
-        let jpegData = try bitmap.jpegData()
-        try jpegData.write(to: outputUrl)
+        // Use the original dimensions for the output
+        let processedWidth = Int(Double(originalWidth) / scaleFactor)
+        let processedHeight = Int(Double(originalHeight) / scaleFactor)
+        let bitmap = exporter.export(
+            data: shapeData,
+            width: processedWidth,
+            height: processedHeight,
+            originalWidth: originalWidth,
+            originalHeight: originalHeight
+        )
+        let imageData = try `extension` == "png" ? bitmap.pngData() : bitmap.jpegData()
+        try imageData.write(to: outputUrl)
     case "svg":
+        let processedWidth = Int(Double(originalWidth) / scaleFactor)
+        let processedHeight = Int(Double(originalHeight) / scaleFactor)
+        let outputWidth: Int, outputHeight: Int
+        if let backgroundRectangle = shapeData.first?.shape as? Rectangle {
+            outputWidth = Int(backgroundRectangle.x2 - backgroundRectangle.x1)
+            outputHeight = Int(backgroundRectangle.y2 - backgroundRectangle.y1)
+        } else {
+            outputWidth = processedWidth
+            outputHeight = processedHeight
+        }
         let svg = SVGExporter()
             .exportCompleteSVG(
                 data: shapeData,
-                width: width, height: height,
-                originWidth: width, originHeight: height // we don't downsample yet
+                width: outputWidth,
+                height: outputHeight,
+                originWidth: originalWidth,
+                originHeight: originalHeight
             )
         if options.outputPath == "-" {
             print(svg)
