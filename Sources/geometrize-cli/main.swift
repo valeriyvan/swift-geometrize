@@ -119,14 +119,14 @@ if options.verbose && scaleFactor > 1.0 {
     print("Image was downscaled for processing: \(originalWidth)x\(originalHeight) → \(Int(Double(originalWidth) / scaleFactor))x\(Int(Double(originalHeight) / scaleFactor))")
 }
 
+let processedWidth = Int(Double(originalWidth) / scaleFactor)
+let processedHeight = Int(Double(originalHeight) / scaleFactor)
+
 do {
     let `extension` = options.outputPath == "-" ? "svg" : outputUrl.pathExtension.lowercased()
     switch `extension` {
     case "png", "jpeg", "jpg":
         let exporter = BitmapExporter()
-        // Use the original dimensions for the output
-        let processedWidth = Int(Double(originalWidth) / scaleFactor)
-        let processedHeight = Int(Double(originalHeight) / scaleFactor)
         let bitmap = exporter.export(
             data: shapeData,
             width: processedWidth,
@@ -137,8 +137,6 @@ do {
         let imageData = try `extension` == "png" ? bitmap.pngData() : bitmap.jpegData()
         try imageData.write(to: outputUrl)
     case "svg":
-        let processedWidth = Int(Double(originalWidth) / scaleFactor)
-        let processedHeight = Int(Double(originalHeight) / scaleFactor)
         let outputWidth: Int, outputHeight: Int
         if let backgroundRectangle = shapeData.first?.shape as? Rectangle {
             outputWidth = Int(backgroundRectangle.x2 - backgroundRectangle.x1)
