@@ -12,21 +12,10 @@ public struct GeometrizingSequence: Sequence {
     let verbose: Bool
     private let downscaleToMaxSize: Int
 
-    /// Helper class to store the iterator and provide scale factor
-    private final class IteratorStorage {
-        var iterator: GeometrizingIterator?
-    }
-
-    /// Storage for the iterator reference
-    private let storage = IteratorStorage()
-
     /// The scale factor between the original image dimensions and the dimensions used for geometrization
     public var scaleFactor: Double {
-        // Create an iterator immediately if needed to get the scale factor
-        if storage.iterator == nil {
-            let _ = makeIterator()
-        }
-        return storage.iterator?.scaleFactor ?? 1.0
+        let maxSize = Swift.max(bitmap.width, bitmap.height)
+        return maxSize > downscaleToMaxSize ? Double(maxSize) / Double(downscaleToMaxSize) : 1.0
     }
 
     /// The original width of the image before downscaling
@@ -58,7 +47,7 @@ public struct GeometrizingSequence: Sequence {
     }
 
     public func makeIterator() -> GeometrizingIterator {
-        let newIterator = GeometrizingIterator(
+        return GeometrizingIterator(
             bitmap: bitmap,
             downscaleToMaxSize: downscaleToMaxSize,
             shapeTypes: shapeTypes,
@@ -67,8 +56,6 @@ public struct GeometrizingSequence: Sequence {
             shapesPerIteration: shapesPerIteration,
             verbose: verbose
         )
-        storage.iterator = newIterator
-        return newIterator
     }
 
 }
