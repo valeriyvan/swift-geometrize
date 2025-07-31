@@ -62,7 +62,8 @@ let package = Package(
             ],
             path: "Sources/geometrize",
             resources: [.copy("PrivacyInfo.xcprivacy")],
-            plugins: plugins
+            swiftSettings: [.enableUpcomingFeature("StrictConcurrency")],
+            plugins: plugins,
         ),
         .target(
             name: "BitmapImportExport",
@@ -73,6 +74,7 @@ let package = Package(
             ],
             path: "Sources/bitmapImportExport",
             resources: [.copy("PrivacyInfo.xcprivacy")],
+            swiftSettings: [.enableUpcomingFeature("StrictConcurrency")],
             plugins: plugins
         ),
         .executableTarget(
@@ -91,6 +93,7 @@ let package = Package(
             ],
             path: "Sources/geometrize-cli",
             resources: [.copy("PrivacyInfo.xcprivacy")],
+            swiftSettings: [.enableUpcomingFeature("StrictConcurrency")],
             plugins: plugins
         ),
         .testTarget(
@@ -106,6 +109,7 @@ let package = Package(
                 .copy("Resources"),
                 .copy("__Snapshots__")
             ],
+            swiftSettings: [.enableUpcomingFeature("StrictConcurrency")],
             plugins: plugins
         ),
         .executableTarget(
@@ -113,7 +117,9 @@ let package = Package(
             dependencies: [
                 "Geometrize",
                 .product(name: "CollectionsBenchmark", package: "swift-collections-benchmark")
-            ]
+            ],
+            swiftSettings: [.enableUpcomingFeature("StrictConcurrency")],
+            plugins: plugins
         )
     ]
 
