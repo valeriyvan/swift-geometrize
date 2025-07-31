@@ -28,4 +28,11 @@ benchmark.add(
     }
 }
 
+benchmark.addSimple(
+  title: "Bitmap.differenceFull",
+  input: Bitmap.self
+) { input in
+    blackHole(input.differenceFull(with: input))
+}
+
 benchmark.main()
