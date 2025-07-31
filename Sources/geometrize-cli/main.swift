@@ -114,13 +114,13 @@ let originalWidth = targetBitmap.width
 let originalHeight = targetBitmap.height
 let scaleFactor = geometrizingSequence.scaleFactor
 
-if options.verbose && scaleFactor > 1.0 {
-    print("Scale factor from original image: \(scaleFactor)")
-    print("Image was downscaled for processing: \(originalWidth)x\(originalHeight) → \(Int(Double(originalWidth) / scaleFactor))x\(Int(Double(originalHeight) / scaleFactor))")
-}
-
 let processedWidth = Int(Double(originalWidth) / scaleFactor)
 let processedHeight = Int(Double(originalHeight) / scaleFactor)
+
+if options.verbose && scaleFactor > 1.0 {
+    print("Scale factor from original image: \(scaleFactor)")
+    print("Image was downscaled for processing: \(originalWidth)x\(originalHeight) → \(processedWidth)x\(processedHeight)")
+}
 
 do {
     let `extension` = options.outputPath == "-" ? "svg" : outputUrl.pathExtension.lowercased()
@@ -141,8 +141,8 @@ do {
         if let backgroundRectangle = shapeData.first?.shape as? Rectangle {
             // If the first shape in the data is a Rectangle, use its dimensions as the output dimensions.
             // This assumes the rectangle represents the background or canvas size.
-            outputWidth = Int(backgroundRectangle.x2 - backgroundRectangle.x1)
-            outputHeight = Int(backgroundRectangle.y2 - backgroundRectangle.y1)
+            outputWidth = Int(abs(backgroundRectangle.x2 - backgroundRectangle.x1))
+            outputHeight = Int(abs(backgroundRectangle.y2 - backgroundRectangle.y1))
         } else {
             // Fallback to the processed dimensions if no background rectangle is found.
             // This ensures the output dimensions are always valid, even if the shape data
