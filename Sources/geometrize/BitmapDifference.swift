@@ -3,7 +3,7 @@ import Foundation
 extension Bitmap {
 
     /// Calculates the root-mean-square error between two bitmaps.
-    func differenceFull(with second: Bitmap) -> Double {
+    public func differenceFull(with second: Bitmap) -> Double {
         assert(width == second.width)
         assert(height == second.height)
 
