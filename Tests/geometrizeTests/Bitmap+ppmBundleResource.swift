@@ -7,7 +7,7 @@ extension Bitmap {
         guard let url = Bundle.module.url(forResource: resource, withExtension: `extension`) else {
             fatalError("Resource \"\(resource).\(`extension`)\" not found in bundle")
         }
-        let string = try String(contentsOf: url)
+        let string = try String(contentsOf: url, encoding: .utf8)
         self = try Bitmap(ppmString: string)
     }
 

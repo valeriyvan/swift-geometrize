@@ -10,7 +10,7 @@ final class SVGAsyncGeometrizerTests: XCTestCase {
         guard let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm") else {
             fatalError()
         }
-        let ppmString = try String(contentsOf: urlSource)
+        let ppmString = try String(contentsOf: urlSource, encoding: .utf8)
         let bitmap = try Bitmap(ppmString: ppmString)
 
         let svgSequence: SVGAsyncSequence = try await SVGAsyncGeometrizer.geometrize(
@@ -39,7 +39,7 @@ final class SVGAsyncGeometrizerTests: XCTestCase {
         guard let urlSource = Bundle.module.url(forResource: "sunrise_at_sea", withExtension: "ppm") else {
             fatalError("No resource files")
         }
-        let ppmString = try String(contentsOf: urlSource)
+        let ppmString = try String(contentsOf: urlSource, encoding: .utf8)
         let bitmap = try Bitmap(ppmString: ppmString)
 
         let updateMarker = "<!-- insert here next shapes -->\n"

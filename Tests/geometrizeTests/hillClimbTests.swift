@@ -14,7 +14,7 @@ final class HillClimbTests: XCTestCase {
         guard let url else {
             fatalError("Resource \"hillClimb randomRange.txt\" not found in bundle")
         }
-        let randomNumbersString = try String(contentsOf: url)
+        let randomNumbersString = try String(contentsOf: url, encoding: .utf8)
         let lines = randomNumbersString.components(separatedBy: .newlines)
         
         // Reference type to hold mutable state for the Sendable closure
