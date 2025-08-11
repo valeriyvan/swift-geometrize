@@ -93,6 +93,14 @@ public struct Rgba {
 
     public var asTuple: (UInt8, UInt8, UInt8, UInt8) { (r, g, b, a) }
 
+    public func squaredDifference(with other: Rgba) -> Int64 {
+        let dr = Int32(r) - Int32(other.r)
+        let dg = Int32(g) - Int32(other.g)
+        let db = Int32(b) - Int32(other.b)
+        let da = Int32(a) - Int32(other.a)
+        return Int64(dr * dr + dg * dg + db * db + da * da)
+    }
+
 }
 
 extension Rgba: Equatable {}
