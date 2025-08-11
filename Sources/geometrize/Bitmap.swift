@@ -268,8 +268,6 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
                     y &+= 1
                 }
             }
-            // swap dims
-            (width, height) = (height, width)
         } else {
             // Non-square: use fast out-of-place path
             let t = transposed()
