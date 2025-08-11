@@ -25,7 +25,7 @@ extension Bitmap {
         return sqrt(Double(total) / (Double(width) * Double(height) * 4.0)) / 255.0
     }
 
-    // This variant is less then 5% faster.
+    // This variant is less than 5% faster.
     public func differenceFullExperimental(with second: Bitmap) -> Double {
         assert(width == second.width)
         assert(height == second.height)
@@ -75,7 +75,7 @@ extension Bitmap {
         return sqrt(Double(total) / Double(rgbaCount)) / 255.0
     }
 
-    // This variant is less then 5% faster.
+    // This variant is less than 5% faster.
     public func differencePartialExperimental(
         with second: Bitmap,
         target: Bitmap,
