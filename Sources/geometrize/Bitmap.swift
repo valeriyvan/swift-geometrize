@@ -163,6 +163,23 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
         }
     }
 
+
+    // This relies on ContiguousArray<UInt8> being implicitly 8-byte aligned on 64-bit platforms.
+    @inlinable
+    @inline(__always)
+    internal func rgbaAsSIMD4Int32(x: Int, y: Int) -> SIMD4<Int32> {
+        backing.withUnsafeBufferPointer { buffer in
+            //print(buffer.baseAddress!)
+            let offset = offset(x: x, y: y)
+            let small: SIMD4<UInt8> = buffer.baseAddress! // UnsafePointer<UInt8>
+                .advanced(by: offset)
+                .withMemoryRebound(to: SIMD4<UInt8>.self, capacity: 1) {
+                    $0.pointee
+                }
+            return SIMD4<Int32>(truncatingIfNeeded: small)
+        }
+    }
+
     public subscript(_ point: Point<Int>) -> Rgba {
         get {
             self[point.x, point.y]

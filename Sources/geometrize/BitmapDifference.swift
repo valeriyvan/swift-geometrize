@@ -25,6 +25,22 @@ extension Bitmap {
         return sqrt(Double(total) / (Double(width) * Double(height) * 4.0)) / 255.0
     }
 
+    // This variant is less then 5% faster.
+    public func differenceFullExperimental(with second: Bitmap) -> Double {
+        assert(width == second.width)
+        assert(height == second.height)
+        var total: Int64 = 0
+        for y in 0..<height {
+            for x in 0..<width {
+                let f = self.rgbaAsSIMD4Int32(x: x, y: y)
+                let s = second.rgbaAsSIMD4Int32(x: x, y: y)
+                let d = f &- s
+                total += Int64((d &* d).wrappedSum())
+            }
+        }
+        return sqrt(Double(total) / (Double(width) * Double(height) * 4.0)) / 255.0
+    }
+
     /// Calculates the root-mean-square error between the parts of the two bitmaps within the scanline mask.
     /// This is for optimization purposes, it lets calculate new error values only for parts of the image
     /// known to be changed.
@@ -37,7 +53,7 @@ extension Bitmap {
     ///
     /// Doesn't take into consideration human color perception.
     /// Look https://en.wikipedia.org/wiki/Color_difference
-    func differencePartial(
+    public func differencePartial(
         with second: Bitmap,
         target: Bitmap,
         score: Double,
@@ -51,22 +67,35 @@ extension Bitmap {
                 let t: Rgba = target[x, y]
                 let b: Rgba = self[x, y]
                 let a: Rgba = second[x, y]
-
-                let dtbr: Int32 = Int32(t.r) - Int32(b.r)
-                let dtbg: Int32 = Int32(t.g) - Int32(b.g)
-                let dtbb: Int32 = Int32(t.b) - Int32(b.b)
-                let dtba: Int32 = Int32(t.a) - Int32(b.a)
-
-                let dtar: Int32 = Int32(t.r) - Int32(a.r)
-                let dtag: Int32 = Int32(t.g) - Int32(a.g)
-                let dtab: Int32 = Int32(t.b) - Int32(a.b)
-                let dtaa: Int32 = Int32(t.a) - Int32(a.a)
-
-                total -= UInt64(dtbr * dtbr + dtbg * dtbg + dtbb * dtbb + dtba * dtba)
-                total += UInt64(dtar * dtar + dtag * dtag + dtab * dtab + dtaa * dtaa)
+                total -= UInt64(t.squaredDifference(with: b))
+                total += UInt64(t.squaredDifference(with: a))
             }
         }
 
+        return sqrt(Double(total) / Double(rgbaCount)) / 255.0
+    }
+
+    // This variant is less then 5% faster.
+    public func differencePartialExperimental(
+        with second: Bitmap,
+        target: Bitmap,
+        score: Double,
+        mask lines: [Scanline]
+    ) -> Double {
+        let rgbaCount: UInt64 = UInt64(target.width * target.height * 4)
+        var total: UInt64 = UInt64((score * 255.0) * (score * 255.0) * Double(rgbaCount))
+        for line in lines {
+            let y = line.y
+            for x in line.x1...line.x2 {
+                let t = target.rgbaAsSIMD4Int32(x: x, y: y)
+                let b = self.rgbaAsSIMD4Int32(x: x, y: y)
+                let a = second.rgbaAsSIMD4Int32(x: x, y: y)
+                let dtb: SIMD4<Int32> = t &- b
+                let dta: SIMD4<Int32> = t &- a
+                total -= UInt64((dtb &* dtb).wrappedSum())
+                total += UInt64((dta &* dta).wrappedSum())
+            }
+        }
         return sqrt(Double(total) / Double(rgbaCount)) / 255.0
     }
 
