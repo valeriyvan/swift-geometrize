@@ -90,6 +90,13 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
         }
     }
 
+    internal init(width: Int, height: Int, backing: ContiguousArray<UInt8>) {
+        assert(width > 0 && height > 0)
+        self.width = width
+        self.height = height
+        self.backing = backing
+    }
+
     /// Width of the bitmap.
     public private(set) var width: Int
 
@@ -113,6 +120,11 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     public var componentCount: Int { pixelCount * 4 }
 
     /// Raw bitmap data.
+    // TODO: Fix alignment to UInt32 or even UInt64 to enable batch pixel processing.
+    // `ContiguousArray<UInt8>` doesn’t guarantee alignment, but in practice,
+    // it is 8-byte aligned on 64-bit platforms. Many optimizations that rely on
+    // processing four UInt8 values as a single UInt32 might slow down or even crash
+    // if the alignment is incorrect.
     public private(set) var backing: ContiguousArray<UInt8> // C ordering, row by row
 
     /// Bitmap has no pixels.
@@ -232,10 +244,75 @@ public struct Bitmap: Sendable { // swiftlint:disable:this type_body_length
     }
 
     // Transposes Bitmap
-    mutating func transpose() {
-        self = Bitmap(width: height, height: width) { x, y in
-            self[y, x]
+    public mutating func transpose() {
+        // Naïve implementation
+        // self = Bitmap(width: height, height: width) { x, y in
+        //     self[y, x]
+        // }
+        if width == height {
+            // In-place swap across the diagonal.
+            let n = width
+            backing.withUnsafeMutableBytes { rb in
+                let buf = rb.bindMemory(to: UInt32.self)
+                var y = 0
+                while y < n {
+                    var x = y + 1
+                    while x < n {
+                        let aIdx = y &* n &+ x
+                        let bIdx = x &* n &+ y
+                        let tmp = buf[aIdx]
+                        buf[aIdx] = buf[bIdx]
+                        buf[bIdx] = tmp
+                        x &+= 1
+                    }
+                    y &+= 1
+                }
+            }
+            // swap dims
+            (width, height) = (height, width)
+        } else {
+            // Non-square: use fast out-of-place path
+            let t = transposed()
+            self.width = t.width
+            self.height = t.height
+            self.backing = t.backing
         }
+    }
+
+    public func transposed() -> Bitmap {
+        let newW = height
+        let newH = width
+        var dst = ContiguousArray<UInt8>(repeating: 0, count: componentCount)
+        // Treat each pixel as a packed 32-bit RGBA word. Safer + faster copies.
+        dst.withUnsafeMutableBytes { db in
+            backing.withUnsafeBytes { sb in
+                let src = sb.bindMemory(to: UInt32.self)
+                let dst = db.bindMemory(to: UInt32.self)
+                let tile = 64 // tuned tile size; try 32/64/128
+                var i = 0
+                while i < height {
+                    let iMax = min(i + tile, height)
+                    var j = 0
+                    while j < width {
+                        let jMax = min(j + tile, width)
+                        var y = i
+                        while y < iMax {
+                            let srcRow = y &* width
+                            var x = j
+                            while x < jMax {
+                                // dst[x, y] = src[y, x]
+                                dst[x &* newW &+ y] = src[srcRow &+ x]
+                                x &+= 1
+                            }
+                            y &+= 1
+                        }
+                        j &+= tile
+                    }
+                    i &+= tile
+                }
+            }
+        }
+        return Bitmap(width: newW, height: newH, backing: dst)
     }
 
     // Swaps points (x1, y1) and (x2, y2)
