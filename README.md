@@ -48,4 +48,18 @@ You could try swift-geometrize in action in Telegram bot [Geometrizebot](https:/
 
 Licensed under MIT license.
 
-<a href="https://www.buymeacoffee.com/valeriyvan" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+## Support My Work
+
+<div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;">
+  <div style="flex: 1; min-width: 250px;">
+    <h3>Bitcoin</h3>
+    <p><code>1Van83aVMRbHoAHEagpSk8oxj6RwTXD6o</code></p>
+    <img src="https://github.com/valeriyvan/valeriyvan.github.io/blob/main/assets/images/bitcoin-qr.png" alt="Bitcoin QR Code" style="width: 180px; height: 180px;">
+  </div>
+  <div style="flex: 1; min-width: 250px; text-align: center;">
+    <h3>Buy Me a Coffee</h3>
+    <a href="https://www.buymeacoffee.com/valeriyvan" target="_blank">
+      <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;">
+    </a>
+  </div>
+</div>
