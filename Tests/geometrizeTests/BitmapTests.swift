@@ -208,6 +208,47 @@ final class BitmapTests: XCTestCase {
         )
     }
 
+    func testTransposed() {
+        // Test square bitmap
+        let squareBitmap = Bitmap(width: 3, height: 3, data: [
+            1,2,3,255,   4,5,6,255,   7,8,9,255,
+            10,11,12,255, 13,14,15,255, 16,17,18,255,
+            19,20,21,255, 22,23,24,255, 25,26,27,255
+        ])
+
+        let squareTransposed = squareBitmap.transposed()
+        let expectedSquare = Bitmap(width: 3, height: 3, data: [
+            1,2,3,255,   10,11,12,255, 19,20,21,255,
+            4,5,6,255,   13,14,15,255, 22,23,24,255,
+            7,8,9,255,   16,17,18,255, 25,26,27,255
+        ])
+        XCTAssertEqual(squareTransposed, expectedSquare)
+
+        // Test rectangular bitmap
+        let rectBitmap = Bitmap(width: 2, height: 3, data: [
+            1,2,3,255,   4,5,6,255,
+            7,8,9,255,   10,11,12,255,
+            13,14,15,255, 16,17,18,255
+        ])
+
+        let rectTransposed = rectBitmap.transposed()
+        XCTAssertEqual(rectTransposed.width, 3)
+        XCTAssertEqual(rectTransposed.height, 2)
+        let expectedRect = Bitmap(width: 3, height: 2, data: [
+            1,2,3,255,   7,8,9,255,   13,14,15,255,
+            4,5,6,255,   10,11,12,255, 16,17,18,255
+        ])
+        XCTAssertEqual(rectTransposed, expectedRect)
+
+        // Test that original bitmap is unchanged
+        XCTAssertEqual(rectBitmap.width, 2)
+        XCTAssertEqual(rectBitmap.height, 3)
+
+        // Test double transpose returns original
+        let doubleTransposed = rectTransposed.transposed()
+        XCTAssertEqual(doubleTransposed, rectBitmap)
+    }
+
     func testSwap() {
         let width = 500, height = 500
         let xRange = 0...width - 1, yRange = 0...height - 1
